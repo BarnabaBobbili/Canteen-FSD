@@ -1,0 +1,63 @@
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Testing
+coverage/
+__tests__/
+*.test.js
+*.spec.js
+test*.js
+*test.js
+
+# Development Scripts
+seed.js
+seedWeeklyData.js
+*seed*.js
+migrate*.js
+migrateHistoricalActivities.js
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code CLI
+.claude/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Cache
+.eslintcache
+
+# Temporary files
+*.tmp
+*.temp
+
+# Build files
+dist/
+build/
+
+# Accidental/Error files
+nul
+*.bak
+*.swp
+*.swo
+*~
