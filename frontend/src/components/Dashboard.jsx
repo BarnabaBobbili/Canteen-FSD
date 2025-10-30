@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
+import API_BASE_URL from '../config/api';
 import {
   ShoppingCart, UtensilsCrossed, Package, Users, Truck, Tag,
   MessageSquare, CreditCard, TrendingUp, BarChart3, Clock, CheckCircle, AlertTriangle,
@@ -11,8 +12,6 @@ import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
-
-const API_URL = 'http://localhost:5001/api';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -123,10 +122,10 @@ const Dashboard = () => {
 
         // Fetch all data in parallel
         const [ordersRes, menuRes, inventoryRes, activitiesRes] = await Promise.all([
-          fetch(`${API_URL}/orders`),
-          fetch(`${API_URL}/menu`),
-          fetch(`${API_URL}/inventory`),
-          fetch(`${API_URL}/activities?limit=50`, {
+          fetch(`${API_BASE_URL}/orders`),
+          fetch(`${API_BASE_URL}/menu`),
+          fetch(`${API_BASE_URL}/inventory`),
+          fetch(`${API_BASE_URL}/activities?limit=50`, {
             headers: {
               'Authorization': `Bearer ${token || ''}`
             }

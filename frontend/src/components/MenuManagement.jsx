@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
+import API_BASE_URL from '../config/api';
 import MenuForm from './MenuForm';
 import {
   UtensilsCrossed, Plus, Edit2, Trash2, X, Save, Search, AlertCircle
 } from 'lucide-react';
-
-const API_URL = 'http://localhost:5001/api';
 
 const MenuManagement = () => {
   const { token, user } = useAuth();
@@ -25,7 +24,7 @@ const MenuManagement = () => {
 
   const fetchMenu = async () => {
     try {
-      const response = await fetch(`${API_URL}/menu`);
+      const response = await fetch(`${API_BASE_URL}/menu`);
       const data = await response.json();
       setMenuItems(data);
     } catch (error) {
@@ -46,8 +45,8 @@ const MenuManagement = () => {
 
     try {
       const url = modalMode === 'add'
-        ? `${API_URL}/menu`
-        : `${API_URL}/menu/${currentForm._id}`;
+        ? `${API_BASE_URL}/menu`
+        : `${API_BASE_URL}/menu/${currentForm._id}`;
 
       // Add user tracking information
       const dataToSend = {
@@ -81,7 +80,7 @@ const MenuManagement = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this menu item?')) return;
     try {
-      const response = await fetch(`${API_URL}/menu/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/menu/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Minus } from 'lucide-react';
+import API_BASE_URL from '../config/api';
 
 const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
   const [suppliers, setSuppliers] = useState([]);
@@ -12,7 +13,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
   const fetchSuppliers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/suppliers', {
+      const response = await fetch(`${API_BASE_URL}/suppliers', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

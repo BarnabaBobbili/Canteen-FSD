@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
+import API_BASE_URL from '../config/api';
 import {
   ShoppingCart, Plus, Edit2, Trash2, X, Save, Search, AlertCircle
 } from 'lucide-react';
-
-const API_URL = 'http://localhost:5001/api';
 
 const OrderManagement = () => {
   const { token, user } = useAuth();
@@ -24,7 +23,7 @@ const OrderManagement = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch(`${API_URL}/orders`);
+      const response = await fetch(`${API_BASE_URL}/orders`);
       const data = await response.json();
       setOrders(data);
     } catch (error) {
@@ -36,8 +35,8 @@ const OrderManagement = () => {
     e.preventDefault();
     try {
       const url = modalMode === 'add'
-        ? `${API_URL}/orders`
-        : `${API_URL}/orders/${currentForm._id}`;
+        ? `${API_BASE_URL}/orders`
+        : `${API_BASE_URL}/orders/${currentForm._id}`;
 
       // Add user tracking information
       const dataToSend = {
@@ -68,7 +67,7 @@ const OrderManagement = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this order?')) return;
     try {
-      const response = await fetch(`${API_URL}/orders/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/orders/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
+import API_BASE_URL from '../config/api';
 import {
   Activity, Search, Filter, Calendar, User, AlertCircle, Info, AlertTriangle, X, ChevronDown, ChevronUp
 } from 'lucide-react';
-
-const API_URL = 'http://localhost:5001/api';
 
 const ActivityLog = () => {
   const { token, user } = useAuth();
@@ -46,7 +45,7 @@ const ActivityLog = () => {
         params.append('search', searchTerm);
       }
 
-      const response = await fetch(`${API_URL}/activities?${params}`, {
+      const response = await fetch(`${API_BASE_URL}/activities?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -85,7 +84,7 @@ const ActivityLog = () => {
 
   const openDetailModal = async (activityId) => {
     try {
-      const response = await fetch(`${API_URL}/activities/${activityId}`, {
+      const response = await fetch(`${API_BASE_URL}/activities/${activityId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
+import API_BASE_URL from '../config/api';
 import {
   Users, Plus, Edit2, Trash2, X, Save, Search,
   AlertCircle, UserCheck, UserX, Shield, Briefcase, DollarSign
@@ -29,7 +30,7 @@ const StaffManagement = () => {
   const fetchStaff = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5001/api/users', {
+      const response = await fetch(`${API_BASE_URL}/users', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -54,8 +55,8 @@ const StaffManagement = () => {
 
     try {
       const url = modalMode === 'add'
-        ? 'http://localhost:5001/api/auth/register'
-        : `http://localhost:5001/api/users/${currentForm._id || currentForm.id}`;
+        ? `${API_BASE_URL}/auth/register'
+        : `${API_BASE_URL}/users/${currentForm._id || currentForm.id}`;
 
       const method = modalMode === 'add' ? 'POST' : 'PUT';
 
@@ -86,7 +87,7 @@ const StaffManagement = () => {
     if (!window.confirm('Are you sure you want to delete this staff member?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5001/api/users/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/users/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -107,7 +108,7 @@ const StaffManagement = () => {
 
   const toggleStatus = async (id, currentStatus) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/users/${id}/toggle-status`, {
+      const response = await fetch(`${API_BASE_URL}/users/${id}/toggle-status`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`

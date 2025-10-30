@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
+import API_BASE_URL from '../config/api';
 import {
   Search, Plus, Edit2, Trash2, X, Save,
   ShoppingCart, UtensilsCrossed, Package, AlertCircle, Truck
@@ -13,8 +14,6 @@ import {
 import OrderForm from './OrderForm';
 import MenuForm from './MenuForm';
 import InventoryForm from './InventoryForm';
-
-const API_URL = 'http://localhost:5001/api'; // Replace if needed
 const COLORS = ['#f97316', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#ef4444'];
 
 const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
@@ -37,18 +36,18 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
     try {
       setApiError('');
       if (activeTab === 'orders') {
-        const response = await fetch(`${API_URL}/orders`);
+        const response = await fetch(`${API_BASE_URL}/orders`);
         const data = await response.json();
         setOrders(data);
       } else if (activeTab === 'menu') {
-        const response = await fetch(`${API_URL}/menu`);
+        const response = await fetch(`${API_BASE_URL}/menu`);
         const data = await response.json();
         setMenuItems(data);
       } else if (activeTab === 'inventory') {
         // Fetch inventory and suppliers in parallel
         const [inventoryRes, suppliersRes] = await Promise.all([
-          fetch(`${API_URL}/inventory`),
-          fetch(`${API_URL}/suppliers`)
+          fetch(`${API_BASE_URL}/inventory`),
+          fetch(`${API_BASE_URL}/suppliers`)
         ]);
 
         const inventoryData = await inventoryRes.json();
@@ -145,7 +144,7 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
       setApiError('');
       const endpoint = activeTab === 'orders' ? '/orders' : activeTab === 'menu' ? '/menu' : '/inventory';
       const method = modalMode === 'add' ? 'POST' : 'PUT';
-      const url = modalMode === 'add' ? `${API_URL}${endpoint}` : `${API_URL}${endpoint}/${currentForm._id}`;
+      const url = modalMode === 'add' ? `${API_BASE_URL}${endpoint}` : `${API_BASE_URL}${endpoint}/${currentForm._id}`;
 
       console.log('Submitting to:', url);
       console.log('Method:', method);
@@ -199,7 +198,7 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
       setApiError('');
       const endpoint = activeTab === 'orders' ? '/orders' : activeTab === 'menu' ? '/menu' : '/inventory';
 
-      const response = await fetch(`${API_URL}${endpoint}/${id}`, {
+      const response = await fetch(`${API_BASE_URL}${endpoint}/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

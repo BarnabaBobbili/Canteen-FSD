@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Truck, Plus, Edit, Trash2, Search, X, Star } from 'lucide-react';
 import DashboardLayout from './DashboardLayout';
 import SupplierForm from './SupplierForm';
+import API_BASE_URL from '../config/api';
 
 const SupplierManagement = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -20,7 +21,7 @@ const SupplierManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/suppliers', {
+      const response = await fetch(`${API_BASE_URL}/suppliers', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -82,8 +83,8 @@ const SupplierManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const url = modalMode === 'add'
-        ? 'http://localhost:5001/api/suppliers'
-        : `http://localhost:5001/api/suppliers/${currentForm._id}`;
+        ? `${API_BASE_URL}/suppliers'
+        : `${API_BASE_URL}/suppliers/${currentForm._id}`;
 
       const method = modalMode === 'add' ? 'POST' : 'PUT';
 
@@ -117,7 +118,7 @@ const SupplierManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/suppliers/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/suppliers/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

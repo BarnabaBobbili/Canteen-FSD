@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Minus, Trash2, ShoppingCart } from 'lucide-react';
-
-const API_URL = 'http://localhost:5001/api';
+import API_BASE_URL from '../config/api';
 
 const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
   const [menuItems, setMenuItems] = useState([]);
@@ -13,7 +12,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await fetch(`${API_URL}/menu`);
+        const response = await fetch(`${API_BASE_URL}/menu`);
         const data = await response.json();
         // Filter only available items
         setMenuItems(data.filter(item => item.available));
