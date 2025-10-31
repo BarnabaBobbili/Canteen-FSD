@@ -30,7 +30,7 @@ const StaffManagement = () => {
   const fetchStaff = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/users', {
+      const response = await fetch(`${API_BASE_URL}/users`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -55,7 +55,7 @@ const StaffManagement = () => {
 
     try {
       const url = modalMode === 'add'
-        ? `${API_BASE_URL}/auth/register'
+        ? `${API_BASE_URL}/auth/register`
         : `${API_BASE_URL}/users/${currentForm._id || currentForm.id}`;
 
       const method = modalMode === 'add' ? 'POST' : 'PUT';

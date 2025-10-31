@@ -21,7 +21,7 @@ const SupplierManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/suppliers', {
+      const response = await fetch(`${API_BASE_URL}/suppliers`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -83,7 +83,7 @@ const SupplierManagement = () => {
     try {
       const token = localStorage.getItem('token');
       const url = modalMode === 'add'
-        ? `${API_BASE_URL}/suppliers'
+        ? `${API_BASE_URL}/suppliers`
         : `${API_BASE_URL}/suppliers/${currentForm._id}`;
 
       const method = modalMode === 'add' ? 'POST' : 'PUT';

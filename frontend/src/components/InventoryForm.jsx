@@ -13,7 +13,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
   const fetchSuppliers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/suppliers', {
+      const response = await fetch(`${API_BASE_URL}/suppliers`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
