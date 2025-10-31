@@ -50,3 +50,5 @@ nul
 *.swp
 *.swo
 *~
+
+vercel.json
