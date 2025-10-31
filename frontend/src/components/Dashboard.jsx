@@ -495,49 +495,49 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className="max-w-7xl mx-auto">
         {/* Welcome Card */}
-        <div className="bg-gradient-to-r from-sky-400 to-blue-500 rounded-2xl p-8 mb-8 text-white shadow-xl">
-          <div className="flex items-start justify-between">
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Welcome to Smart Canteen!</h2>
-              <p className="text-sky-50 mb-4">
+        <div className="bg-gradient-to-r from-sky-400 to-blue-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mb-6 md:mb-8 text-white shadow-xl">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">Welcome to Smart Canteen!</h2>
+              <p className="text-sky-50 mb-3 sm:mb-4 text-sm sm:text-base">
                 {user?.role === 'admin' && 'You have full access to all system features.'}
                 {user?.role === 'manager' && 'Manage operations and oversee canteen activities.'}
                 {user?.role === 'cashier' && 'Process orders and handle payments efficiently.'}
                 {user?.role === 'staff' && 'Manage orders, menu items, and inventory.'}
               </p>
-              <div className="flex gap-4 text-sm">
-                <div className="bg-white/20 px-4 py-2 rounded-lg backdrop-blur">
-                  <div className="font-semibold">{accessibleModules.length}</div>
-                  <div className="text-sky-100">Available Modules</div>
+              <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm">
+                <div className="bg-white/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg backdrop-blur">
+                  <div className="font-semibold text-sm sm:text-base">{accessibleModules.length}</div>
+                  <div className="text-sky-100 text-xs">Available Modules</div>
                 </div>
                 {user?.department && user.department !== 'none' && (
-                  <div className="bg-white/20 px-4 py-2 rounded-lg backdrop-blur">
-                    <div className="font-semibold capitalize">{user.department}</div>
-                    <div className="text-sky-100">Department</div>
+                  <div className="bg-white/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg backdrop-blur">
+                    <div className="font-semibold text-sm sm:text-base capitalize">{user.department}</div>
+                    <div className="text-sky-100 text-xs">Department</div>
                   </div>
                 )}
               </div>
             </div>
-            <BarChart3 className="w-24 h-24 opacity-20" />
+            <BarChart3 className="w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 opacity-20 flex-shrink-0" />
           </div>
         </div>
 
         {/* Quick Access Modules */}
-        <div className="mb-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Access</h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="mb-6 md:mb-8">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">Quick Access</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {accessibleModules.slice(1, 5).map((module, index) => {
               const Icon = module.icon;
               return (
                 <button
                   key={index}
                   onClick={() => navigate(module.path)}
-                  className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 text-left group"
+                  className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 text-left group"
                 >
-                  <div className={`inline-block p-3 rounded-lg bg-gradient-to-br ${module.color} text-white mb-3 group-hover:scale-110 transition-transform`}>
-                    <Icon className="w-6 h-6" />
+                  <div className={`inline-block p-2 sm:p-3 rounded-lg bg-gradient-to-br ${module.color} text-white mb-2 sm:mb-3 group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <h4 className="text-base font-bold text-gray-900 mb-1">{module.name}</h4>
+                  <h4 className="text-sm sm:text-base font-bold text-gray-900 mb-1">{module.name}</h4>
                   <p className="text-xs text-gray-600">{module.description}</p>
                 </button>
               );
@@ -546,76 +546,77 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <ShoppingCart className="w-6 h-6 text-blue-600" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 md:mb-8">
+          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
+                <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
               </div>
-              <TrendingUp className="w-5 h-5 text-green-500" />
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
               {loading ? '...' : stats.activeOrders}
             </h3>
-            <p className="text-sm text-gray-600">Active Orders</p>
+            <p className="text-xs sm:text-sm text-gray-600">Active Orders</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-sky-100 rounded-lg">
-                <UtensilsCrossed className="w-6 h-6 text-sky-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-sky-100 rounded-lg">
+                <UtensilsCrossed className="w-5 h-5 sm:w-6 sm:h-6 text-sky-600" />
               </div>
-              <CheckCircle className="w-5 h-5 text-green-500" />
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
               {loading ? '...' : stats.menuItems}
             </h3>
-            <p className="text-sm text-gray-600">Menu Items</p>
+            <p className="text-xs sm:text-sm text-gray-600">Menu Items</p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <Package className="w-6 h-6 text-green-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="p-2 sm:p-3 bg-green-100 rounded-lg">
+                <Package className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
               </div>
               {stats.lowStockCount > 0 ? (
-                <AlertTriangle className="w-5 h-5 text-sky-500" />
+                <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-sky-500" />
               ) : (
-                <CheckCircle className="w-5 h-5 text-green-500" />
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
               )}
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
               {loading ? '...' : `${stats.stockLevel}%`}
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs sm:text-sm text-gray-600">
               Stock Level {stats.lowStockCount > 0 && `(${stats.lowStockCount} low)`}
             </p>
           </div>
         </div>
 
         {/* Recent Activity & Quick Info */}
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-sky-500" />
-                Recent Activity
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-1.5 sm:gap-2">
+                <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-sky-500" />
+                <span className="truncate">Recent Activity</span>
               </h3>
               <button
                 onClick={() => navigate('/activities')}
-                className="flex items-center gap-1 text-sm text-sky-600 hover:text-sky-700 font-medium"
+                className="flex items-center gap-0.5 sm:gap-1 text-xs sm:text-sm text-sky-600 hover:text-sky-700 font-medium flex-shrink-0"
               >
-                View More
-                <ChevronRight size={16} />
+                <span className="hidden sm:inline">View More</span>
+                <span className="sm:hidden">More</span>
+                <ChevronRight size={14} className="sm:w-4 sm:h-4" />
               </button>
             </div>
             <div className="space-y-2">
               {loading ? (
-                <div className="text-center py-4 text-gray-500">Loading...</div>
+                <div className="text-center py-4 text-gray-500 text-sm">Loading...</div>
               ) : recentActivity.length > 0 ? (
                 recentActivity.map((activity, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                  <div key={idx} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mt-1.5 sm:mt-2 flex-shrink-0 ${
                       activity.icon === 'alert' ? 'bg-red-500' :
                       activity.icon === 'completed' ? 'bg-green-500' :
                       activity.icon === 'cancelled' ? 'bg-red-400' :
@@ -626,41 +627,41 @@ const Dashboard = () => {
                       'bg-gray-500'
                     }`}></div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm text-gray-900 font-medium truncate">{activity.text}</div>
+                      <div className="text-xs sm:text-sm text-gray-900 font-medium truncate">{activity.text}</div>
                       {activity.detail && (
-                        <div className="text-xs text-gray-500 mt-0.5">{activity.detail}</div>
+                        <div className="text-xs text-gray-500 mt-0.5 truncate">{activity.detail}</div>
                       )}
                     </div>
                     <span className="text-xs text-gray-500 flex-shrink-0">{activity.time}</span>
                   </div>
                 ))
               ) : (
-                <div className="text-center py-4 text-gray-500">No recent activity</div>
+                <div className="text-center py-4 text-gray-500 text-sm">No recent activity</div>
               )}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-lg">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Your Information</h3>
-            <div className="space-y-3">
-              <div className="flex justify-between p-3 bg-blue-50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700">Email</span>
-                <span className="text-sm text-gray-900 font-semibold truncate ml-2">{user?.email}</span>
+          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">Your Information</h3>
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex justify-between items-center gap-2 p-2 sm:p-3 bg-blue-50 rounded-lg">
+                <span className="text-xs sm:text-sm font-medium text-gray-700 flex-shrink-0">Email</span>
+                <span className="text-xs sm:text-sm text-gray-900 font-semibold truncate">{user?.email}</span>
               </div>
-              <div className="flex justify-between p-3 bg-sky-50 rounded-lg">
-                <span className="text-sm font-medium text-gray-700">Role</span>
-                <span className="text-sm text-gray-900 font-semibold capitalize">{user?.role}</span>
+              <div className="flex justify-between items-center gap-2 p-2 sm:p-3 bg-sky-50 rounded-lg">
+                <span className="text-xs sm:text-sm font-medium text-gray-700">Role</span>
+                <span className="text-xs sm:text-sm text-gray-900 font-semibold capitalize">{user?.role}</span>
               </div>
               {user?.employeeId && (
-                <div className="flex justify-between p-3 bg-green-50 rounded-lg">
-                  <span className="text-sm font-medium text-gray-700">Employee ID</span>
-                  <span className="text-sm text-gray-900 font-semibold">{user.employeeId}</span>
+                <div className="flex justify-between items-center gap-2 p-2 sm:p-3 bg-green-50 rounded-lg">
+                  <span className="text-xs sm:text-sm font-medium text-gray-700 flex-shrink-0">Employee ID</span>
+                  <span className="text-xs sm:text-sm text-gray-900 font-semibold">{user.employeeId}</span>
                 </div>
               )}
               {user?.department && user.department !== 'none' && (
-                <div className="flex justify-between p-3 bg-purple-50 rounded-lg">
-                  <span className="text-sm font-medium text-gray-700">Department</span>
-                  <span className="text-sm text-gray-900 font-semibold capitalize">{user.department}</span>
+                <div className="flex justify-between items-center gap-2 p-2 sm:p-3 bg-purple-50 rounded-lg">
+                  <span className="text-xs sm:text-sm font-medium text-gray-700 flex-shrink-0">Department</span>
+                  <span className="text-xs sm:text-sm text-gray-900 font-semibold capitalize">{user.department}</span>
                 </div>
               )}
             </div>
@@ -668,97 +669,98 @@ const Dashboard = () => {
         </div>
 
         {/* Completed Orders Analytics Section */}
-        <div className="mt-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <BarChart3 className="w-6 h-6 text-sky-500" />
-              Orders Analytics
+        <div className="mt-6 md:mt-8">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-1.5 sm:gap-2">
+              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-sky-500" />
+              <span className="truncate">Orders Analytics</span>
             </h3>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
               {/* Date Filter */}
-              <div className="bg-white rounded-xl p-6 shadow-lg">
-                <div className="flex items-center gap-2 mb-4">
-                  <Filter className="w-5 h-5 text-gray-600" />
-                  <h4 className="font-semibold text-gray-900">Filter by Period</h4>
+              <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+                  <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+                  <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Filter by Period</h4>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {[
-                    { value: 'week', label: 'Last Week' },
-                    { value: 'month', label: 'Last Month' },
-                    { value: 'quarterly', label: 'Last Quarter (3 months)' },
-                    { value: 'half-yearly', label: 'Last 6 Months' },
-                    { value: 'yearly', label: 'Last Year' }
+                    { value: 'week', label: 'Last Week', shortLabel: '1W' },
+                    { value: 'month', label: 'Last Month', shortLabel: '1M' },
+                    { value: 'quarterly', label: 'Last Quarter', shortLabel: '3M' },
+                    { value: 'half-yearly', label: 'Last 6 Months', shortLabel: '6M' },
+                    { value: 'yearly', label: 'Last Year', shortLabel: '1Y' }
                   ].map((filter) => (
                     <button
                       key={filter.value}
                       onClick={() => setDateFilter(filter.value)}
-                      className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
                         dateFilter === filter.value
                           ? 'bg-sky-500 text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
-                      {filter.label}
+                      <span className="hidden sm:inline">{filter.label}</span>
+                      <span className="sm:hidden">{filter.shortLabel}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Analytics Summary Cards */}
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
-                      <CheckCircle className="w-6 h-6" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <div className="p-2 sm:p-3 bg-white/20 rounded-lg backdrop-blur">
+                      <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <TrendingUp className="w-5 h-5" />
+                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-1">{analytics.totalOrders}</h3>
-                  <p className="text-blue-100">Completed Orders</p>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-1">{analytics.totalOrders}</h3>
+                  <p className="text-blue-100 text-xs sm:text-sm">Completed Orders</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
-                      <DollarSign className="w-6 h-6" />
+                <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <div className="p-2 sm:p-3 bg-white/20 rounded-lg backdrop-blur">
+                      <DollarSign className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <TrendingUp className="w-5 h-5" />
+                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-1">
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-1">
                     ₹{analytics.totalRevenue.toFixed(2)}
                   </h3>
-                  <p className="text-green-100">Total Revenue</p>
+                  <p className="text-green-100 text-xs sm:text-sm">Total Revenue</p>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-white/20 rounded-lg backdrop-blur">
-                      <BarChart3 className="w-6 h-6" />
+                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <div className="p-2 sm:p-3 bg-white/20 rounded-lg backdrop-blur">
+                      <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <TrendingUp className="w-5 h-5" />
+                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <h3 className="text-3xl font-bold mb-1">
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-1">
                     ₹{analytics.averageOrderValue.toFixed(2)}
                   </h3>
-                  <p className="text-purple-100">Average Order Value</p>
+                  <p className="text-purple-100 text-xs sm:text-sm">Average Order Value</p>
                 </div>
               </div>
 
               {/* Charts */}
-              <div className="grid lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Orders Trend Chart */}
-                <div className="bg-white rounded-xl p-6 shadow-lg">
-                  <h4 className="font-semibold text-gray-900 mb-4">Orders Trend</h4>
+                <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+                  <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Orders Trend</h4>
                   {analytics.chartData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
                       <LineChart data={analytics.chartData}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
+                        <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                        <YAxis tick={{ fontSize: 12 }} />
                         <Tooltip />
-                        <Legend />
+                        <Legend wrapperStyle={{ fontSize: 12 }} />
                         <Line
                           type="monotone"
                           dataKey="count"
@@ -769,28 +771,28 @@ const Dashboard = () => {
                       </LineChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-[300px] flex items-center justify-center text-gray-500">
+                    <div className="h-[250px] sm:h-[300px] flex items-center justify-center text-gray-500 text-sm">
                       No data for selected period
                     </div>
                   )}
                 </div>
 
                 {/* Revenue Trend Chart */}
-                <div className="bg-white rounded-xl p-6 shadow-lg">
-                  <h4 className="font-semibold text-gray-900 mb-4">Revenue Trend</h4>
+                <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+                  <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Revenue Trend</h4>
                   {analytics.chartData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
                       <BarChart data={analytics.chartData}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
+                        <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                        <YAxis tick={{ fontSize: 12 }} />
                         <Tooltip />
-                        <Legend />
+                        <Legend wrapperStyle={{ fontSize: 12 }} />
                         <Bar dataKey="revenue" fill="#10b981" name="Revenue (₹)" />
                       </BarChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-[300px] flex items-center justify-center text-gray-500">
+                    <div className="h-[250px] sm:h-[300px] flex items-center justify-center text-gray-500 text-sm">
                       No data for selected period
                     </div>
                   )}
@@ -798,11 +800,11 @@ const Dashboard = () => {
               </div>
 
               {/* Order Status Distribution */}
-              <div className="grid lg:grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl p-6 shadow-lg">
-                  <h4 className="font-semibold text-gray-900 mb-4">Order Status Distribution</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+                  <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Order Status Distribution</h4>
                   {analytics.statusChartData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
                       <PieChart>
                         <Pie
                           data={analytics.statusChartData}
@@ -810,7 +812,7 @@ const Dashboard = () => {
                           cy="50%"
                           labelLine={false}
                           label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                          outerRadius={100}
+                          outerRadius={80}
                           fill="#8884d8"
                           dataKey="value"
                         >
@@ -825,34 +827,34 @@ const Dashboard = () => {
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-[300px] flex items-center justify-center text-gray-500">
+                    <div className="h-[250px] sm:h-[300px] flex items-center justify-center text-gray-500 text-sm">
                       No orders data available
                     </div>
                   )}
                 </div>
 
                 {/* Completed Orders List */}
-                <div className="bg-white rounded-xl p-6 shadow-lg">
-                  <h4 className="font-semibold text-gray-900 mb-4">
+                <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
+                  <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">
                     Recent Completed Orders ({completedOrders.length})
                   </h4>
-                  <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                  <div className="space-y-2 max-h-[250px] sm:max-h-[300px] overflow-y-auto">
                     {completedOrders.slice(0, 10).map((order, idx) => (
                       <div
                         key={order._id || idx}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="flex items-center justify-between gap-2 p-2 sm:p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                       >
-                        <div className="flex-1">
-                          <div className="font-medium text-gray-900">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-gray-900 text-xs sm:text-sm truncate">
                             {order.customerName || 'Customer'}
                           </div>
-                          <div className="text-xs text-gray-500">
-                            {new Date(order.createdAt).toLocaleDateString()} at{' '}
-                            {new Date(order.createdAt).toLocaleTimeString()}
+                          <div className="text-xs text-gray-500 truncate">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                            <span className="hidden sm:inline"> at {new Date(order.createdAt).toLocaleTimeString()}</span>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="font-bold text-green-600">
+                        <div className="text-right flex-shrink-0">
+                          <div className="font-bold text-green-600 text-xs sm:text-sm">
                             ₹{order.totalAmount?.toFixed(2) || '0.00'}
                           </div>
                           <div className="text-xs text-gray-500">
@@ -862,7 +864,7 @@ const Dashboard = () => {
                       </div>
                     ))}
                     {completedOrders.length === 0 && (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-gray-500 text-sm">
                         No completed orders in selected period
                       </div>
                     )}
@@ -874,29 +876,29 @@ const Dashboard = () => {
 
         {/* Activity Modal */}
         {showActivityModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+            <div className="bg-white rounded-xl sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden shadow-2xl">
               {/* Modal Header */}
-              <div className="bg-gradient-to-r from-sky-400 to-blue-500 p-6 text-white">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-2xl font-bold flex items-center gap-2">
-                    <Activity className="w-6 h-6" />
-                    All Activities
+              <div className="bg-gradient-to-r from-sky-400 to-blue-500 p-4 sm:p-6 text-white">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h2 className="text-lg sm:text-2xl font-bold flex items-center gap-1.5 sm:gap-2">
+                    <Activity className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="truncate">All Activities</span>
                   </h2>
                   <button
                     onClick={() => setShowActivityModal(false)}
-                    className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                    className="p-1.5 sm:p-2 hover:bg-white/20 rounded-lg transition-colors flex-shrink-0"
                   >
-                    <X size={24} />
+                    <X size={20} className="sm:w-6 sm:h-6" />
                   </button>
                 </div>
 
                 {/* Filters Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   {/* Date Filter Dropdown */}
                   <div>
-                    <label className="text-sm text-sky-100 mb-2 font-medium flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
+                    <label className="text-xs sm:text-sm text-sky-100 mb-1.5 sm:mb-2 font-medium flex items-center gap-1.5 sm:gap-2">
+                      <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       Filter by Date
                     </label>
                     <select
@@ -907,7 +909,7 @@ const Dashboard = () => {
                           setCustomDateRange({ start: '', end: '' });
                         }
                       }}
-                      className="w-full px-4 py-2 rounded-lg bg-white text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-white"
+                      className="w-full px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-white text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-white text-sm"
                     >
                       <option value="today">Today</option>
                       <option value="yesterday">Yesterday</option>
@@ -918,14 +920,14 @@ const Dashboard = () => {
 
                     {/* Custom Date Range Inputs */}
                     {activityDateFilter === 'custom' && (
-                      <div className="mt-3 space-y-2">
+                      <div className="mt-2 sm:mt-3 space-y-2">
                         <div>
                           <label className="text-xs text-sky-100 mb-1 block">Start Date</label>
                           <input
                             type="date"
                             value={customDateRange.start}
                             onChange={(e) => setCustomDateRange({ ...customDateRange, start: e.target.value })}
-                            className="w-full px-3 py-2 rounded-lg bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white"
+                            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-white text-gray-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-white"
                           />
                         </div>
                         <div>
@@ -934,7 +936,7 @@ const Dashboard = () => {
                             type="date"
                             value={customDateRange.end}
                             onChange={(e) => setCustomDateRange({ ...customDateRange, end: e.target.value })}
-                            className="w-full px-3 py-2 rounded-lg bg-white text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white"
+                            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-white text-gray-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-white"
                           />
                         </div>
                       </div>
@@ -943,14 +945,14 @@ const Dashboard = () => {
 
                   {/* Activity Type Filter Dropdown */}
                   <div>
-                    <label className="text-sm text-sky-100 mb-2 font-medium flex items-center gap-2">
-                      <Filter className="w-4 h-4" />
+                    <label className="text-xs sm:text-sm text-sky-100 mb-1.5 sm:mb-2 font-medium flex items-center gap-1.5 sm:gap-2">
+                      <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       Filter by Type
                     </label>
                     <select
                       value={activityTypeFilter}
                       onChange={(e) => setActivityTypeFilter(e.target.value)}
-                      className="w-full px-4 py-2 rounded-lg bg-white text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-white"
+                      className="w-full px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-white text-gray-900 font-medium focus:outline-none focus:ring-2 focus:ring-white text-sm"
                     >
                       <option value="all">All Activities</option>
                       <option value="order">Orders</option>
@@ -965,23 +967,23 @@ const Dashboard = () => {
               </div>
 
               {/* Activities Count */}
-              <div className="px-6 py-3 bg-gray-50 border-b">
-                <p className="text-sm text-gray-600">
+              <div className="px-4 sm:px-6 py-2 sm:py-3 bg-gray-50 border-b">
+                <p className="text-xs sm:text-sm text-gray-600">
                   Showing <span className="font-semibold text-gray-900">{filteredActivities.length}</span> {filteredActivities.length === 1 ? 'activity' : 'activities'}
                 </p>
               </div>
 
               {/* Modal Content */}
-              <div className="p-6 overflow-y-auto max-h-[calc(90vh-240px)]">
+              <div className="p-3 sm:p-6 overflow-y-auto max-h-[calc(95vh-200px)] sm:max-h-[calc(90vh-240px)]">
                 {filteredActivities.length > 0 ? (
                   <div className="space-y-2">
                     {filteredActivities.map((activity, idx) => (
                       <div
                         key={idx}
-                        className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        className="flex items-start gap-2 sm:gap-4 p-2 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                       >
                         {/* Activity Icon */}
-                        <div className={`p-3 rounded-lg flex-shrink-0 ${
+                        <div className={`p-2 sm:p-3 rounded-lg flex-shrink-0 ${
                           activity.icon === 'alert' ? 'bg-red-100' :
                           activity.icon === 'completed' ? 'bg-green-100' :
                           activity.icon === 'cancelled' ? 'bg-red-100' :
@@ -991,26 +993,26 @@ const Dashboard = () => {
                           activity.icon === 'update' ? 'bg-yellow-100' :
                           'bg-gray-100'
                         }`}>
-                          {activity.icon === 'alert' && <AlertTriangle className="w-5 h-5 text-red-600" />}
-                          {activity.icon === 'completed' && <CheckCircle className="w-5 h-5 text-green-600" />}
-                          {activity.icon === 'cancelled' && <X className="w-5 h-5 text-red-600" />}
-                          {activity.icon === 'order' && <ShoppingCart className="w-5 h-5 text-blue-600" />}
-                          {activity.icon === 'menu' && <UtensilsCrossed className="w-5 h-5 text-sky-600" />}
-                          {activity.icon === 'inventory' && <Package className="w-5 h-5 text-purple-600" />}
-                          {activity.icon === 'update' && <Clock className="w-5 h-5 text-yellow-600" />}
+                          {activity.icon === 'alert' && <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />}
+                          {activity.icon === 'completed' && <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />}
+                          {activity.icon === 'cancelled' && <X className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />}
+                          {activity.icon === 'order' && <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />}
+                          {activity.icon === 'menu' && <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5 text-sky-600" />}
+                          {activity.icon === 'inventory' && <Package className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />}
+                          {activity.icon === 'update' && <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />}
                         </div>
 
                         {/* Activity Details */}
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-semibold text-gray-900 mb-1">
+                          <div className="text-xs sm:text-sm font-semibold text-gray-900 mb-0.5 sm:mb-1">
                             {activity.text}
                           </div>
                           {activity.detail && (
-                            <div className="text-sm text-gray-600">
+                            <div className="text-xs sm:text-sm text-gray-600">
                               {activity.detail}
                             </div>
                           )}
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-gray-500 mt-0.5 sm:mt-1">
                             {new Date(activity.timestamp).toLocaleString()}
                           </div>
                         </div>
@@ -1023,19 +1025,19 @@ const Dashboard = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12 text-gray-500">
-                    <Activity className="w-16 h-16 mx-auto mb-4 opacity-20" />
-                    <p className="text-lg font-medium">No activities found</p>
-                    <p className="text-sm mt-2">Try selecting a different date range</p>
+                  <div className="text-center py-8 sm:py-12 text-gray-500">
+                    <Activity className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 opacity-20" />
+                    <p className="text-base sm:text-lg font-medium">No activities found</p>
+                    <p className="text-xs sm:text-sm mt-1 sm:mt-2">Try selecting a different date range</p>
                   </div>
                 )}
               </div>
 
               {/* Modal Footer */}
-              <div className="px-6 py-4 bg-gray-50 border-t flex justify-end">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t flex justify-end">
                 <button
                   onClick={() => setShowActivityModal(false)}
-                  className="px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors font-medium"
+                  className="px-4 sm:px-6 py-1.5 sm:py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors font-medium text-sm"
                 >
                   Close
                 </button>

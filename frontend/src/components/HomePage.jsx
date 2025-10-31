@@ -55,23 +55,24 @@ const HomePage = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="relative max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-br from-sky-400 to-blue-500 p-2 rounded-xl">
-              <ChefHat className="w-8 h-8 text-white" />
+        <nav className="relative max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 flex justify-between items-center">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="bg-gradient-to-br from-sky-400 to-blue-500 p-1.5 sm:p-2 rounded-lg sm:rounded-xl">
+              <ChefHat className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-800">Smart Canteen</h1>
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 truncate">Smart Canteen</h1>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <button
               onClick={() => navigate('/signup')}
-              className="px-6 py-2 bg-white text-sky-600 border-2 border-sky-500 rounded-lg hover:bg-sky-50 transition-all transform hover:scale-105 shadow-lg font-medium"
+              className="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 bg-white text-sky-600 border-2 border-sky-500 rounded-lg hover:bg-sky-50 transition-all transform hover:scale-105 shadow-lg font-medium text-xs sm:text-sm md:text-base"
             >
-              Sign Up
+              <span className="hidden sm:inline">Sign Up</span>
+              <span className="sm:hidden">Join</span>
             </button>
             <button
               onClick={() => navigate('/login')}
-              className="px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105 shadow-lg"
+              className="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105 shadow-lg text-xs sm:text-sm md:text-base"
             >
               Login
             </button>
@@ -79,99 +80,99 @@ const HomePage = () => {
         </nav>
 
         {/* Hero Content */}
-        <div className="relative max-w-7xl mx-auto px-6 py-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-8 sm:py-12 md:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div>
-              <div className="inline-block bg-sky-100 text-sky-600 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+              <div className="inline-block bg-sky-100 text-sky-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6">
                 Modern Canteen Solution
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
                 Manage Your Canteen
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-blue-500">
                   Effortlessly
                 </span>
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
                 A comprehensive management system designed to streamline your canteen operations,
                 from orders to inventory, with powerful analytics at your fingertips.
               </p>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={() => navigate('/signup')}
-                  className="group flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-sky-400 to-blue-500 text-white rounded-xl hover:shadow-2xl transition-all transform hover:scale-105 font-semibold text-lg"
+                  className="group flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-sky-400 to-blue-500 text-white rounded-xl hover:shadow-2xl transition-all transform hover:scale-105 font-semibold text-base sm:text-lg"
                 >
                   Get Started
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <button
                   onClick={() => navigate('/login')}
-                  className="px-8 py-4 border-2 border-sky-500 text-sky-600 rounded-xl hover:bg-sky-50 transition-all font-semibold text-lg"
+                  className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-sky-500 text-sky-600 rounded-xl hover:bg-sky-50 transition-all font-semibold text-base sm:text-lg"
                 >
                   Login
                 </button>
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-12">
+              <div className="grid grid-cols-3 gap-3 sm:gap-6 mt-8 sm:mt-12">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-gray-900">3</div>
-                  <div className="text-sm text-gray-600">Modules</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">3</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Modules</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-gray-900">24/7</div>
-                  <div className="text-sm text-gray-600">Available</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">24/7</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Available</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-gray-900">100%</div>
-                  <div className="text-sm text-gray-600">Efficient</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">100%</div>
+                  <div className="text-xs sm:text-sm text-gray-600">Efficient</div>
                 </div>
               </div>
             </div>
 
             {/* Hero Image/Illustration */}
-            <div className="relative">
-              <div className="bg-gradient-to-br from-sky-400 to-blue-400 rounded-3xl p-8 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                <div className="bg-white rounded-2xl p-6 transform -rotate-3">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
-                      <div className="flex items-center gap-3">
-                        <ShoppingCart className="text-blue-600" />
+            <div className="relative mt-8 lg:mt-0">
+              <div className="bg-gradient-to-br from-sky-400 to-blue-400 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 transform -rotate-3">
+                  <div className="space-y-2 sm:space-y-3 md:space-y-4">
+                    <div className="flex items-center justify-between p-2 sm:p-3 md:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg sm:rounded-xl">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-600" />
                         <div>
-                          <div className="font-semibold text-gray-800">Orders</div>
+                          <div className="font-semibold text-gray-800 text-xs sm:text-sm md:text-base">Orders</div>
                           <div className="text-xs text-gray-600">24 active</div>
                         </div>
                       </div>
-                      <TrendingUp className="text-blue-600" />
+                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                     </div>
-                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-sky-50 to-sky-100 rounded-xl">
-                      <div className="flex items-center gap-3">
-                        <UtensilsCrossed className="text-sky-600" />
+                    <div className="flex items-center justify-between p-2 sm:p-3 md:p-4 bg-gradient-to-r from-sky-50 to-sky-100 rounded-lg sm:rounded-xl">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-sky-600" />
                         <div>
-                          <div className="font-semibold text-gray-800">Menu Items</div>
+                          <div className="font-semibold text-gray-800 text-xs sm:text-sm md:text-base">Menu Items</div>
                           <div className="text-xs text-gray-600">45 items</div>
                         </div>
                       </div>
-                      <CheckCircle className="text-sky-600" />
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-sky-600" />
                     </div>
-                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl">
-                      <div className="flex items-center gap-3">
-                        <Package className="text-green-600" />
+                    <div className="flex items-center justify-between p-2 sm:p-3 md:p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg sm:rounded-xl">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <Package className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-600" />
                         <div>
-                          <div className="font-semibold text-gray-800">Inventory</div>
+                          <div className="font-semibold text-gray-800 text-xs sm:text-sm md:text-base">Inventory</div>
                           <div className="text-xs text-gray-600">Stock managed</div>
                         </div>
                       </div>
-                      <Clock className="text-green-600" />
+                      <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                     </div>
                   </div>
                 </div>
               </div>
               {/* Floating Elements */}
-              <div className="absolute -top-6 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce">
-                <Users className="w-8 h-8 text-sky-500" />
+              <div className="hidden sm:block absolute -top-4 sm:-top-6 -left-4 sm:-left-6 bg-white p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-xl animate-bounce">
+                <Users className="w-6 h-6 sm:w-8 sm:h-8 text-sky-500" />
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-xl animate-pulse">
-                <ChefHat className="w-8 h-8 text-blue-400" />
+              <div className="hidden sm:block absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-white p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-xl animate-pulse">
+                <ChefHat className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
               </div>
             </div>
           </div>

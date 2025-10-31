@@ -10,7 +10,8 @@ const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Default sidebar closed on mobile, open on desktop
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
 
   // Navigation items with role-based access
   const navItems = [
@@ -92,24 +93,32 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50 flex">
+      {/* Backdrop for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <div
         className={`${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } w-64 bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col fixed h-screen z-30`}
+        } w-64 sm:w-72 bg-white shadow-2xl transition-all duration-300 ease-in-out flex flex-col fixed h-screen z-30`}
       >
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-          <div className="flex items-center gap-2 flex-1">
+        <div className="p-3 sm:p-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="bg-gradient-to-br from-sky-400 to-blue-500 p-2 rounded-lg hover:opacity-90 transition-opacity"
+              className="bg-gradient-to-br from-sky-400 to-blue-500 p-1.5 sm:p-2 rounded-lg hover:opacity-90 transition-opacity flex-shrink-0"
             >
-              <Menu className="w-6 h-6 text-white" />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </button>
-            <div>
-              <h2 className="font-bold text-gray-900">Smart Canteen</h2>
-              <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-bold text-gray-900 text-sm sm:text-base truncate">Smart Canteen</h2>
+              <p className="text-xs text-gray-500 capitalize truncate">{user?.role}</p>
             </div>
           </div>
         </div>
@@ -123,16 +132,22 @@ const DashboardLayout = ({ children }) => {
             return (
               <button
                 key={item.path + item.name}
-                onClick={() => navigate(item.path)}
-                className={`w-full flex items-center gap-3 px-4 py-3 transition-colors ${
+                onClick={() => {
+                  navigate(item.path);
+                  // Close sidebar on mobile after navigation
+                  if (window.innerWidth < 768) {
+                    setSidebarOpen(false);
+                  }
+                }}
+                className={`w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 transition-colors ${
                   active
                     ? 'bg-sky-50 text-sky-600 border-r-4 border-sky-500'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                <Icon size={20} className="flex-shrink-0" />
+                <Icon size={18} className="flex-shrink-0 sm:w-5 sm:h-5" />
                 {sidebarOpen && (
-                  <span className="font-medium truncate">{item.name}</span>
+                  <span className="font-medium truncate text-sm sm:text-base">{item.name}</span>
                 )}
               </button>
             );
@@ -140,27 +155,30 @@ const DashboardLayout = ({ children }) => {
         </nav>
 
         {/* User Info & Actions */}
-        <div className="border-t border-gray-200 p-4">
+        <div className="border-t border-gray-200 p-3 sm:p-4">
           {sidebarOpen ? (
             <>
-              <div className="mb-3 p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
+              <div className="mb-2 sm:mb-3 p-2 sm:p-3 bg-gray-50 rounded-lg">
+                <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
                 <p className="text-xs text-gray-500 truncate">{user?.email}</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1.5 sm:gap-2">
                 <button
-                  onClick={() => navigate('/')}
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
+                  onClick={() => {
+                    navigate('/');
+                    if (window.innerWidth < 768) setSidebarOpen(false);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm"
                 >
-                  <Home size={16} />
-                  Home
+                  <Home size={14} className="sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Home</span>
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm"
+                  className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-xs sm:text-sm"
                 >
-                  <LogOut size={16} />
-                  Logout
+                  <LogOut size={14} className="sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Logout</span>
                 </button>
               </div>
             </>
@@ -171,14 +189,14 @@ const DashboardLayout = ({ children }) => {
                 className="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 mx-auto"
                 title="Home"
               >
-                <Home size={20} />
+                <Home size={18} className="sm:w-5 sm:h-5" />
               </button>
               <button
                 onClick={handleLogout}
                 className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 mx-auto"
                 title="Logout"
               >
-                <LogOut size={20} />
+                <LogOut size={18} className="sm:w-5 sm:h-5" />
               </button>
             </div>
           )}
@@ -190,45 +208,47 @@ const DashboardLayout = ({ children }) => {
       {!sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(true)}
-          className="fixed left-4 top-6 bg-gradient-to-br from-sky-400 to-blue-500 rounded-lg p-3 hover:opacity-90 hover:shadow-2xl shadow-xl z-50 transition-all"
+          className="fixed left-2 sm:left-4 top-4 sm:top-6 bg-gradient-to-br from-sky-400 to-blue-500 rounded-lg p-2 sm:p-3 hover:opacity-90 hover:shadow-2xl shadow-xl z-50 transition-all"
           title="Open Sidebar"
         >
-          <Menu size={24} className="text-white" />
+          <Menu size={20} className="sm:w-6 sm:h-6 text-white" />
         </button>
       )}
 
       {/* Main Content */}
       <div
         className={`flex-1 transition-all duration-300 ${
-          sidebarOpen ? 'ml-64' : 'ml-0'
+          sidebarOpen ? 'md:ml-64 lg:ml-72' : 'ml-0'
         }`}
       >
         {/* Top Bar */}
-        <div className="bg-white shadow-md sticky top-0 z-20">
-          <div className="px-6 py-4 flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {navItems.find(item => isActive(item.path))?.name || 'Dashboard'}
-              </h1>
-              <p className="text-sm text-gray-500">
-                Welcome back, <span className="font-semibold">{user?.name}</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="px-3 py-1 bg-sky-100 text-sky-600 rounded-full text-sm font-medium capitalize">
-                {user?.role}
+        <div className="bg-white shadow-md sticky top-0 z-10">
+          <div className="px-3 sm:px-4 md:px-6 py-3 md:py-4">
+            <div className="flex justify-between items-center">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 truncate">
+                  {navItems.find(item => isActive(item.path))?.name || 'Dashboard'}
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-500 truncate mt-0.5">
+                  Welcome, <span className="font-semibold">{user?.name}</span>
+                </p>
               </div>
-              {user?.status === 'active' && (
-                <div className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
-                  Active
+              <div className="flex items-center gap-1 sm:gap-2 ml-2">
+                <div className="px-2 sm:px-3 py-1 bg-sky-100 text-sky-600 rounded-full text-xs sm:text-sm font-medium capitalize">
+                  {user?.role}
                 </div>
-              )}
+                {user?.status === 'active' && (
+                  <div className="hidden sm:flex px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
+                    Active
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Page Content */}
-        <div className="p-6">
+        <div className="p-3 sm:p-4 md:p-6">
           {children}
         </div>
       </div>
