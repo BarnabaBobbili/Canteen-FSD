@@ -873,7 +873,7 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
   // ---- Component JSX including tabs, search, table, modal + analytics ----
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto">
+      <div className="p-6">
 
         {/* Error/Success Messages */}
         {apiError && (

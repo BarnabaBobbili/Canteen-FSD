@@ -203,7 +203,7 @@ const StaffManagement = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto">
+      <div className="p-6">
 
         {/* Messages */}
         {apiError && (

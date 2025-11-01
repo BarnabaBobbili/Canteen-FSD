@@ -223,7 +223,7 @@ const DashboardLayout = ({ children }) => {
       >
         {/* Top Bar */}
         <div className="bg-white shadow-md sticky top-0 z-10">
-          <div className="px-3 sm:px-4 md:px-6 py-3 md:py-4">
+          <div className={`py-3 md:py-4 ${sidebarOpen ? 'px-3 sm:px-4 md:px-6' : 'pl-16 sm:pl-20 pr-3 sm:pr-4 md:pr-6'}`}>
             <div className="flex justify-between items-center">
               <div className="flex-1 min-w-0">
                 <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 truncate">
