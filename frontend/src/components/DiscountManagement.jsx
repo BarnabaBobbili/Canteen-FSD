@@ -4,7 +4,7 @@ import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
 import {
   Tag, TrendingUp, Clock, Package, Percent, DollarSign, X, AlertCircle,
-  CheckCircle, Calendar, ShoppingCart, Award, RefreshCw, Filter, ArrowUpDown, Plus, Minus
+  CheckCircle, Calendar, ShoppingCart, Award, RefreshCw, Filter, ArrowUpDown, Plus, Minus, Search
 } from 'lucide-react';
 
 const DiscountManagement = () => {
@@ -28,6 +28,11 @@ const DiscountManagement = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [expiryFilter, setExpiryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('discount-desc');
+
+  // Search states for each tab
+  const [discountedSearch, setDiscountedSearch] = useState('');
+  const [allItemsSearch, setAllItemsSearch] = useState('');
+  const [popularSearch, setPopularSearch] = useState('');
 
   // Auto-discount modal states
   const [showLowStockModal, setShowLowStockModal] = useState(false);
@@ -441,8 +446,17 @@ const DiscountManagement = () => {
   };
 
   // Filter and sort logic
-  const filterAndSortItems = (items) => {
+  const filterAndSortItems = (items, searchTerm = '') => {
     let filtered = [...items];
+
+    // Apply search filter
+    if (searchTerm.trim()) {
+      filtered = filtered.filter(item => {
+        const itemName = (item.menuItemDetails?.itemName || item.itemName || '').toLowerCase();
+        const category = (item.menuItemDetails?.category || item.category || '').toLowerCase();
+        return itemName.includes(searchTerm.toLowerCase()) || category.includes(searchTerm.toLowerCase());
+      });
+    }
 
     // Apply category filter
     if (categoryFilter !== 'all') {
@@ -557,9 +571,9 @@ const DiscountManagement = () => {
     return filtered;
   };
 
-  const filteredDiscountedItems = filterAndSortItems(discountedItems);
-  const filteredAllMenuItems = filterAndSortItems(allMenuItems);
-  const filteredMostOrderedItems = filterAndSortItems(mostOrderedItems);
+  const filteredDiscountedItems = filterAndSortItems(discountedItems, discountedSearch);
+  const filteredAllMenuItems = filterAndSortItems(allMenuItems, allItemsSearch);
+  const filteredMostOrderedItems = filterAndSortItems(mostOrderedItems, popularSearch);
 
   // Calculate discounted price preview for modal - updates reactively
   const discountPreview = useMemo(() => {
@@ -799,6 +813,78 @@ const DiscountManagement = () => {
           )}
         </div>
 
+        {/* Search Bar for Active Tab */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+          {activeTab === 'discounted' && (
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search active discounts by name or category..."
+                value={discountedSearch}
+                onChange={(e) => setDiscountedSearch(e.target.value)}
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {discountedSearch && (
+                <button
+                  onClick={() => setDiscountedSearch('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  type="button"
+                  aria-label="Clear search"
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'all' && (
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search all menu items by name or category..."
+                value={allItemsSearch}
+                onChange={(e) => setAllItemsSearch(e.target.value)}
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {allItemsSearch && (
+                <button
+                  onClick={() => setAllItemsSearch('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  type="button"
+                  aria-label="Clear search"
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'popular' && (
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search most ordered items by name or category..."
+                value={popularSearch}
+                onChange={(e) => setPopularSearch(e.target.value)}
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              {popularSearch && (
+                <button
+                  onClick={() => setPopularSearch('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  type="button"
+                  aria-label="Clear search"
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
         {/* Content based on active tab */}
         {activeTab === 'discounted' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -954,9 +1040,23 @@ const DiscountManagement = () => {
                         <td className="px-6 py-4 text-sm">
                           <button
                             onClick={() => openManualDiscountModal(item)}
-                            className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+                            className={`px-3 py-1.5 rounded-lg font-medium text-xs flex items-center gap-1 transition-colors ${
+                              item.discount?.type !== 'none' && item.discount?.value > 0
+                                ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+                                : 'bg-green-100 text-green-700 hover:bg-green-200'
+                            }`}
                           >
-                            Add/Edit Discount
+                            {item.discount?.type !== 'none' && item.discount?.value > 0 ? (
+                              <>
+                                <Tag size={14} />
+                                Edit Discount
+                              </>
+                            ) : (
+                              <>
+                                <Plus size={14} />
+                                Add Discount
+                              </>
+                            )}
                           </button>
                         </td>
                       </tr>
@@ -1003,6 +1103,7 @@ const DiscountManagement = () => {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Orders</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Revenue</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Discount</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -1034,6 +1135,42 @@ const DiscountManagement = () => {
                             </span>
                           ) : (
                             <span className="text-gray-400">None</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          {item.menuItemDetails ? (
+                            <button
+                              onClick={() => {
+                                setSelectedItem(item.menuItemDetails);
+                                setManualDiscount({
+                                  discountType: item.menuItemDetails.discount?.type === 'percentage' || item.menuItemDetails.discount?.type === 'fixed'
+                                    ? item.menuItemDetails.discount.type
+                                    : 'percentage',
+                                  discountValue: item.menuItemDetails.discount?.value || 0,
+                                  reason: 'manual'
+                                });
+                                setShowManualModal(true);
+                              }}
+                              className={`px-3 py-1.5 rounded-lg font-medium text-xs flex items-center gap-1 transition-colors ${
+                                item.menuItemDetails.discount?.type !== 'none' && item.menuItemDetails.discount?.value > 0
+                                  ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+                                  : 'bg-green-100 text-green-700 hover:bg-green-200'
+                              }`}
+                            >
+                              {item.menuItemDetails.discount?.type !== 'none' && item.menuItemDetails.discount?.value > 0 ? (
+                                <>
+                                  <Tag size={14} />
+                                  Edit Discount
+                                </>
+                              ) : (
+                                <>
+                                  <Plus size={14} />
+                                  Add Discount
+                                </>
+                              )}
+                            </button>
+                          ) : (
+                            <span className="text-gray-400 text-xs">N/A</span>
                           )}
                         </td>
                       </tr>
