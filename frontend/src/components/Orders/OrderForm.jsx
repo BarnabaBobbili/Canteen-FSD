@@ -111,7 +111,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Email *
+          Email <span className="text-gray-400 font-normal">(optional)</span>
         </label>
         <input
           type="email"
@@ -132,7 +132,10 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
         <input
           type="text"
           value={currentForm.customerPhone || ''}
-          onChange={(e) => setCurrentForm({ ...currentForm, customerPhone: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, ''); // Only allow digits
+            setCurrentForm({ ...currentForm, customerPhone: value });
+          }}
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
             errors.customerPhone ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-sky-500'
           }`}
@@ -285,9 +288,12 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
             })}
           </div>
         ) : (
-          <div className="text-center py-8 text-gray-400 border-2 border-dashed border-gray-300 rounded-lg">
+          <div className={`text-center py-8 border-2 border-dashed rounded-lg ${
+            errors.items ? 'border-red-500 bg-red-50 text-red-600' : 'border-gray-300 text-gray-400'
+          }`}>
             <ShoppingCart size={32} className="mx-auto mb-2 opacity-50" />
             <p className="text-sm">No items added. Click "Add Item" to select menu items.</p>
+            {errors.items && <p className="text-red-500 text-xs mt-2 font-semibold">{errors.items}</p>}
           </div>
         )}
       </div>

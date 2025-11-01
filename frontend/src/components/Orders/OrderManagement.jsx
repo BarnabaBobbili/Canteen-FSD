@@ -5,6 +5,7 @@ import API_BASE_URL from '../../config/api';
 import SearchBar from '../Shared/SearchBar';
 import OrderFilterBar from '../Shared/OrderFilterBar';
 import OrderAnalytics from './OrderAnalytics';
+import OrderForm from './OrderForm';
 import {
   Plus, Edit2, Trash2, X, Save
 } from 'lucide-react';
@@ -21,6 +22,7 @@ const OrderManagement = () => {
   const [sortBy, setSortBy] = useState('date-desc');
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     fetchOrders();
@@ -36,8 +38,63 @@ const OrderManagement = () => {
     }
   };
 
+  const validateEmail = (email) => {
+    if (!email) return true; // Email is optional
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateForm = () => {
+    const errors = {};
+
+    // Customer Name validation
+    if (!currentForm.customerName || currentForm.customerName.trim() === '') {
+      errors.customerName = 'Customer name is required';
+    }
+
+    // Email validation (optional but must be valid if provided)
+    if (currentForm.customerEmail && currentForm.customerEmail.trim() !== '') {
+      if (!validateEmail(currentForm.customerEmail)) {
+        errors.customerEmail = 'Please enter a valid email address';
+      }
+    }
+
+    // Phone Number validation
+    if (!currentForm.customerPhone || currentForm.customerPhone.trim() === '') {
+      errors.customerPhone = 'Phone number is required';
+    } else if (currentForm.customerPhone.length !== 10) {
+      errors.customerPhone = 'Phone number must be 10 digits';
+    } else if (!/^\d+$/.test(currentForm.customerPhone)) {
+      errors.customerPhone = 'Phone number must contain only digits';
+    }
+
+    // Order Items validation
+    if (!currentForm.items || currentForm.items.length === 0) {
+      errors.items = 'Please add at least one item to the order';
+    }
+
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Clear previous errors
+    setFormErrors({});
+    setApiError('');
+
+    // Validate form
+    const errors = validateForm();
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      if (errors.items) {
+        setApiError(errors.items);
+        setTimeout(() => setApiError(''), 3000);
+      }
+      return;
+    }
+
     try {
       const url = modalMode === 'add'
         ? `${API_BASE_URL}/orders`
@@ -93,16 +150,20 @@ const OrderManagement = () => {
       customerEmail: '',
       customerPhone: '',
       items: [],
-      orderType: 'online',
+      orderType: 'dine-in',
       status: 'pending',
       totalAmount: 0
     } : { ...item });
+    setFormErrors({});
+    setApiError('');
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
     setCurrentForm({});
+    setFormErrors({});
+    setApiError('');
   };
 
   // Filter and sort orders
@@ -155,7 +216,7 @@ const OrderManagement = () => {
             <SearchBar
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
-              placeholder="Search orders by customer name, email, or phone..."
+              placeholder="Search orders by name, email, or phone..."
             />
             <button
               onClick={() => openModal('add')}
@@ -180,7 +241,7 @@ const OrderManagement = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Customer</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">Customer Name</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold">Phone</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold">Order Type</th>
@@ -193,7 +254,7 @@ const OrderManagement = () => {
               {filteredOrders.map((order) => (
                 <tr key={order._id} className="border-b hover:bg-gray-50">
                   <td className="px-6 py-4">{order.customerName}</td>
-                  <td className="px-6 py-4">{order.customerEmail}</td>
+                  <td className="px-6 py-4">{order.customerEmail || '-'}</td>
                   <td className="px-6 py-4">{order.customerPhone}</td>
                   <td className="px-6 py-4 capitalize">{order.orderType}</td>
                   <td className="px-6 py-4">
@@ -230,58 +291,16 @@ const OrderManagement = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-              <h2 className="text-xl font-bold">{modalMode === 'add' ? 'Add' : 'Edit'} Order</h2>
+              <h2 className="text-xl font-bold">{modalMode === 'add' ? 'Add New' : 'Edit'} Order</h2>
               <button onClick={closeModal}><X size={24} /></button>
             </div>
-            <form onSubmit={handleSubmit} className="p-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Customer Name *</label>
-                  <input type="text" value={currentForm.customerName || ''}
-                    onChange={(e) => setCurrentForm({...currentForm, customerName: e.target.value})}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Email *</label>
-                  <input type="email" value={currentForm.customerEmail || ''}
-                    onChange={(e) => setCurrentForm({...currentForm, customerEmail: e.target.value})}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Phone *</label>
-                  <input type="tel" value={currentForm.customerPhone || ''}
-                    onChange={(e) => setCurrentForm({...currentForm, customerPhone: e.target.value})}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Order Type *</label>
-                  <select value={currentForm.orderType || 'online'}
-                    onChange={(e) => setCurrentForm({...currentForm, orderType: e.target.value})}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500">
-                    <option value="online">Online</option>
-                    <option value="counter">Counter</option>
-                    <option value="dine-in">Dine-In</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Status</label>
-                  <select value={currentForm.status || 'pending'}
-                    onChange={(e) => setCurrentForm({...currentForm, status: e.target.value})}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500">
-                    <option value="pending">Pending</option>
-                    <option value="preparing">Preparing</option>
-                    <option value="ready">Ready</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Total Amount</label>
-                  <input type="number" value={currentForm.totalAmount || ''}
-                    onChange={(e) => setCurrentForm({...currentForm, totalAmount: parseFloat(e.target.value) || 0})}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500" />
-                </div>
-              </div>
+            <form onSubmit={handleSubmit} className="p-6" noValidate>
+              <OrderForm
+                currentForm={currentForm}
+                setCurrentForm={setCurrentForm}
+                errors={formErrors}
+                modalMode={modalMode}
+              />
               <div className="flex gap-3 mt-6">
                 <button type="submit" className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600">
                   <Save size={18} /> {modalMode === 'add' ? 'Add' : 'Update'}
