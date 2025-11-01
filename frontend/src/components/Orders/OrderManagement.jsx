@@ -23,6 +23,8 @@ const OrderManagement = () => {
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [formErrors, setFormErrors] = useState({});
+  const [displayLimit, setDisplayLimit] = useState(10);
+  const [showCompletedReady, setShowCompletedReady] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -180,7 +182,10 @@ const OrderManagement = () => {
       // Order type filter
       const matchesOrderType = orderTypeFilter === 'all' || order.orderType === orderTypeFilter;
 
-      return matchesSearch && matchesStatus && matchesOrderType;
+      // Hide completed and ready orders by default unless user wants to see them
+      const isActiveOrder = showCompletedReady || (order.status !== 'completed' && order.status !== 'ready');
+
+      return matchesSearch && matchesStatus && matchesOrderType && isActiveOrder;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -203,6 +208,11 @@ const OrderManagement = () => {
           return 0;
       }
     });
+
+  // Pagination - limit displayed orders
+  const totalFilteredCount = filteredOrders.length;
+  const displayedOrders = filteredOrders.slice(0, displayLimit);
+  const hasMoreOrders = totalFilteredCount > displayLimit;
 
   return (
     <DashboardLayout>
@@ -251,7 +261,7 @@ const OrderManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredOrders.map((order) => (
+              {displayedOrders.map((order) => (
                 <tr key={order._id} className="border-b hover:bg-gray-50">
                   <td className="px-6 py-4">{order.customerName}</td>
                   <td className="px-6 py-4">{order.customerEmail || '-'}</td>
@@ -281,6 +291,46 @@ const OrderManagement = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* View More / Show Completed Orders Section */}
+        <div className="mt-4 space-y-3">
+          <div className="text-center text-sm text-gray-600">
+            Showing <span className="font-semibold text-gray-900">{displayedOrders.length}</span> of{' '}
+            <span className="font-semibold text-gray-900">{totalFilteredCount}</span> orders
+            {!showCompletedReady && <span className="text-gray-500"> (excluding completed & ready)</span>}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+            {hasMoreOrders && (
+              <button
+                onClick={() => setDisplayLimit(displayLimit + 10)}
+                className="px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+              >
+                View More ({totalFilteredCount - displayLimit} more)
+              </button>
+            )}
+
+            <button
+              onClick={() => setShowCompletedReady(!showCompletedReady)}
+              className={`px-6 py-2 rounded-lg border-2 transition-colors ${
+                showCompletedReady
+                  ? 'bg-sky-500 text-white border-sky-500 hover:bg-sky-600'
+                  : 'bg-white text-sky-600 border-sky-500 hover:bg-sky-50'
+              }`}
+            >
+              {showCompletedReady ? 'Hide' : 'Show'} Completed & Ready
+            </button>
+
+            {displayLimit > 10 && (
+              <button
+                onClick={() => setDisplayLimit(10)}
+                className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                Show Less
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
