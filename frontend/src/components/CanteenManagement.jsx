@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
+import ConfirmationModal from './Shared/ConfirmationModal';
 import {
   Search, Plus, Edit2, Trash2, X, Save,
   ShoppingCart, UtensilsCrossed, Package, AlertCircle, Truck, Filter, ArrowUpDown
@@ -43,6 +44,10 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  // Confirmation modal states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -201,8 +206,13 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this item?')) return;
+  const handleDelete = (id) => {
+    setItemToDelete(id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
 
     if (!token) {
       setApiError('You must be logged in to perform this action.');
@@ -213,7 +223,7 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
       setApiError('');
       const endpoint = activeTab === 'orders' ? '/orders' : activeTab === 'menu' ? '/menu' : '/inventory';
 
-      const response = await fetch(`${API_BASE_URL}${endpoint}/${id}`, {
+      const response = await fetch(`${API_BASE_URL}${endpoint}/${itemToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -231,6 +241,8 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
     } catch (error) {
       console.error('Error deleting data:', error);
       setApiError(`Failed to delete: ${error.message}`);
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -1744,6 +1756,22 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setItemToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Item"
+        message="Are you sure you want to delete this item? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmButtonClass="bg-red-600 hover:bg-red-700"
+        icon="danger"
+      />
     </DashboardLayout>
   );
 };

@@ -6,6 +6,7 @@ import MenuForm from './MenuForm';
 import SearchBar from '../Shared/SearchBar';
 import MenuFilterBar from '../Shared/MenuFilterBar';
 import MenuAnalytics from './MenuAnalytics';
+import ConfirmationModal from '../Shared/ConfirmationModal';
 import {
   Plus, Edit2, Trash2, X, Save, Filter, ChevronUp, ChevronDown
 } from 'lucide-react';
@@ -25,6 +26,10 @@ const MenuManagement = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [itemsToShow, setItemsToShow] = useState(10);
   const [showFilters, setShowFilters] = useState(false);
+
+  // Confirmation modal states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   // Calculate discounted price
   const calculateDiscountedPrice = (price, discount) => {
@@ -104,20 +109,28 @@ const MenuManagement = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this menu item?')) return;
+  const handleDelete = (id) => {
+    setItemToDelete(id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+
     try {
-      const response = await fetch(`${API_BASE_URL}/menu/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/menu/${itemToDelete}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
-        setSuccessMessage('Menu item deleted!');
+        setSuccessMessage('Menu item deleted successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchMenu();
       }
     } catch (error) {
       setApiError('Delete failed');
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -333,6 +346,22 @@ const MenuManagement = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setItemToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Menu Item"
+        message="Are you sure you want to delete this menu item? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmButtonClass="bg-red-600 hover:bg-red-700"
+        icon="danger"
+      />
     </DashboardLayout>
   );
 };

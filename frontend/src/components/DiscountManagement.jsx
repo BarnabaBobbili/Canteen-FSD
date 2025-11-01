@@ -11,6 +11,7 @@ import DiscountTabs from './Discount/DiscountTabs';
 import DiscountFilters from './Discount/DiscountFilters';
 import LowStockModal from './Discount/LowStockModal';
 import ExpiringItemsModal from './Discount/ExpiringItemsModal';
+import ConfirmationModal from './Shared/ConfirmationModal';
 import { useDiscountFilters } from './Discount/useDiscountFilters';
 import {
   calculateDiscountedPrice,
@@ -72,6 +73,10 @@ const DiscountManagement = () => {
   const [expiringItems, setExpiringItems] = useState([]);
   const [selectedLowStockIds, setSelectedLowStockIds] = useState([]);
   const [selectedExpiryIds, setSelectedExpiryIds] = useState([]);
+
+  // Confirmation modal state
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
 
   useEffect(() => {
     fetchDiscountedItems();
@@ -258,12 +263,17 @@ const DiscountManagement = () => {
     }
   };
 
-  const handleRemoveDiscount = async (itemId) => {
-    if (!window.confirm('Remove discount from this item?')) return;
+  const handleRemoveDiscount = (itemId) => {
+    setItemToRemove(itemId);
+    setShowConfirmModal(true);
+  };
+
+  const confirmRemoveDiscount = async () => {
+    if (!itemToRemove) return;
 
     setLoading(true);
     try {
-      await removeDiscount(itemId, token);
+      await removeDiscount(itemToRemove, token);
       setSuccessMessage('Discount removed successfully!');
       setTimeout(() => setSuccessMessage(''), 3000);
       fetchDiscountedItems();
@@ -272,6 +282,7 @@ const DiscountManagement = () => {
       setApiError('Operation failed: ' + error.message);
     } finally {
       setLoading(false);
+      setItemToRemove(null);
     }
   };
 
@@ -393,6 +404,22 @@ const DiscountManagement = () => {
             loading={loading}
           />
         )}
+
+        {/* Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={showConfirmModal}
+          onClose={() => {
+            setShowConfirmModal(false);
+            setItemToRemove(null);
+          }}
+          onConfirm={confirmRemoveDiscount}
+          title="Remove Discount"
+          message="Are you sure you want to remove the discount from this item? This action cannot be undone."
+          confirmText="Remove"
+          cancelText="Cancel"
+          confirmButtonClass="bg-red-600 hover:bg-red-700"
+          icon="danger"
+        />
       </div>
     </DashboardLayout>
   );

@@ -6,6 +6,7 @@ import SearchBar from '../Shared/SearchBar';
 import OrderFilterBar from '../Shared/OrderFilterBar';
 import OrderAnalytics from './OrderAnalytics';
 import OrderForm from './OrderForm';
+import ConfirmationModal from '../Shared/ConfirmationModal';
 import {
   Plus, Edit2, Trash2, X, Save, Filter, ChevronUp, ChevronDown
 } from 'lucide-react';
@@ -26,6 +27,10 @@ const OrderManagement = () => {
   const [displayLimit, setDisplayLimit] = useState(10);
   const [showCompletedReady, setShowCompletedReady] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+
+  // Confirmation modal states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -129,20 +134,28 @@ const OrderManagement = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this order?')) return;
+  const handleDelete = (id) => {
+    setOrderToDelete(id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!orderToDelete) return;
+
     try {
-      const response = await fetch(`${API_BASE_URL}/orders/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/orders/${orderToDelete}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
-        setSuccessMessage('Order deleted!');
+        setSuccessMessage('Order deleted successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchOrders();
       }
     } catch (error) {
       setApiError('Delete failed');
+    } finally {
+      setOrderToDelete(null);
     }
   };
 
@@ -371,6 +384,22 @@ const OrderManagement = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setOrderToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Order"
+        message="Are you sure you want to delete this order? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmButtonClass="bg-red-600 hover:bg-red-700"
+        icon="danger"
+      />
     </DashboardLayout>
   );
 };

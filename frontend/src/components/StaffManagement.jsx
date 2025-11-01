@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
+import ConfirmationModal from './Shared/ConfirmationModal';
 import {
   Users, Plus, Edit2, Trash2, X, Save, Search,
   AlertCircle, UserCheck, UserX, Shield, Briefcase, DollarSign
@@ -22,6 +23,10 @@ const StaffManagement = () => {
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Confirmation modal states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [staffToDelete, setStaffToDelete] = useState(null);
 
   useEffect(() => {
     fetchStaff();
@@ -83,11 +88,16 @@ const StaffManagement = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this staff member?')) return;
+  const handleDelete = (id) => {
+    setStaffToDelete(id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!staffToDelete) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/users/${staffToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -103,6 +113,8 @@ const StaffManagement = () => {
       }
     } catch (error) {
       setApiError('Error deleting staff: ' + error.message);
+    } finally {
+      setStaffToDelete(null);
     }
   };
 
@@ -576,6 +588,22 @@ const StaffManagement = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setStaffToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Staff Member"
+        message="Are you sure you want to delete this staff member? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmButtonClass="bg-red-600 hover:bg-red-700"
+        icon="danger"
+      />
     </DashboardLayout>
   );
 };

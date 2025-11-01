@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Truck, Plus, Edit, Trash2, Search, X, Star } from 'lucide-react';
 import DashboardLayout from './DashboardLayout';
 import SupplierForm from './SupplierForm';
+import ConfirmationModal from './Shared/ConfirmationModal';
 import API_BASE_URL from '../config/api';
 
 const SupplierManagement = () => {
@@ -12,6 +13,10 @@ const SupplierManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // Confirmation modal states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [supplierToDelete, setSupplierToDelete] = useState(null);
 
   useEffect(() => {
     fetchSuppliers();
@@ -111,14 +116,17 @@ const SupplierManagement = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this supplier?')) {
-      return;
-    }
+  const handleDelete = (id) => {
+    setSupplierToDelete(id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!supplierToDelete) return;
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/suppliers/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/suppliers/${supplierToDelete}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -134,6 +142,8 @@ const SupplierManagement = () => {
     } catch (error) {
       console.error('Error deleting supplier:', error);
       alert('An error occurred while deleting the supplier');
+    } finally {
+      setSupplierToDelete(null);
     }
   };
 
@@ -428,6 +438,22 @@ const SupplierManagement = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setSupplierToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Supplier"
+        message="Are you sure you want to delete this supplier? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmButtonClass="bg-red-600 hover:bg-red-700"
+        icon="danger"
+      />
       </div>
     </DashboardLayout>
   );

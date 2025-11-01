@@ -6,6 +6,7 @@ import SearchBar from '../Shared/SearchBar';
 import InventoryFilterBar from '../Shared/InventoryFilterBar';
 import InventoryAnalytics from './InventoryAnalytics';
 import InventoryForm from './InventoryForm';
+import ConfirmationModal from '../Shared/ConfirmationModal';
 import {
   Plus, Edit2, Trash2, X, Save, Filter, ChevronUp, ChevronDown
 } from 'lucide-react';
@@ -25,6 +26,10 @@ const InventoryManagement = () => {
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+
+  // Confirmation modal states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -85,8 +90,13 @@ const InventoryManagement = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this inventory item?')) return;
+  const handleDelete = (id) => {
+    setItemToDelete(id);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
 
     if (!token) {
       setApiError('You must be logged in to perform this action.');
@@ -94,18 +104,20 @@ const InventoryManagement = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/inventory/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/inventory/${itemToDelete}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
       if (response.ok) {
-        setSuccessMessage('Inventory item deleted!');
+        setSuccessMessage('Inventory item deleted successfully!');
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchData();
       }
     } catch (error) {
       setApiError('Delete failed');
+    } finally {
+      setItemToDelete(null);
     }
   };
 
@@ -290,6 +302,22 @@ const InventoryManagement = () => {
           </div>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setItemToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Inventory Item"
+        message="Are you sure you want to delete this inventory item? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmButtonClass="bg-red-600 hover:bg-red-700"
+        icon="danger"
+      />
     </DashboardLayout>
   );
 };
