@@ -1,0 +1,2 @@
+This file forces a rebuild to pick up new environment variables.
+Build timestamp: 2025-11-01
