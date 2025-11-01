@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Minus, Trash2, ShoppingCart } from 'lucide-react';
-import API_BASE_URL from '../config/api';
+import API_BASE_URL from '../../config/api';
 
 const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItems, setSelectedItems] = useState(currentForm.items || []);
   const [showItemSearch, setShowItemSearch] = useState(false);
+
+  // Calculate discounted price
+  const calculateDiscountedPrice = (price, discount) => {
+    if (!discount || discount.type === 'none' || !discount.value) return price;
+
+    if (discount.type === 'percentage') {
+      return price - (price * discount.value / 100);
+    } else if (discount.type === 'fixed') {
+      return Math.max(0, price - discount.value);
+    }
+    return price;
+  };
 
   // Fetch menu items
   useEffect(() => {
@@ -44,6 +56,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
   );
 
   const addItem = (menuItem) => {
+    const finalPrice = calculateDiscountedPrice(menuItem.price, menuItem.discount);
     const existingItem = selectedItems.find(item => item.menuItemId === menuItem._id);
     if (existingItem) {
       // Increase quantity if already added
@@ -53,11 +66,13 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
           : item
       ));
     } else {
-      // Add new item
+      // Add new item with discounted price
       setSelectedItems([...selectedItems, {
         menuItemId: menuItem._id,
         itemName: menuItem.itemName,
-        price: menuItem.price,
+        price: finalPrice,
+        originalPrice: menuItem.price,
+        discount: menuItem.discount,
         quantity: 1
       }]);
     }
@@ -174,20 +189,39 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
             </div>
             <div className="max-h-48 overflow-y-auto space-y-1">
               {filteredMenuItems.length > 0 ? (
-                filteredMenuItems.map(item => (
-                  <button
-                    key={item._id}
-                    type="button"
-                    onClick={() => addItem(item)}
-                    className="w-full text-left px-3 py-2 hover:bg-sky-50 rounded-lg flex justify-between items-center"
-                  >
-                    <div>
-                      <p className="font-medium text-gray-900">{item.itemName}</p>
-                      <p className="text-xs text-gray-500">{item.category}</p>
-                    </div>
-                    <span className="text-sky-600 font-semibold">₹{item.price}</span>
-                  </button>
-                ))
+                filteredMenuItems.map(item => {
+                  const discountedPrice = calculateDiscountedPrice(item.price, item.discount);
+                  const hasDiscount = item.discount && item.discount.type !== 'none' && item.discount.value > 0;
+
+                  return (
+                    <button
+                      key={item._id}
+                      type="button"
+                      onClick={() => addItem(item)}
+                      className="w-full text-left px-3 py-2 hover:bg-sky-50 rounded-lg flex justify-between items-center"
+                    >
+                      <div className="flex-1">
+                        <p className="font-medium text-gray-900">{item.itemName}</p>
+                        <p className="text-xs text-gray-500">{item.category}</p>
+                        {hasDiscount && (
+                          <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs font-semibold">
+                            {item.discount.type === 'percentage' ? `${item.discount.value}% OFF` : `₹${item.discount.value} OFF`}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-right ml-2">
+                        {hasDiscount ? (
+                          <>
+                            <div className="text-xs text-gray-400 line-through">₹{item.price.toFixed(2)}</div>
+                            <div className="text-green-600 font-bold">₹{discountedPrice.toFixed(2)}</div>
+                          </>
+                        ) : (
+                          <span className="text-sky-600 font-semibold">₹{item.price.toFixed(2)}</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })
               ) : (
                 <p className="text-gray-500 text-sm text-center py-2">No items found</p>
               )}
@@ -198,43 +232,57 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
         {/* Selected Items List */}
         {selectedItems.length > 0 ? (
           <div className="space-y-2 max-h-64 overflow-y-auto">
-            {selectedItems.map((item, index) => (
-              <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-                <ShoppingCart size={16} className="text-gray-400 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm text-gray-900 truncate">{item.itemName}</p>
-                  <p className="text-xs text-gray-500">₹{item.price} each</p>
-                </div>
-                <div className="flex items-center gap-1">
+            {selectedItems.map((item, index) => {
+              const hasDiscount = item.discount && item.discount.type !== 'none' && item.discount.value > 0;
+
+              return (
+                <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                  <ShoppingCart size={16} className="text-gray-400 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm text-gray-900 truncate">{item.itemName}</p>
+                    {hasDiscount ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400 line-through">₹{item.originalPrice}</span>
+                        <span className="text-xs text-green-600 font-semibold">₹{item.price} each</span>
+                        <span className="text-xs bg-green-100 text-green-800 px-1 rounded">
+                          {item.discount.type === 'percentage' ? `${item.discount.value}% OFF` : `₹${item.discount.value} OFF`}
+                        </span>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-gray-500">₹{item.price} each</p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(index, item.quantity - 1)}
+                      disabled={item.quantity <= 1}
+                      className="p-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Minus size={14} />
+                    </button>
+                    <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(index, item.quantity + 1)}
+                      className="p-1 bg-gray-100 hover:bg-gray-200 rounded"
+                    >
+                      <Plus size={14} />
+                    </button>
+                  </div>
+                  <span className={`text-sm font-semibold w-20 text-right ${hasDiscount ? 'text-green-600' : 'text-gray-900'}`}>
+                    ₹{(item.price * item.quantity).toFixed(2)}
+                  </span>
                   <button
                     type="button"
-                    onClick={() => updateQuantity(index, item.quantity - 1)}
-                    disabled={item.quantity <= 1}
-                    className="p-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => removeItem(index)}
+                    className="p-1 text-red-600 hover:bg-red-50 rounded"
                   >
-                    <Minus size={14} />
-                  </button>
-                  <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
-                  <button
-                    type="button"
-                    onClick={() => updateQuantity(index, item.quantity + 1)}
-                    className="p-1 bg-gray-100 hover:bg-gray-200 rounded"
-                  >
-                    <Plus size={14} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
-                <span className="text-sm font-semibold text-gray-900 w-20 text-right">
-                  ₹{(item.price * item.quantity).toFixed(2)}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => removeItem(index)}
-                  className="p-1 text-red-600 hover:bg-red-50 rounded"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-8 text-gray-400 border-2 border-dashed border-gray-300 rounded-lg">

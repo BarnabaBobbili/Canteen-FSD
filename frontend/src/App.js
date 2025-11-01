@@ -9,9 +9,13 @@ import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import CanteenManagement from './components/CanteenManagement';
+import MenuManagement from './components/Menu/MenuManagement';
+import OrderManagement from './components/Orders/OrderManagement';
+import InventoryManagement from './components/Inventory/InventoryManagement';
 import StaffManagement from './components/StaffManagement';
 import ActivityLog from './components/ActivityLog';
 import SupplierManagement from './components/SupplierManagement';
+import DiscountManagement from './components/DiscountManagement';
 
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || 'your-google-client-id';
 
@@ -50,7 +54,7 @@ function App() {
               path="/orders"
               element={
                 <ProtectedRoute roles={['admin', 'manager', 'cashier', 'staff']}>
-                  <CanteenManagement section="orders" showTabs={false} />
+                  <OrderManagement />
                 </ProtectedRoute>
               }
             />
@@ -59,7 +63,7 @@ function App() {
               path="/menu"
               element={
                 <ProtectedRoute roles={['admin', 'manager', 'staff']}>
-                  <CanteenManagement section="menu" showTabs={false} />
+                  <MenuManagement />
                 </ProtectedRoute>
               }
             />
@@ -68,7 +72,7 @@ function App() {
               path="/inventory"
               element={
                 <ProtectedRoute roles={['admin', 'manager', 'staff']}>
-                  <CanteenManagement section="inventory" showTabs={false} />
+                  <InventoryManagement />
                 </ProtectedRoute>
               }
             />
@@ -101,9 +105,18 @@ function App() {
               }
             />
 
+            {/* Discount Management Route */}
+            <Route
+              path="/discounts"
+              element={
+                <ProtectedRoute roles={['admin', 'manager']}>
+                  <DiscountManagement />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Future routes for other management components */}
             {/*
-            <Route path="/discounts" element={<ProtectedRoute roles={['admin', 'manager']}><DiscountManagement /></ProtectedRoute>} />
             <Route path="/feedback" element={<ProtectedRoute roles={['admin', 'manager']}><FeedbackManagement /></ProtectedRoute>} />
             <Route path="/payments" element={<ProtectedRoute roles={['admin', 'manager', 'cashier']}><PaymentBilling /></ProtectedRoute>} />
             */}

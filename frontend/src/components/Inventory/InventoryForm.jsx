@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Minus } from 'lucide-react';
-import API_BASE_URL from '../config/api';
+import API_BASE_URL from '../../config/api';
 
 const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
   const [suppliers, setSuppliers] = useState([]);

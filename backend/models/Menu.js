@@ -28,6 +28,39 @@ const menuSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  stockQuantity: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  lowStockThreshold: {
+    type: Number,
+    default: 10,
+    min: 0
+  },
+  expiryDate: {
+    type: Date
+  },
+  discount: {
+    type: {
+      type: String,
+      enum: ['percentage', 'fixed', 'none'],
+      default: 'none'
+    },
+    value: {
+      type: Number,
+      default: 0,
+      min: 0
+    },
+    reason: {
+      type: String,
+      enum: ['manual', 'low_stock', 'expiry', 'clearance', 'none'],
+      default: 'none'
+    },
+    appliedAt: {
+      type: Date
+    }
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import DashboardLayout from './DashboardLayout';
-import API_BASE_URL from '../config/api';
+import { useAuth } from '../../context/AuthContext';
+import DashboardLayout from '../DashboardLayout';
+import API_BASE_URL from '../../config/api';
+import SearchBar from '../Shared/SearchBar';
+import OrderFilterBar from '../Shared/OrderFilterBar';
+import OrderAnalytics from './OrderAnalytics';
 import {
-  ShoppingCart, Plus, Edit2, Trash2, X, Save, Search, AlertCircle
+  Plus, Edit2, Trash2, X, Save
 } from 'lucide-react';
 
 const OrderManagement = () => {
@@ -13,7 +16,9 @@ const OrderManagement = () => {
   const [modalMode, setModalMode] = useState('add');
   const [currentForm, setCurrentForm] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [errors, setErrors] = useState({});
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [orderTypeFilter, setOrderTypeFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('date-desc');
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -98,13 +103,45 @@ const OrderManagement = () => {
   const closeModal = () => {
     setShowModal(false);
     setCurrentForm({});
-    setErrors({});
   };
 
-  const filteredOrders = orders.filter(order =>
-    order.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.customerEmail?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter and sort orders
+  const filteredOrders = orders
+    .filter(order => {
+      // Search filter
+      const matchesSearch = order.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerPhone?.includes(searchTerm);
+
+      // Status filter
+      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+
+      // Order type filter
+      const matchesOrderType = orderTypeFilter === 'all' || order.orderType === orderTypeFilter;
+
+      return matchesSearch && matchesStatus && matchesOrderType;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'date-asc':
+          return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+        case 'date-desc':
+          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+        case 'total-asc':
+          return (a.totalAmount || 0) - (b.totalAmount || 0);
+        case 'total-desc':
+          return (b.totalAmount || 0) - (a.totalAmount || 0);
+        case 'customer-asc':
+          return (a.customerName || '').localeCompare(b.customerName || '');
+        case 'customer-desc':
+          return (b.customerName || '').localeCompare(a.customerName || '');
+        case 'status':
+          const statusOrder = { 'pending': 1, 'preparing': 2, 'ready': 3, 'completed': 4, 'cancelled': 5 };
+          return (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
+        default:
+          return 0;
+      }
+    });
 
   return (
     <DashboardLayout>
@@ -113,17 +150,13 @@ const OrderManagement = () => {
         {successMessage && <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg">{successMessage}</div>}
 
         <div className="bg-white rounded-xl shadow-lg mb-6 p-6">
-          <div className="flex gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Search orders..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500"
-              />
-            </div>
+          {/* Search Bar */}
+          <div className="flex gap-4 mb-4">
+            <SearchBar
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              placeholder="Search orders by customer name, email, or phone..."
+            />
             <button
               onClick={() => openModal('add')}
               className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
@@ -131,6 +164,16 @@ const OrderManagement = () => {
               <Plus size={20} /> Add Order
             </button>
           </div>
+
+          {/* Filters and Sort */}
+          <OrderFilterBar
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            orderTypeFilter={orderTypeFilter}
+            setOrderTypeFilter={setOrderTypeFilter}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
         </div>
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -179,6 +222,9 @@ const OrderManagement = () => {
           </table>
         </div>
       </div>
+
+      {/* Analytics Section */}
+      <OrderAnalytics orders={orders} />
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">

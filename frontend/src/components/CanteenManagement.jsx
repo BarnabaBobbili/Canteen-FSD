@@ -5,15 +5,15 @@ import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
 import {
   Search, Plus, Edit2, Trash2, X, Save,
-  ShoppingCart, UtensilsCrossed, Package, AlertCircle, Truck
+  ShoppingCart, UtensilsCrossed, Package, AlertCircle, Truck, Filter, ArrowUpDown
 } from 'lucide-react';
 import {
   BarChart, Bar, PieChart, Pie, XAxis, YAxis,
   CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer
 } from 'recharts';
-import OrderForm from './OrderForm';
-import MenuForm from './MenuForm';
-import InventoryForm from './InventoryForm';
+import OrderForm from './Orders/OrderForm';
+import MenuForm from './Menu/MenuForm';
+import InventoryForm from './Inventory/InventoryForm';
 const COLORS = ['#f97316', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#ef4444'];
 
 const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
@@ -28,6 +28,18 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
   const [modalMode, setModalMode] = useState('add');
   const [currentForm, setCurrentForm] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  // Filter and sort states for Inventory
+  const [supplierFilter, setSupplierFilter] = useState('all');
+  const [stockFilter, setStockFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('name-asc');
+  // Filter and sort states for Menu
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [availabilityFilter, setAvailabilityFilter] = useState('all');
+  const [menuSortBy, setMenuSortBy] = useState('name-asc');
+  // Filter and sort states for Orders
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [orderTypeFilter, setOrderTypeFilter] = useState('all');
+  const [orderSortBy, setOrderSortBy] = useState('date-desc');
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -42,6 +54,8 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
       } else if (activeTab === 'menu') {
         const response = await fetch(`${API_BASE_URL}/menu`);
         const data = await response.json();
+        console.log('Fetched menu items:', data);
+        console.log('First item discount:', data[0]?.discount);
         setMenuItems(data);
       } else if (activeTab === 'inventory') {
         // Fetch inventory and suppliers in parallel
@@ -54,7 +68,8 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
         const suppliersData = await suppliersRes.json();
 
         setInventory(inventoryData);
-        setSuppliers(suppliersData);
+        // Ensure suppliers is always an array
+        setSuppliers(Array.isArray(suppliersData) ? suppliersData : []);
 
         // Calculate low stock items (quantity < 20)
         const lowStock = inventoryData.filter(item => item.quantity < 20);
@@ -271,19 +286,121 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
   const filteredData = () => {
     const data = activeTab === 'orders' ? orders : activeTab === 'menu' ? menuItems : inventory;
 
-    return data.filter(item => {
+    // Safety check: return empty array if data is undefined/null
+    if (!data || !Array.isArray(data)) {
+      return [];
+    }
+
+    let filtered = data.filter(item => {
       const searchStr = searchTerm.toLowerCase();
+
       if (activeTab === 'orders') {
-        return item.customerName?.toLowerCase().includes(searchStr) ||
-               item.customerEmail?.toLowerCase().includes(searchStr);
+        // Orders filtering
+        const matchesSearch = item.customerName?.toLowerCase().includes(searchStr) ||
+               item.customerEmail?.toLowerCase().includes(searchStr) ||
+               item.customerPhone?.includes(searchStr);
+        const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+        const matchesOrderType = orderTypeFilter === 'all' || item.orderType === orderTypeFilter;
+        return matchesSearch && matchesStatus && matchesOrderType;
+
       } else if (activeTab === 'menu') {
-        return item.itemName?.toLowerCase().includes(searchStr) ||
+        // Menu filtering
+        const matchesSearch = item.itemName?.toLowerCase().includes(searchStr) ||
                item.category?.toLowerCase().includes(searchStr);
+        const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+        const matchesAvailability = availabilityFilter === 'all' ||
+               (availabilityFilter === 'available' && item.available) ||
+               (availabilityFilter === 'unavailable' && !item.available);
+        return matchesSearch && matchesCategory && matchesAvailability;
+
       } else {
-        return item.itemName?.toLowerCase().includes(searchStr) ||
+        // Inventory specific filters
+        const matchesSearch = item.itemName?.toLowerCase().includes(searchStr) ||
                item.supplier?.toLowerCase().includes(searchStr);
+        const matchesSupplier = supplierFilter === 'all' || item.supplier === supplierFilter;
+        const matchesStock = stockFilter === 'all' ||
+               (stockFilter === 'low' && item.quantity < 20) ||
+               (stockFilter === 'normal' && item.quantity >= 20);
+        return matchesSearch && matchesSupplier && matchesStock;
       }
     });
+
+    // Apply sorting
+    if (activeTab === 'inventory' && sortBy) {
+      filtered = filtered.sort((a, b) => {
+        switch (sortBy) {
+          case 'name-asc':
+            return (a.itemName || '').localeCompare(b.itemName || '');
+          case 'name-desc':
+            return (b.itemName || '').localeCompare(a.itemName || '');
+          case 'quantity-asc':
+            return (a.quantity || 0) - (b.quantity || 0);
+          case 'quantity-desc':
+            return (b.quantity || 0) - (a.quantity || 0);
+          case 'supplier-asc':
+            return (a.supplier || '').localeCompare(b.supplier || '');
+          case 'supplier-desc':
+            return (b.supplier || '').localeCompare(a.supplier || '');
+          default:
+            return 0;
+        }
+      });
+    } else if (activeTab === 'menu' && menuSortBy) {
+      filtered = filtered.sort((a, b) => {
+        switch (menuSortBy) {
+          case 'name-asc':
+            return (a.itemName || '').localeCompare(b.itemName || '');
+          case 'name-desc':
+            return (b.itemName || '').localeCompare(a.itemName || '');
+          case 'price-asc':
+            return (a.price || 0) - (b.price || 0);
+          case 'price-desc':
+            return (b.price || 0) - (a.price || 0);
+          case 'category-asc':
+            return (a.category || '').localeCompare(b.category || '');
+          case 'category-desc':
+            return (b.category || '').localeCompare(a.category || '');
+          default:
+            return 0;
+        }
+      });
+    } else if (activeTab === 'orders' && orderSortBy) {
+      filtered = filtered.sort((a, b) => {
+        switch (orderSortBy) {
+          case 'date-asc':
+            return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
+          case 'date-desc':
+            return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+          case 'total-asc':
+            return (a.totalAmount || 0) - (b.totalAmount || 0);
+          case 'total-desc':
+            return (b.totalAmount || 0) - (a.totalAmount || 0);
+          case 'customer-asc':
+            return (a.customerName || '').localeCompare(b.customerName || '');
+          case 'customer-desc':
+            return (b.customerName || '').localeCompare(a.customerName || '');
+          case 'status':
+            const statusOrder = { 'pending': 1, 'preparing': 2, 'ready': 3, 'completed': 4, 'cancelled': 5 };
+            return (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
+          default:
+            return 0;
+        }
+      });
+    }
+
+    return filtered;
+  };
+
+  // Calculate discounted price
+  const calculateDiscountedPrice = (price, discount) => {
+    if (!discount || discount.type === 'none' || !discount.value) return price;
+
+    if (discount.type === 'percentage') {
+      return price - (price * discount.value / 100);
+    } else if (discount.type === 'fixed') {
+      return Math.max(0, price - discount.value);
+    }
+    return price;
   };
 
   // Group data by category (for Menu)
@@ -804,7 +921,7 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
           )}
 
           {/* Search and Add Button */}
-          <div className="p-6 flex gap-4">
+          <div className="p-6 pb-4 flex gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
@@ -823,6 +940,302 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
               {activeTab === 'orders' ? 'New Order' : 'Add New'}
             </button>
           </div>
+
+          {/* Filters and Sort (Menu) */}
+          {activeTab === 'menu' && (
+            <div className="px-6 pb-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Category Filter */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <Filter size={16} />
+                    Filter by Category
+                  </label>
+                  <select
+                    value={categoryFilter}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="all">All Categories</option>
+                    <option value="snacks">Snacks</option>
+                    <option value="beverages">Beverages</option>
+                    <option value="meals">Meals</option>
+                    <option value="desserts">Desserts</option>
+                    <option value="breakfast">Breakfast</option>
+                  </select>
+                </div>
+
+                {/* Availability Filter */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <Filter size={16} />
+                    Filter by Availability
+                  </label>
+                  <select
+                    value={availabilityFilter}
+                    onChange={(e) => setAvailabilityFilter(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="all">All Items</option>
+                    <option value="available">Available</option>
+                    <option value="unavailable">Unavailable</option>
+                  </select>
+                </div>
+
+                {/* Sort */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <ArrowUpDown size={16} />
+                    Sort By
+                  </label>
+                  <select
+                    value={menuSortBy}
+                    onChange={(e) => setMenuSortBy(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="name-asc">Name: A to Z</option>
+                    <option value="name-desc">Name: Z to A</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="category-asc">Category: A to Z</option>
+                    <option value="category-desc">Category: Z to A</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Active Filters Display */}
+              {(categoryFilter !== 'all' || availabilityFilter !== 'all') && (
+                <div className="mt-4 flex items-center gap-2 flex-wrap">
+                  <span className="text-sm text-gray-600">Active filters:</span>
+                  {categoryFilter !== 'all' && (
+                    <span className="px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm flex items-center gap-1">
+                      Category: {categoryFilter}
+                      <button onClick={() => setCategoryFilter('all')} className="hover:bg-sky-200 rounded-full p-0.5">
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+                  {availabilityFilter !== 'all' && (
+                    <span className="px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm flex items-center gap-1">
+                      {availabilityFilter === 'available' ? 'Available' : 'Unavailable'}
+                      <button onClick={() => setAvailabilityFilter('all')} className="hover:bg-sky-200 rounded-full p-0.5">
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+                  <button
+                    onClick={() => {
+                      setCategoryFilter('all');
+                      setAvailabilityFilter('all');
+                    }}
+                    className="text-sm text-sky-600 hover:text-sky-800 font-medium"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Filters and Sort (Orders) */}
+          {activeTab === 'orders' && (
+            <div className="px-6 pb-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Status Filter */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <Filter size={16} />
+                    Filter by Status
+                  </label>
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="all">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="ready">Ready</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+
+                {/* Order Type Filter */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <Filter size={16} />
+                    Filter by Order Type
+                  </label>
+                  <select
+                    value={orderTypeFilter}
+                    onChange={(e) => setOrderTypeFilter(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="dine-in">Dine-In</option>
+                    <option value="takeaway">Takeaway</option>
+                    <option value="delivery">Delivery</option>
+                    <option value="online">Online</option>
+                    <option value="counter">Counter</option>
+                  </select>
+                </div>
+
+                {/* Sort */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <ArrowUpDown size={16} />
+                    Sort By
+                  </label>
+                  <select
+                    value={orderSortBy}
+                    onChange={(e) => setOrderSortBy(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="date-desc">Date: Newest First</option>
+                    <option value="date-asc">Date: Oldest First</option>
+                    <option value="total-desc">Total: High to Low</option>
+                    <option value="total-asc">Total: Low to High</option>
+                    <option value="customer-asc">Customer: A to Z</option>
+                    <option value="customer-desc">Customer: Z to A</option>
+                    <option value="status">Status (Pending → Completed)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Active Filters Display */}
+              {(statusFilter !== 'all' || orderTypeFilter !== 'all') && (
+                <div className="mt-4 flex items-center gap-2 flex-wrap">
+                  <span className="text-sm text-gray-600">Active filters:</span>
+                  {statusFilter !== 'all' && (
+                    <span className="px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm flex items-center gap-1 capitalize">
+                      Status: {statusFilter}
+                      <button onClick={() => setStatusFilter('all')} className="hover:bg-sky-200 rounded-full p-0.5">
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+                  {orderTypeFilter !== 'all' && (
+                    <span className="px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm flex items-center gap-1 capitalize">
+                      Type: {orderTypeFilter}
+                      <button onClick={() => setOrderTypeFilter('all')} className="hover:bg-sky-200 rounded-full p-0.5">
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+                  <button
+                    onClick={() => {
+                      setStatusFilter('all');
+                      setOrderTypeFilter('all');
+                    }}
+                    className="text-sm text-sky-600 hover:text-sky-800 font-medium"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Filters and Sort (Inventory Only) */}
+          {activeTab === 'inventory' && (
+            <div className="px-6 pb-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Supplier Filter */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <Filter size={16} />
+                    Filter by Supplier
+                  </label>
+                  <select
+                    value={supplierFilter}
+                    onChange={(e) => setSupplierFilter(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="all">All Suppliers</option>
+                    {Array.isArray(suppliers) && suppliers.map((supplier, idx) => (
+                      <option key={idx} value={supplier.name}>{supplier.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Stock Level Filter */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <Filter size={16} />
+                    Filter by Stock Level
+                  </label>
+                  <select
+                    value={stockFilter}
+                    onChange={(e) => setStockFilter(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="all">All Stock Levels</option>
+                    <option value="low">Low Stock (Below 20)</option>
+                    <option value="normal">Normal Stock (20+)</option>
+                  </select>
+                </div>
+
+                {/* Sort */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                    <ArrowUpDown size={16} />
+                    Sort By
+                  </label>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="name-asc">Name: A to Z</option>
+                    <option value="name-desc">Name: Z to A</option>
+                    <option value="quantity-asc">Quantity: Low to High</option>
+                    <option value="quantity-desc">Quantity: High to Low</option>
+                    <option value="supplier-asc">Supplier: A to Z</option>
+                    <option value="supplier-desc">Supplier: Z to A</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Active Filters Display */}
+              {(supplierFilter !== 'all' || stockFilter !== 'all') && (
+                <div className="mt-4 flex items-center gap-2 flex-wrap">
+                  <span className="text-sm text-gray-600">Active filters:</span>
+                  {supplierFilter !== 'all' && (
+                    <span className="px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm flex items-center gap-1">
+                      Supplier: {supplierFilter}
+                      <button
+                        onClick={() => setSupplierFilter('all')}
+                        className="hover:bg-sky-200 rounded-full p-0.5"
+                      >
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+                  {stockFilter !== 'all' && (
+                    <span className="px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm flex items-center gap-1">
+                      {stockFilter === 'low' ? 'Low Stock' : 'Normal Stock'}
+                      <button
+                        onClick={() => setStockFilter('all')}
+                        className="hover:bg-sky-200 rounded-full p-0.5"
+                      >
+                        <X size={14} />
+                      </button>
+                    </span>
+                  )}
+                  <button
+                    onClick={() => {
+                      setSupplierFilter('all');
+                      setStockFilter('all');
+                    }}
+                    className="text-sm text-sky-600 hover:text-sky-800 font-medium"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Low Stock Alerts (Inventory Only) */}
           {activeTab === 'inventory' && lowStockItems.length > 0 && (
@@ -931,7 +1344,19 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
                         <tr key={item._id || index} className="border-b hover:bg-gray-50">
                           <td className="px-4 py-3 text-sm">{item.itemName}</td>
                           <td className="px-4 py-3 text-sm capitalize">{item.category}</td>
-                          <td className="px-4 py-3 text-sm">₹{item.price}</td>
+                          <td className="px-4 py-3 text-sm">
+                            {item.discount && item.discount.type !== 'none' && item.discount.value > 0 ? (
+                              <div>
+                                <div className="text-xs text-gray-400 line-through">₹{item.price.toFixed(2)}</div>
+                                <div className="text-green-600 font-bold">₹{calculateDiscountedPrice(item.price, item.discount).toFixed(2)}</div>
+                                <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs font-semibold">
+                                  {item.discount.type === 'percentage' ? `${item.discount.value}% OFF` : `₹${item.discount.value} OFF`}
+                                </span>
+                              </div>
+                            ) : (
+                              <>₹{item.price.toFixed(2)}</>
+                            )}
+                          </td>
                           <td className="px-4 py-3 text-sm">{item.allergens || 'None'}</td>
                           <td className="px-4 py-3 text-sm">
                             <span className={`px-2 py-1 rounded-full text-xs ${
@@ -1127,7 +1552,19 @@ const CanteenManagement = ({ section = 'orders', showTabs = false }) => {
                         <>
                           <td className="px-4 py-3 text-sm">{item.itemName}</td>
                           <td className="px-4 py-3 text-sm capitalize">{item.category}</td>
-                          <td className="px-4 py-3 text-sm">₹{item.price}</td>
+                          <td className="px-4 py-3 text-sm">
+                            {item.discount && item.discount.type !== 'none' && item.discount.value > 0 ? (
+                              <div>
+                                <div className="text-xs text-gray-400 line-through">₹{item.price.toFixed(2)}</div>
+                                <div className="text-green-600 font-bold">₹{calculateDiscountedPrice(item.price, item.discount).toFixed(2)}</div>
+                                <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs font-semibold">
+                                  {item.discount.type === 'percentage' ? `${item.discount.value}% OFF` : `₹${item.discount.value} OFF`}
+                                </span>
+                              </div>
+                            ) : (
+                              <>₹{item.price.toFixed(2)}</>
+                            )}
+                          </td>
                           <td className="px-4 py-3 text-sm">{item.allergens || 'None'}</td>
                           <td className="px-4 py-3 text-sm">
                             <span className={`px-2 py-1 rounded-full text-xs ${
