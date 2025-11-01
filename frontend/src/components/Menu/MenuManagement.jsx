@@ -7,7 +7,7 @@ import SearchBar from '../Shared/SearchBar';
 import MenuFilterBar from '../Shared/MenuFilterBar';
 import MenuAnalytics from './MenuAnalytics';
 import {
-  Plus, Edit2, Trash2, X, Save
+  Plus, Edit2, Trash2, X, Save, Filter, ChevronUp, ChevronDown
 } from 'lucide-react';
 
 const MenuManagement = () => {
@@ -24,6 +24,7 @@ const MenuManagement = () => {
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [itemsToShow, setItemsToShow] = useState(10);
+  const [showFilters, setShowFilters] = useState(false);
 
   // Calculate discounted price
   const calculateDiscountedPrice = (price, discount) => {
@@ -190,6 +191,14 @@ const MenuManagement = () => {
               placeholder="Search menu items..."
             />
             <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            >
+              <Filter size={16} />
+              Filters
+              {showFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            </button>
+            <button
               onClick={() => openModal('add')}
               className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
             >
@@ -205,6 +214,7 @@ const MenuManagement = () => {
             setAvailabilityFilter={setAvailabilityFilter}
             sortBy={sortBy}
             setSortBy={setSortBy}
+            showFilters={showFilters}
           />
         </div>
 

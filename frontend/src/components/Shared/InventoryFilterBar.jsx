@@ -8,11 +8,13 @@ const InventoryFilterBar = ({
   setStockFilter,
   sortBy,
   setSortBy,
-  suppliers = []
+  suppliers = [],
+  showFilters = true
 }) => {
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {showFilters && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Supplier Filter */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
@@ -68,6 +70,7 @@ const InventoryFilterBar = ({
           </select>
         </div>
       </div>
+      )}
 
       {/* Active Filters Display */}
       {(supplierFilter !== 'all' || stockFilter !== 'all') && (

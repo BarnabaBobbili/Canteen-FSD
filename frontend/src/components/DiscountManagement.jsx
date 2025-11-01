@@ -4,7 +4,8 @@ import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
 import {
   Tag, TrendingUp, Clock, Package, Percent, DollarSign, X, AlertCircle,
-  CheckCircle, Calendar, ShoppingCart, Award, RefreshCw, Filter, ArrowUpDown, Plus, Minus, Search
+  CheckCircle, Calendar, ShoppingCart, Award, RefreshCw, Filter, ArrowUpDown, Plus, Minus, Search,
+  ChevronUp, ChevronDown
 } from 'lucide-react';
 
 const DiscountManagement = () => {
@@ -33,6 +34,7 @@ const DiscountManagement = () => {
   const [discountedSearch, setDiscountedSearch] = useState('');
   const [allItemsSearch, setAllItemsSearch] = useState('');
   const [popularSearch, setPopularSearch] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
 
   // Auto-discount modal states
   const [showLowStockModal, setShowLowStockModal] = useState(false);
@@ -709,9 +711,91 @@ const DiscountManagement = () => {
           </button>
         </div>
 
-        {/* Filters and Sorting */}
+        {/* Search Bar and Filters */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex gap-4 mb-4">
+            {activeTab === 'discounted' && (
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search active discounts by name or category..."
+                  value={discountedSearch}
+                  onChange={(e) => setDiscountedSearch(e.target.value)}
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                {discountedSearch && (
+                  <button
+                    onClick={() => setDiscountedSearch('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    type="button"
+                    aria-label="Clear search"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'all' && (
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search all menu items by name or category..."
+                  value={allItemsSearch}
+                  onChange={(e) => setAllItemsSearch(e.target.value)}
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                {allItemsSearch && (
+                  <button
+                    onClick={() => setAllItemsSearch('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    type="button"
+                    aria-label="Clear search"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'popular' && (
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search most ordered items by name or category..."
+                  value={popularSearch}
+                  onChange={(e) => setPopularSearch(e.target.value)}
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                {popularSearch && (
+                  <button
+                    onClick={() => setPopularSearch('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    type="button"
+                    aria-label="Clear search"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+            )}
+
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center gap-2"
+            >
+              <Filter size={16} />
+              Filters
+              {showFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            </button>
+          </div>
+
+          {showFilters && (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Category Filter */}
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
@@ -773,10 +857,12 @@ const DiscountManagement = () => {
               </select>
             </div>
           </div>
+            </>
+          )}
 
-          {/* Active Filters Display */}
+          {/* Active Filters Display - Always visible when filters are active */}
           {(categoryFilter !== 'all' || expiryFilter !== 'all') && (
-            <div className="mt-4 flex items-center gap-2 flex-wrap">
+            <div className="mt-4 pt-4 border-t border-gray-200 flex items-center gap-2 flex-wrap">
               <span className="text-sm text-gray-600">Active filters:</span>
               {categoryFilter !== 'all' && (
                 <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm flex items-center gap-1">
@@ -809,78 +895,6 @@ const DiscountManagement = () => {
               >
                 Clear all
               </button>
-            </div>
-          )}
-        </div>
-
-        {/* Search Bar for Active Tab */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          {activeTab === 'discounted' && (
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Search active discounts by name or category..."
-                value={discountedSearch}
-                onChange={(e) => setDiscountedSearch(e.target.value)}
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              {discountedSearch && (
-                <button
-                  onClick={() => setDiscountedSearch('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  type="button"
-                  aria-label="Clear search"
-                >
-                  <X size={18} />
-                </button>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'all' && (
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Search all menu items by name or category..."
-                value={allItemsSearch}
-                onChange={(e) => setAllItemsSearch(e.target.value)}
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              {allItemsSearch && (
-                <button
-                  onClick={() => setAllItemsSearch('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  type="button"
-                  aria-label="Clear search"
-                >
-                  <X size={18} />
-                </button>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'popular' && (
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-              <input
-                type="text"
-                placeholder="Search most ordered items by name or category..."
-                value={popularSearch}
-                onChange={(e) => setPopularSearch(e.target.value)}
-                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              {popularSearch && (
-                <button
-                  onClick={() => setPopularSearch('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  type="button"
-                  aria-label="Clear search"
-                >
-                  <X size={18} />
-                </button>
-              )}
             </div>
           )}
         </div>

@@ -7,11 +7,13 @@ const OrderFilterBar = ({
   orderTypeFilter,
   setOrderTypeFilter,
   sortBy,
-  setSortBy
+  setSortBy,
+  showFilters = true
 }) => {
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {showFilters && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Status Filter */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
@@ -73,6 +75,7 @@ const OrderFilterBar = ({
           </select>
         </div>
       </div>
+      )}
 
       {/* Active Filters Display */}
       {(statusFilter !== 'all' || orderTypeFilter !== 'all') && (

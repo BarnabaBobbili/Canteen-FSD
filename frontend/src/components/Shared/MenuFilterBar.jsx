@@ -7,11 +7,13 @@ const MenuFilterBar = ({
   availabilityFilter,
   setAvailabilityFilter,
   sortBy,
-  setSortBy
+  setSortBy,
+  showFilters = true
 }) => {
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {showFilters && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Category Filter */}
         <div>
           <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
@@ -69,6 +71,7 @@ const MenuFilterBar = ({
           </select>
         </div>
       </div>
+      )}
 
       {/* Active Filters Display */}
       {(categoryFilter !== 'all' || availabilityFilter !== 'all') && (

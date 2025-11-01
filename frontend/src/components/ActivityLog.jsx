@@ -256,15 +256,74 @@ const ActivityLog = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
+            </div>
+          )}
 
-              <div className="flex items-end">
-                <button
-                  onClick={clearFilters}
-                  className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-                >
-                  Clear Filters
-                </button>
-              </div>
+          {/* Active Filters Display - Always visible when filters are active */}
+          {(filters.activityType || filters.resourceType || filters.severity || filters.startDate || filters.endDate) && (
+            <div className="mt-4 pt-4 border-t border-gray-200 flex items-center gap-2 flex-wrap">
+              <span className="text-sm text-gray-600">Active filters:</span>
+              {filters.activityType && (
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-1">
+                  Type: {filters.activityType.replace('_', ' ')}
+                  <button
+                    onClick={() => handleFilterChange('activityType', '')}
+                    className="hover:bg-blue-200 rounded-full p-0.5"
+                  >
+                    <X size={14} />
+                  </button>
+                </span>
+              )}
+              {filters.resourceType && (
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-1">
+                  Resource: {filters.resourceType}
+                  <button
+                    onClick={() => handleFilterChange('resourceType', '')}
+                    className="hover:bg-blue-200 rounded-full p-0.5"
+                  >
+                    <X size={14} />
+                  </button>
+                </span>
+              )}
+              {filters.severity && (
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-1">
+                  Severity: {filters.severity}
+                  <button
+                    onClick={() => handleFilterChange('severity', '')}
+                    className="hover:bg-blue-200 rounded-full p-0.5"
+                  >
+                    <X size={14} />
+                  </button>
+                </span>
+              )}
+              {filters.startDate && (
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-1">
+                  From: {filters.startDate}
+                  <button
+                    onClick={() => handleFilterChange('startDate', '')}
+                    className="hover:bg-blue-200 rounded-full p-0.5"
+                  >
+                    <X size={14} />
+                  </button>
+                </span>
+              )}
+              {filters.endDate && (
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-1">
+                  To: {filters.endDate}
+                  <button
+                    onClick={() => handleFilterChange('endDate', '')}
+                    className="hover:bg-blue-200 rounded-full p-0.5"
+                  >
+                    <X size={14} />
+                  </button>
+                </span>
+              )}
+              <button
+                onClick={clearFilters}
+                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Clear all
+              </button>
             </div>
           )}
         </div>

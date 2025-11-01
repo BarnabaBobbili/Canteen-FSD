@@ -7,7 +7,7 @@ import InventoryFilterBar from '../Shared/InventoryFilterBar';
 import InventoryAnalytics from './InventoryAnalytics';
 import InventoryForm from './InventoryForm';
 import {
-  Plus, Edit2, Trash2, X, Save
+  Plus, Edit2, Trash2, X, Save, Filter, ChevronUp, ChevronDown
 } from 'lucide-react';
 
 const InventoryManagement = () => {
@@ -24,6 +24,7 @@ const InventoryManagement = () => {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -172,6 +173,14 @@ const InventoryManagement = () => {
               placeholder="Search inventory items..."
             />
             <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            >
+              <Filter size={16} />
+              Filters
+              {showFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            </button>
+            <button
               onClick={() => openModal('add')}
               className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
             >
@@ -188,6 +197,7 @@ const InventoryManagement = () => {
             sortBy={sortBy}
             setSortBy={setSortBy}
             suppliers={suppliers}
+            showFilters={showFilters}
           />
         </div>
 

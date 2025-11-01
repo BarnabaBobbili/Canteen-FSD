@@ -7,7 +7,7 @@ import OrderFilterBar from '../Shared/OrderFilterBar';
 import OrderAnalytics from './OrderAnalytics';
 import OrderForm from './OrderForm';
 import {
-  Plus, Edit2, Trash2, X, Save
+  Plus, Edit2, Trash2, X, Save, Filter, ChevronUp, ChevronDown
 } from 'lucide-react';
 
 const OrderManagement = () => {
@@ -25,6 +25,7 @@ const OrderManagement = () => {
   const [formErrors, setFormErrors] = useState({});
   const [displayLimit, setDisplayLimit] = useState(10);
   const [showCompletedReady, setShowCompletedReady] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -221,13 +222,21 @@ const OrderManagement = () => {
         {successMessage && <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg">{successMessage}</div>}
 
         <div className="bg-white rounded-xl shadow-lg mb-6 p-6">
-          {/* Search Bar */}
+          {/* Search Bar and Buttons */}
           <div className="flex gap-4 mb-4">
             <SearchBar
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
               placeholder="Search orders by name, email, or phone..."
             />
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+            >
+              <Filter size={16} />
+              Filters
+              {showFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            </button>
             <button
               onClick={() => openModal('add')}
               className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
@@ -244,6 +253,7 @@ const OrderManagement = () => {
             setOrderTypeFilter={setOrderTypeFilter}
             sortBy={sortBy}
             setSortBy={setSortBy}
+            showFilters={showFilters}
           />
         </div>
 
