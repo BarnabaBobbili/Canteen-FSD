@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
+import DiscountForm from './Discount/DiscountForm';
+import ActiveDiscountsTab from './Discount/ActiveDiscountsTab';
+import AllMenuItemsTab from './Discount/AllMenuItemsTab';
+import MostOrderedTab from './Discount/MostOrderedTab';
 import {
-  Tag, TrendingUp, Clock, Package, Percent, DollarSign, X, AlertCircle,
-  CheckCircle, Calendar, ShoppingCart, Award, RefreshCw, Filter, ArrowUpDown, Plus, Minus, Search,
-  ChevronUp, ChevronDown
+  Tag, TrendingUp, Clock, Package, X, AlertCircle,
+  CheckCircle, RefreshCw, Filter, ArrowUpDown, Search,
+  ChevronUp, ChevronDown, ShoppingCart
 } from 'lucide-react';
 
 const DiscountManagement = () => {
@@ -15,11 +19,6 @@ const DiscountManagement = () => {
   const [mostOrderedItems, setMostOrderedItems] = useState([]);
   const [showManualModal, setShowManualModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [manualDiscount, setManualDiscount] = useState({
-    discountType: 'percentage',
-    discountValue: 0,
-    reason: 'manual'
-  });
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -337,41 +336,19 @@ const DiscountManagement = () => {
 
   const openManualDiscountModal = (item) => {
     setSelectedItem(item);
-    // Set initial discount value to 10 for better UX if no discount exists
-    // Ensure discountValue is always a number
-    const initialValue = item.discount?.value ? Number(item.discount.value) : 10;
-
-    // Default to 'percentage' if no discount or discount type is 'none'
-    const discountType = (item.discount?.type && item.discount.type !== 'none')
-      ? item.discount.type
-      : 'percentage';
-
-    // Default to 'manual' if no reason or reason is 'none'
-    const reason = (item.discount?.reason && item.discount.reason !== 'none')
-      ? item.discount.reason
-      : 'manual';
-
-    setManualDiscount({
-      discountType: discountType,
-      discountValue: initialValue,
-      reason: reason
-    });
     setShowManualModal(true);
   };
 
-  const handleManualDiscountSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleManualDiscountSubmit = async (discountData) => {
     setLoading(true);
     try {
-      console.log('Submitting discount:', manualDiscount);
       const response = await fetch(`${API_BASE_URL}/menu/${selectedItem._id}/discount`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(manualDiscount)
+        body: JSON.stringify(discountData)
       });
 
       if (response.ok) {
@@ -379,6 +356,7 @@ const DiscountManagement = () => {
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchDiscountedItems();
         fetchAllMenuItems();
+        fetchMostOrderedItems();
         setShowManualModal(false);
       } else {
         setApiError('Failed to apply discount');
@@ -576,29 +554,6 @@ const DiscountManagement = () => {
   const filteredDiscountedItems = filterAndSortItems(discountedItems, discountedSearch);
   const filteredAllMenuItems = filterAndSortItems(allMenuItems, allItemsSearch);
   const filteredMostOrderedItems = filterAndSortItems(mostOrderedItems, popularSearch);
-
-  // Calculate discounted price preview for modal - updates reactively
-  const discountPreview = useMemo(() => {
-    if (!selectedItem || !manualDiscount) return { finalPrice: 0, savings: 0 };
-
-    const originalPrice = selectedItem.price || 0;
-    const discountValue = Number(manualDiscount.discountValue) || 0;
-    const discountType = manualDiscount.discountType;
-
-    console.log('useMemo recalculating:', { originalPrice, discountValue, discountType, manualDiscount });
-
-    let finalPrice = originalPrice;
-    if (discountType === 'percentage') {
-      finalPrice = originalPrice - (originalPrice * discountValue / 100);
-    } else if (discountType === 'fixed') {
-      finalPrice = Math.max(0, originalPrice - discountValue);
-    }
-
-    const savings = originalPrice - finalPrice;
-    console.log('useMemo result:', { finalPrice, savings });
-    return { finalPrice, savings };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItem, manualDiscount]);
 
   return (
     <DashboardLayout>
@@ -901,298 +856,32 @@ const DiscountManagement = () => {
 
         {/* Content based on active tab */}
         {activeTab === 'discounted' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredDiscountedItems.length === 0 ? (
-              <div className="col-span-full text-center py-12 text-gray-500">
-                <Tag size={48} className="mx-auto mb-4 opacity-50" />
-                <p className="text-lg">
-                  {discountedItems.length === 0
-                    ? 'No active discounts'
-                    : 'No items match your filters'}
-                </p>
-                <p className="text-sm">
-                  {discountedItems.length === 0
-                    ? 'Apply automatic or manual discounts to get started'
-                    : 'Try adjusting your filters to see more items'}
-                </p>
-              </div>
-            ) : (
-              filteredDiscountedItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="bg-white rounded-lg shadow-md p-5 hover:shadow-lg transition border border-gray-200"
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-bold text-lg text-gray-800">{item.itemName}</h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getDiscountBadgeColor(item.discount.reason)}`}>
-                      {item.discount.reason.replace('_', ' ').toUpperCase()}
-                    </span>
-                  </div>
-
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <DollarSign size={16} />
-                      <span className="line-through">Rs. {item.price.toFixed(2)}</span>
-                      <span className="text-green-600 font-bold text-lg">
-                        Rs. {calculateDiscountedPrice(item.price, item.discount).toFixed(2)}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm">
-                      <Percent size={16} className="text-indigo-600" />
-                      <span className="font-semibold text-indigo-600">
-                        {item.discount.type === 'percentage'
-                          ? `${item.discount.value}% OFF`
-                          : `Rs. ${item.discount.value} OFF`}
-                      </span>
-                    </div>
-
-                    {item.stockQuantity !== undefined && (
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Package size={16} />
-                        <span>Stock: {item.stockQuantity} units</span>
-                      </div>
-                    )}
-
-                    {item.expiryDate && (
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Calendar size={16} />
-                        <span>Expires: {formatDate(item.expiryDate)}</span>
-                      </div>
-                    )}
-
-                    <div className="text-xs text-gray-500">
-                      Applied: {formatDate(item.discount.appliedAt)}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => openManualDiscountModal(item)}
-                      className="flex-1 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition text-sm font-medium"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleRemoveDiscount(item._id)}
-                      className="flex-1 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm font-medium"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+          <ActiveDiscountsTab
+            items={filteredDiscountedItems}
+            onEdit={openManualDiscountModal}
+            onRemove={handleRemoveDiscount}
+            calculateDiscountedPrice={calculateDiscountedPrice}
+            getDiscountBadgeColor={getDiscountBadgeColor}
+            formatDate={formatDate}
+          />
         )}
 
         {activeTab === 'all' && (
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            {filteredAllMenuItems.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                <ShoppingCart size={48} className="mx-auto mb-4 opacity-50" />
-                <p className="text-lg">
-                  {allMenuItems.length === 0
-                    ? 'No menu items available'
-                    : 'No items match your filters'}
-                </p>
-                <p className="text-sm">
-                  {allMenuItems.length === 0
-                    ? 'Add menu items to get started'
-                    : 'Try adjusting your filters to see more items'}
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Item Name</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Expiry</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Discount</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {filteredAllMenuItems.map((item) => (
-                      <tr key={item._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{item.itemName}</td>
-                        <td className="px-6 py-4 text-sm text-gray-600 capitalize">{item.category}</td>
-                        <td className="px-6 py-4 text-sm text-gray-900">Rs. {item.price.toFixed(2)}</td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
-                          {item.stockQuantity !== undefined ? `${item.stockQuantity}` : 'N/A'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
-                          {item.expiryDate ? (
-                            <span className={
-                              new Date(item.expiryDate) < new Date()
-                                ? 'text-red-600 font-semibold'
-                                : new Date(item.expiryDate) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-                                ? 'text-orange-600 font-semibold'
-                                : 'text-gray-600'
-                            }>
-                              {formatDate(item.expiryDate)}
-                            </span>
-                          ) : (
-                            <span className="text-gray-400">N/A</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          {item.discount?.type !== 'none' && item.discount?.value > 0 ? (
-                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
-                              {item.discount.type === 'percentage'
-                                ? `${item.discount.value}% OFF`
-                                : `Rs. ${item.discount.value} OFF`}
-                            </span>
-                          ) : (
-                            <span className="text-gray-400">None</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          <button
-                            onClick={() => openManualDiscountModal(item)}
-                            className={`px-3 py-1.5 rounded-lg font-medium text-xs flex items-center gap-1 transition-colors ${
-                              item.discount?.type !== 'none' && item.discount?.value > 0
-                                ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
-                                : 'bg-green-100 text-green-700 hover:bg-green-200'
-                            }`}
-                          >
-                            {item.discount?.type !== 'none' && item.discount?.value > 0 ? (
-                              <>
-                                <Tag size={14} />
-                                Edit Discount
-                              </>
-                            ) : (
-                              <>
-                                <Plus size={14} />
-                                Add Discount
-                              </>
-                            )}
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <AllMenuItemsTab
+              items={filteredAllMenuItems}
+              onEdit={openManualDiscountModal}
+              formatDate={formatDate}
+            />
           </div>
         )}
 
         {activeTab === 'popular' && (
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <Award size={24} />
-                Top Most Ordered Items (Last 30 Days)
-              </h2>
-              <p className="text-sm opacity-90 mt-1">Track your best-selling items and consider strategic discounts</p>
-            </div>
-            {filteredMostOrderedItems.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                <TrendingUp size={48} className="mx-auto mb-4 opacity-50" />
-                <p className="text-lg">
-                  {mostOrderedItems.length === 0
-                    ? 'No order data available'
-                    : 'No items match your filters'}
-                </p>
-                <p className="text-sm">
-                  {mostOrderedItems.length === 0
-                    ? 'Orders will appear here once placed'
-                    : 'Try adjusting your filters to see more items'}
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rank</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Item Name</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Sold</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Orders</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Revenue</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Discount</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {filteredMostOrderedItems.map((item, index) => (
-                      <tr key={item._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                            index === 0 ? 'bg-yellow-400 text-white' :
-                            index === 1 ? 'bg-gray-300 text-white' :
-                            index === 2 ? 'bg-orange-400 text-white' :
-                            'bg-gray-100 text-gray-600'
-                          }`}>
-                            {index + 1}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{item._id}</td>
-                        <td className="px-6 py-4 text-sm text-gray-600 capitalize">
-                          {item.menuItemDetails?.category || 'N/A'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 font-semibold">{item.totalQuantity} units</td>
-                        <td className="px-6 py-4 text-sm text-gray-600">{item.orderCount} orders</td>
-                        <td className="px-6 py-4 text-sm text-green-600 font-semibold">Rs. {item.totalRevenue.toFixed(2)}</td>
-                        <td className="px-6 py-4 text-sm">
-                          {item.menuItemDetails?.discount?.type !== 'none' && item.menuItemDetails?.discount?.value > 0 ? (
-                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
-                              {item.menuItemDetails.discount.type === 'percentage'
-                                ? `${item.menuItemDetails.discount.value}% OFF`
-                                : `Rs. ${item.menuItemDetails.discount.value} OFF`}
-                            </span>
-                          ) : (
-                            <span className="text-gray-400">None</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-sm">
-                          {item.menuItemDetails ? (
-                            <button
-                              onClick={() => {
-                                setSelectedItem(item.menuItemDetails);
-                                setManualDiscount({
-                                  discountType: item.menuItemDetails.discount?.type === 'percentage' || item.menuItemDetails.discount?.type === 'fixed'
-                                    ? item.menuItemDetails.discount.type
-                                    : 'percentage',
-                                  discountValue: item.menuItemDetails.discount?.value || 0,
-                                  reason: 'manual'
-                                });
-                                setShowManualModal(true);
-                              }}
-                              className={`px-3 py-1.5 rounded-lg font-medium text-xs flex items-center gap-1 transition-colors ${
-                                item.menuItemDetails.discount?.type !== 'none' && item.menuItemDetails.discount?.value > 0
-                                  ? 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
-                                  : 'bg-green-100 text-green-700 hover:bg-green-200'
-                              }`}
-                            >
-                              {item.menuItemDetails.discount?.type !== 'none' && item.menuItemDetails.discount?.value > 0 ? (
-                                <>
-                                  <Tag size={14} />
-                                  Edit Discount
-                                </>
-                              ) : (
-                                <>
-                                  <Plus size={14} />
-                                  Add Discount
-                                </>
-                              )}
-                            </button>
-                          ) : (
-                            <span className="text-gray-400 text-xs">N/A</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <MostOrderedTab
+              items={filteredMostOrderedItems}
+              onEdit={openManualDiscountModal}
+            />
           </div>
         )}
 
@@ -1499,161 +1188,12 @@ const DiscountManagement = () => {
 
         {/* Manual Discount Modal */}
         {showManualModal && selectedItem && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold text-gray-800">Apply Discount</h2>
-                  <button
-                    onClick={() => setShowManualModal(false)}
-                    className="text-gray-400 hover:text-gray-600"
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-
-                <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-600">Item</p>
-                  <p className="font-bold text-gray-900">{selectedItem.itemName}</p>
-                  <p className="text-sm text-gray-600 mt-1">Current Price: Rs. {selectedItem.price.toFixed(2)}</p>
-                </div>
-
-                <form onSubmit={handleManualDiscountSubmit}>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Discount Type
-                      </label>
-                      <select
-                        value={manualDiscount.discountType}
-                        onChange={(e) => {
-                          console.log('Discount type changed to:', e.target.value);
-                          setManualDiscount({ ...manualDiscount, discountType: e.target.value });
-                        }}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
-                      >
-                        <option value="percentage">Percentage (%)</option>
-                        <option value="fixed">Fixed Amount (Rs.)</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Discount Value
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const currentValue = Number(manualDiscount.discountValue) || 0;
-                            const step = manualDiscount.discountType === 'percentage' ? 5 : 10;
-                            const newValue = Math.max(0, currentValue - step);
-                            setManualDiscount({ ...manualDiscount, discountValue: Number(newValue) });
-                          }}
-                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition"
-                        >
-                          <Minus size={20} />
-                        </button>
-                        <input
-                          type="number"
-                          value={manualDiscount.discountValue}
-                          onChange={(e) => {
-                            const value = e.target.value === '' ? 0 : parseFloat(e.target.value);
-                            console.log('Discount value changed to:', value);
-                            if (!isNaN(value) && value >= 0) {
-                              const newDiscount = {
-                                ...manualDiscount,
-                                discountValue: Number(value)
-                              };
-                              console.log('Setting new discount state:', newDiscount);
-                              setManualDiscount(newDiscount);
-                            }
-                          }}
-                          min="0"
-                          max={manualDiscount.discountType === 'percentage' ? 100 : selectedItem.price}
-                          step="1"
-                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-center text-lg font-semibold"
-                          required
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const currentValue = Number(manualDiscount.discountValue) || 0;
-                            const step = manualDiscount.discountType === 'percentage' ? 5 : 10;
-                            const maxValue = manualDiscount.discountType === 'percentage' ? 100 : selectedItem.price;
-                            const newValue = Math.min(maxValue, currentValue + step);
-                            setManualDiscount({ ...manualDiscount, discountValue: Number(newValue) });
-                          }}
-                          className="p-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition"
-                        >
-                          <Plus size={20} />
-                        </button>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1 text-center">
-                        {manualDiscount.discountType === 'percentage' ?
-                          `${manualDiscount.discountValue}% discount` :
-                          `Rs. ${manualDiscount.discountValue} off`}
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Reason
-                      </label>
-                      <select
-                        value={manualDiscount.reason}
-                        onChange={(e) => setManualDiscount({ ...manualDiscount, reason: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
-                      >
-                        <option value="manual">Manual Discount</option>
-                        <option value="clearance">Clearance Sale</option>
-                        <option value="low_stock">Low Stock</option>
-                        <option value="expiry">Near Expiry</option>
-                      </select>
-                    </div>
-
-                    <div className="p-4 bg-indigo-50 rounded-lg border-2 border-indigo-200">
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm font-medium text-gray-700">Original Price:</p>
-                        <p className="text-lg text-gray-600 line-through">Rs. {selectedItem.price.toFixed(2)}</p>
-                      </div>
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm font-medium text-gray-700">You Save:</p>
-                        <p className="text-lg font-bold text-green-600">
-                          Rs. {discountPreview.savings.toFixed(2)}
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t-2 border-indigo-300">
-                        <div className="flex justify-between items-center">
-                          <p className="text-base font-semibold text-gray-800">Final Price:</p>
-                          <p className="text-3xl font-bold text-indigo-600">
-                            Rs. {discountPreview.finalPrice.toFixed(2)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 mt-6">
-                    <button
-                      type="button"
-                      onClick={() => setShowManualModal(false)}
-                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
-                    >
-                      {loading ? 'Applying...' : 'Apply Discount'}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+          <DiscountForm
+            selectedItem={selectedItem}
+            onClose={() => setShowManualModal(false)}
+            onSubmit={handleManualDiscountSubmit}
+            loading={loading}
+          />
         )}
       </div>
     </DashboardLayout>
