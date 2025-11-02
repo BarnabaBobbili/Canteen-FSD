@@ -23,16 +23,18 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Helper function to determine redirect path based on user role
+  // Always redirect to default dashboard for security
   const getDefaultRedirect = (userRole) => {
     return userRole === 'admin' ? '/admin' : '/dashboard';
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const from = location.state?.from?.pathname || getDefaultRedirect(user?.role);
-      navigate(from, { replace: true });
+    if (isAuthenticated && user) {
+      // Always redirect to default dashboard - ignore previous location for security
+      const redirectPath = getDefaultRedirect(user.role);
+      navigate(redirectPath, { replace: true, state: null });
     }
-  }, [isAuthenticated, navigate, location, user]);
+  }, [isAuthenticated, navigate, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,9 +70,9 @@ const Signup = () => {
       const result = await register(userData);
 
       if (result.success) {
-        const defaultPath = getDefaultRedirect(result.user?.role || 'customer');
-        const from = location.state?.from?.pathname || defaultPath;
-        navigate(from, { replace: true });
+        // Always redirect to default dashboard for security
+        const redirectPath = getDefaultRedirect(result.user?.role || 'customer');
+        navigate(redirectPath, { replace: true, state: null });
       } else {
         setError(result.message || 'Registration failed. Please try again.');
       }
@@ -94,9 +96,9 @@ const Signup = () => {
       const result = await googleLogin(credentialResponse.credential);
 
       if (result.success) {
-        const defaultPath = getDefaultRedirect(result.user?.role || 'customer');
-        const from = location.state?.from?.pathname || defaultPath;
-        navigate(from, { replace: true });
+        // Always redirect to default dashboard for security
+        const redirectPath = getDefaultRedirect(result.user?.role || 'customer');
+        navigate(redirectPath, { replace: true, state: null });
       } else {
         setError(result.message || 'Google sign-up failed. Please try again.');
       }

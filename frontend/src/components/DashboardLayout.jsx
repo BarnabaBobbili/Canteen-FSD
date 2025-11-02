@@ -93,7 +93,7 @@ const DashboardLayout = ({ children }) => {
       setShowConfirmDialog(true);
     } else {
       logout();
-      navigate('/login');
+      navigate('/login', { replace: true, state: null });
     }
   };
 
@@ -104,7 +104,7 @@ const DashboardLayout = ({ children }) => {
   const handleConfirmLogout = () => {
     setShowConfirmDialog(false);
     logout();
-    navigate('/login');
+    navigate('/login', { replace: true, state: null });
   };
 
   const isActive = (path) => {
