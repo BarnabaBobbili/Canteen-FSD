@@ -7,8 +7,8 @@ import HomePage from './components/HomePage';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
+import AdminDashboard from './components/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import CanteenManagement from './components/CanteenManagement';
 import MenuManagement from './components/Menu/MenuManagement';
 import OrderManagement from './components/Orders/OrderManagement';
 import InventoryManagement from './components/Inventory/InventoryManagement';
@@ -32,20 +32,22 @@ function App() {
             <Route path="/signup" element={<Signup />} />
 
             {/* Protected Routes */}
+            {/* Admin Dashboard - Admin Only */}
             <Route
-              path="/dashboard"
+              path="/admin"
               element={
-                <ProtectedRoute>
-                  <Dashboard />
+                <ProtectedRoute roles={['admin']}>
+                  <AdminDashboard />
                 </ProtectedRoute>
               }
             />
 
+            {/* Regular Dashboard - All authenticated users except admin */}
             <Route
-              path="/management"
+              path="/dashboard"
               element={
-                <ProtectedRoute roles={['admin', 'manager', 'cashier', 'staff']}>
-                  <CanteenManagement showTabs={true} />
+                <ProtectedRoute roles={['manager', 'cashier', 'staff', 'customer']}>
+                  <Dashboard />
                 </ProtectedRoute>
               }
             />

@@ -25,7 +25,7 @@ import {
   generateFallbackActivities
 } from './Dashboard/dashboardHelpers';
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   const { user, token } = useAuth();
 
   // State for dynamic data
@@ -244,4 +244,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

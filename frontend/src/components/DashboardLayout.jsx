@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   ShoppingCart, UtensilsCrossed, Package, Users, Truck, Tag,
-  MessageSquare, CreditCard, LogOut, Home, Menu, LayoutDashboard, Activity
+  MessageSquare, CreditCard, LogOut, Menu, LayoutDashboard, Activity, X, AlertCircle
 } from 'lucide-react';
 
 const DashboardLayout = ({ children }) => {
@@ -12,6 +12,7 @@ const DashboardLayout = ({ children }) => {
   const { user, logout } = useAuth();
   // Default sidebar closed on mobile, open on desktop
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   // Navigation items with role-based access
   const navItems = [
@@ -82,7 +83,21 @@ const DashboardLayout = ({ children }) => {
     item.roles.includes(user?.role)
   );
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    if (user?.role === 'admin') {
+      setShowConfirmDialog(true);
+    } else {
+      logout();
+      navigate('/login');
+    }
+  };
+
+  const handleStayInDashboard = () => {
+    setShowConfirmDialog(false);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowConfirmDialog(false);
     logout();
     navigate('/login');
   };
@@ -162,43 +177,22 @@ const DashboardLayout = ({ children }) => {
                 <p className="text-xs sm:text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
                 <p className="text-xs text-gray-500 truncate">{user?.email}</p>
               </div>
-              <div className="flex gap-1.5 sm:gap-2">
-                <button
-                  onClick={() => {
-                    navigate('/');
-                    if (window.innerWidth < 768) setSidebarOpen(false);
-                  }}
-                  className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs sm:text-sm"
-                >
-                  <Home size={14} className="sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">Home</span>
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-xs sm:text-sm"
-                >
-                  <LogOut size={14} className="sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">Logout</span>
-                </button>
-              </div>
+              <button
+                onClick={handleLogoutClick}
+                className="w-full flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-xs sm:text-sm"
+              >
+                <LogOut size={14} className="sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
             </>
           ) : (
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => navigate('/')}
-                className="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 mx-auto"
-                title="Home"
-              >
-                <Home size={18} className="sm:w-5 sm:h-5" />
-              </button>
-              <button
-                onClick={handleLogout}
-                className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 mx-auto"
-                title="Logout"
-              >
-                <LogOut size={18} className="sm:w-5 sm:h-5" />
-              </button>
-            </div>
+            <button
+              onClick={handleLogoutClick}
+              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 mx-auto"
+              title="Logout"
+            >
+              <LogOut size={18} className="sm:w-5 sm:h-5" />
+            </button>
           )}
         </div>
 
@@ -252,6 +246,52 @@ const DashboardLayout = ({ children }) => {
           {children}
         </div>
       </div>
+
+      {/* Admin Logout Confirmation Dialog */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="bg-sky-100 p-3 rounded-full">
+                  <AlertCircle className="w-6 h-6 text-sky-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Confirm Logout</h3>
+                  <p className="text-sm text-gray-500">You are logged in as Admin</p>
+                </div>
+              </div>
+              <button
+                onClick={handleStayInDashboard}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-gray-600">
+                Are you sure you want to logout from your admin account?
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleStayInDashboard}
+                className="w-full px-4 py-3 bg-gradient-to-r from-sky-400 to-blue-500 text-white rounded-lg hover:shadow-lg transition-all font-medium"
+              >
+                Stay in Dashboard
+              </button>
+              <button
+                onClick={handleConfirmLogout}
+                className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all font-medium"
+              >
+                Yes, Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
