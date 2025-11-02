@@ -52,71 +52,71 @@ const AdminDashboard = () => {
   const [activityTypeFilter, setActivityTypeFilter] = useState('all');
   const [customDateRange, setCustomDateRange] = useState({ start: '', end: '' });
 
-  // Role-based module access
+  // Role-based module access (admin paths with /admin prefix)
   const modules = [
     {
       name: 'Orders',
       description: 'Manage customer orders and track status',
       icon: ShoppingCart,
-      path: '/orders',
+      path: '/admin/orders',
       color: 'from-blue-500 to-blue-600',
-      roles: ['admin', 'manager', 'cashier', 'staff']
+      roles: ['admin']
     },
     {
       name: 'Menu',
       description: 'Manage menu items and categories',
       icon: UtensilsCrossed,
-      path: '/menu',
+      path: '/admin/menu',
       color: 'from-sky-500 to-sky-600',
-      roles: ['admin', 'manager', 'staff']
+      roles: ['admin']
     },
     {
       name: 'Inventory',
       description: 'Track stock and manage inventory',
       icon: Package,
-      path: '/inventory',
+      path: '/admin/inventory',
       color: 'from-green-500 to-green-600',
-      roles: ['admin', 'manager', 'staff']
+      roles: ['admin']
     },
     {
       name: 'Staff Management',
       description: 'Manage staff accounts and roles',
       icon: Users,
-      path: '/staff',
+      path: '/admin/staff',
       color: 'from-purple-500 to-purple-600',
-      roles: ['admin', 'manager']
+      roles: ['admin']
     },
     {
       name: 'Suppliers',
       description: 'Manage supplier information',
       icon: Truck,
-      path: '/suppliers',
+      path: '/admin/suppliers',
       color: 'from-cyan-500 to-cyan-600',
-      roles: ['admin', 'manager']
+      roles: ['admin']
     },
     {
       name: 'Discounts',
       description: 'Create and manage discount codes',
       icon: Tag,
-      path: '/discounts',
+      path: '/admin/discounts',
       color: 'from-pink-500 to-pink-600',
-      roles: ['admin', 'manager']
+      roles: ['admin']
     },
     {
       name: 'Feedback',
       description: 'View and respond to customer feedback',
       icon: MessageSquare,
-      path: '/feedback',
+      path: '/admin/feedback',
       color: 'from-indigo-500 to-indigo-600',
-      roles: ['admin', 'manager']
+      roles: ['admin']
     },
     {
       name: 'Payments',
       description: 'Process payments and view transactions',
       icon: CreditCard,
-      path: '/payments',
+      path: '/admin/payments',
       color: 'from-emerald-500 to-emerald-600',
-      roles: ['admin', 'manager', 'cashier']
+      roles: ['admin']
     }
   ];
 

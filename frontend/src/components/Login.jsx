@@ -7,7 +7,7 @@ import { GoogleLogin } from '@react-oauth/google';
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, googleLogin, isAuthenticated } = useAuth();
+  const { login, googleLogin, isAuthenticated, user } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -25,12 +25,17 @@ const Login = () => {
     { label: 'Staff', email: 'staff@canteen.com', password: 'staff123', role: 'staff' }
   ];
 
+  // Helper function to determine redirect path based on user role
+  const getDefaultRedirect = (userRole) => {
+    return userRole === 'admin' ? '/admin' : '/dashboard';
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
-      const from = location.state?.from?.pathname || '/dashboard';
+      const from = location.state?.from?.pathname || getDefaultRedirect(user?.role);
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, location]);
+  }, [isAuthenticated, navigate, location, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +46,8 @@ const Login = () => {
       const result = await login(formData.email, formData.password);
 
       if (result.success) {
-        const from = location.state?.from?.pathname || '/dashboard';
+        const defaultPath = getDefaultRedirect(result.user?.role);
+        const from = location.state?.from?.pathname || defaultPath;
         navigate(from, { replace: true });
       } else {
         setError(result.message || 'Login failed. Please check your credentials.');
@@ -65,7 +71,8 @@ const Login = () => {
       const result = await googleLogin(credentialResponse.credential);
 
       if (result.success) {
-        const from = location.state?.from?.pathname || '/dashboard';
+        const defaultPath = getDefaultRedirect(result.user?.role);
+        const from = location.state?.from?.pathname || defaultPath;
         navigate(from, { replace: true });
       } else {
         setError(result.message || 'Google login failed. Please try again.');

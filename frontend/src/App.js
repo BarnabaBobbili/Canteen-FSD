@@ -32,7 +32,8 @@ function App() {
             <Route path="/signup" element={<Signup />} />
 
             {/* Protected Routes */}
-            {/* Admin Dashboard - Admin Only */}
+
+            {/* ========== ADMIN ROUTES (with /admin prefix) ========== */}
             <Route
               path="/admin"
               element={
@@ -42,7 +43,70 @@ function App() {
               }
             />
 
-            {/* Regular Dashboard - All authenticated users except admin */}
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <OrderManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/menu"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <MenuManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/inventory"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <InventoryManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/staff"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <StaffManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/activities"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <ActivityLog />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/suppliers"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <SupplierManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/discounts"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <DiscountManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* ========== REGULAR USER ROUTES (without /admin prefix) ========== */}
             <Route
               path="/dashboard"
               element={
@@ -55,7 +119,7 @@ function App() {
             <Route
               path="/orders"
               element={
-                <ProtectedRoute roles={['admin', 'manager', 'cashier', 'staff']}>
+                <ProtectedRoute roles={['manager', 'cashier', 'staff']}>
                   <OrderManagement />
                 </ProtectedRoute>
               }
@@ -64,7 +128,7 @@ function App() {
             <Route
               path="/menu"
               element={
-                <ProtectedRoute roles={['admin', 'manager', 'staff']}>
+                <ProtectedRoute roles={['manager', 'staff']}>
                   <MenuManagement />
                 </ProtectedRoute>
               }
@@ -73,7 +137,7 @@ function App() {
             <Route
               path="/inventory"
               element={
-                <ProtectedRoute roles={['admin', 'manager', 'staff']}>
+                <ProtectedRoute roles={['manager', 'staff']}>
                   <InventoryManagement />
                 </ProtectedRoute>
               }
@@ -82,7 +146,7 @@ function App() {
             <Route
               path="/staff"
               element={
-                <ProtectedRoute roles={['admin', 'manager']}>
+                <ProtectedRoute roles={['manager']}>
                   <StaffManagement />
                 </ProtectedRoute>
               }
@@ -91,27 +155,25 @@ function App() {
             <Route
               path="/activities"
               element={
-                <ProtectedRoute roles={['admin', 'manager']}>
+                <ProtectedRoute roles={['manager']}>
                   <ActivityLog />
                 </ProtectedRoute>
               }
             />
 
-            {/* Supplier Management Route */}
             <Route
               path="/suppliers"
               element={
-                <ProtectedRoute roles={['admin', 'manager']}>
+                <ProtectedRoute roles={['manager']}>
                   <SupplierManagement />
                 </ProtectedRoute>
               }
             />
 
-            {/* Discount Management Route */}
             <Route
               path="/discounts"
               element={
-                <ProtectedRoute roles={['admin', 'manager']}>
+                <ProtectedRoute roles={['manager']}>
                   <DiscountManagement />
                 </ProtectedRoute>
               }

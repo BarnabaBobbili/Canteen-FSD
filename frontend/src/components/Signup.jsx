@@ -7,7 +7,7 @@ import { GoogleLogin } from '@react-oauth/google';
 const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { register, googleLogin, isAuthenticated } = useAuth();
+  const { register, googleLogin, isAuthenticated, user } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -22,12 +22,17 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // Helper function to determine redirect path based on user role
+  const getDefaultRedirect = (userRole) => {
+    return userRole === 'admin' ? '/admin' : '/dashboard';
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
-      const from = location.state?.from?.pathname || '/dashboard';
+      const from = location.state?.from?.pathname || getDefaultRedirect(user?.role);
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, location]);
+  }, [isAuthenticated, navigate, location, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +68,8 @@ const Signup = () => {
       const result = await register(userData);
 
       if (result.success) {
-        const from = location.state?.from?.pathname || '/dashboard';
+        const defaultPath = getDefaultRedirect(result.user?.role || 'customer');
+        const from = location.state?.from?.pathname || defaultPath;
         navigate(from, { replace: true });
       } else {
         setError(result.message || 'Registration failed. Please try again.');
@@ -88,7 +94,8 @@ const Signup = () => {
       const result = await googleLogin(credentialResponse.credential);
 
       if (result.success) {
-        const from = location.state?.from?.pathname || '/dashboard';
+        const defaultPath = getDefaultRedirect(result.user?.role || 'customer');
+        const from = location.state?.from?.pathname || defaultPath;
         navigate(from, { replace: true });
       } else {
         setError(result.message || 'Google sign-up failed. Please try again.');

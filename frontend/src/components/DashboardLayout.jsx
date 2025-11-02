@@ -14,65 +14,70 @@ const DashboardLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
+  // Helper function to get path with admin prefix if user is admin
+  const getPath = (basePath) => {
+    return user?.role === 'admin' ? `/admin${basePath === '/dashboard' ? '' : basePath}` : basePath;
+  };
+
   // Navigation items with role-based access
   const navItems = [
     {
       name: 'Dashboard',
-      path: '/dashboard',
+      path: getPath('/dashboard'),
       icon: LayoutDashboard,
       roles: ['admin', 'manager', 'cashier', 'staff', 'customer']
     },
     {
       name: 'Orders',
-      path: '/orders',
+      path: getPath('/orders'),
       icon: ShoppingCart,
       roles: ['admin', 'manager', 'cashier', 'staff']
     },
     {
       name: 'Menu',
-      path: '/menu',
+      path: getPath('/menu'),
       icon: UtensilsCrossed,
       roles: ['admin', 'manager', 'staff']
     },
     {
       name: 'Inventory',
-      path: '/inventory',
+      path: getPath('/inventory'),
       icon: Package,
       roles: ['admin', 'manager', 'staff']
     },
     {
       name: 'Staff',
-      path: '/staff',
+      path: getPath('/staff'),
       icon: Users,
       roles: ['admin', 'manager']
     },
     {
       name: 'Activity Log',
-      path: '/activities',
+      path: getPath('/activities'),
       icon: Activity,
       roles: ['admin', 'manager']
     },
     {
       name: 'Suppliers',
-      path: '/suppliers',
+      path: getPath('/suppliers'),
       icon: Truck,
       roles: ['admin', 'manager']
     },
     {
       name: 'Discounts',
-      path: '/discounts',
+      path: getPath('/discounts'),
       icon: Tag,
       roles: ['admin', 'manager']
     },
     {
       name: 'Feedback',
-      path: '/feedback',
+      path: getPath('/feedback'),
       icon: MessageSquare,
       roles: ['admin', 'manager']
     },
     {
       name: 'Payments',
-      path: '/payments',
+      path: getPath('/payments'),
       icon: CreditCard,
       roles: ['admin', 'manager', 'cashier']
     }
