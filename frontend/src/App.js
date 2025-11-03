@@ -8,6 +8,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
+import CashierDashboard from './components/CashierDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import MenuManagement from './components/Menu/MenuManagement';
 import OrderManagement from './components/Orders/OrderManagement';
@@ -106,11 +107,21 @@ function App() {
               }
             />
 
+            {/* ========== CASHIER ROUTES ========== */}
+            <Route
+              path="/cashier"
+              element={
+                <ProtectedRoute roles={['cashier']}>
+                  <CashierDashboard />
+                </ProtectedRoute>
+              }
+            />
+
             {/* ========== REGULAR USER ROUTES (without /admin prefix) ========== */}
             <Route
               path="/dashboard"
               element={
-                <ProtectedRoute roles={['manager', 'cashier', 'staff', 'customer']}>
+                <ProtectedRoute roles={['manager', 'staff', 'customer']}>
                   <Dashboard />
                 </ProtectedRoute>
               }

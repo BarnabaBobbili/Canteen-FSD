@@ -28,7 +28,9 @@ const Login = () => {
   // Helper function to determine redirect path based on user role
   // Always redirect to default dashboard for security
   const getDefaultRedirect = (userRole) => {
-    return userRole === 'admin' ? '/admin' : '/dashboard';
+    if (userRole === 'admin') return '/admin';
+    if (userRole === 'cashier') return '/cashier';
+    return '/dashboard';
   };
 
   useEffect(() => {
