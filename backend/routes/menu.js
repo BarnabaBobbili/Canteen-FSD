@@ -4,6 +4,7 @@ const Menu = require('../models/Menu');
 const Order = require('../models/Order');
 const { logActivity, ActivityTypes, ResourceTypes } = require('../middleware/activityLogger');
 const { authenticateToken } = require('../middleware/auth');
+const upload = require('../middleware/upload');
 
 // GET all menu items
 router.get('/', async (req, res) => {
@@ -96,15 +97,35 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// UPLOAD image for menu item
+router.post('/upload-image', authenticateToken, upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file provided' });
+    }
+
+    // Return the file path relative to the server
+    const imagePath = `/uploads/menu-items/${req.file.filename}`;
+    res.json({ imagePath });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // CREATE new menu item
 router.post('/', authenticateToken, async (req, res) => {
   const menuItem = new Menu({
     itemName: req.body.itemName,
     category: req.body.category,
+    itemType: req.body.itemType || 'homemade',
     price: req.body.price,
     description: req.body.description,
     allergens: req.body.allergens,
     available: req.body.available !== false,
+    stockQuantity: req.body.stockQuantity || 0,
+    lowStockThreshold: req.body.lowStockThreshold || 10,
+    expiryDate: req.body.expiryDate || null,
+    image: req.body.image || null,
     createdBy: req.user._id,
     updatedBy: req.user._id
   });
@@ -277,8 +298,10 @@ router.post('/discounts/auto-low-stock', authenticateToken, async (req, res) => 
     const { discountType = 'percentage', discountValue = 15 } = req.body;
 
     // Find items with stock below threshold
+    // Only apply to packaged items (exclude homemade from auto-discounts)
     const lowStockItems = await Menu.find({
-      stockQuantity: { $gt: 0, $lte: '$lowStockThreshold' }
+      stockQuantity: { $gt: 0, $lte: '$lowStockThreshold' },
+      itemType: 'packaged'
     });
 
     const updates = [];
@@ -328,13 +351,15 @@ router.post('/discounts/auto-expiry', authenticateToken, async (req, res) => {
     expiryDate.setDate(expiryDate.getDate() + daysThreshold);
 
     // Find items expiring soon
+    // Only apply to packaged items (exclude homemade from auto-discounts)
     const expiringItems = await Menu.find({
       expiryDate: {
         $exists: true,
         $ne: null,
         $lte: expiryDate,
         $gte: new Date()
-      }
+      },
+      itemType: 'packaged'
     });
 
     const updates = [];

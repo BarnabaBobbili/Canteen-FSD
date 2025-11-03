@@ -76,12 +76,15 @@ export const removeDiscount = async (itemId, token) => {
 
 /**
  * Get low stock items from menu items
+ * Only includes packaged items (excludes homemade from auto-discount)
  * @param {Array} allMenuItems - All menu items
  * @returns {Array} - Sorted low stock items
  */
 export const getLowStockItems = (allMenuItems) => {
   const items = allMenuItems.filter(item =>
-    item.stockQuantity !== undefined && item.stockQuantity <= item.lowStockThreshold
+    (item.itemType || 'homemade') === 'packaged' &&
+    item.stockQuantity !== undefined &&
+    item.stockQuantity <= item.lowStockThreshold
   );
 
   return sortByDiscountStatus(items, 'low_stock');
@@ -89,6 +92,7 @@ export const getLowStockItems = (allMenuItems) => {
 
 /**
  * Get expiring items from menu items
+ * Only includes packaged items (excludes homemade from auto-discount)
  * @param {Array} allMenuItems - All menu items
  * @returns {Array} - Sorted expiring items
  */
@@ -97,7 +101,7 @@ export const getExpiringItems = (allMenuItems) => {
   sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
 
   const items = allMenuItems.filter(item => {
-    if (!item.expiryDate) return false;
+    if ((item.itemType || 'homemade') !== 'packaged' || !item.expiryDate) return false;
     const expiryDate = new Date(item.expiryDate);
     return expiryDate <= sevenDaysFromNow && expiryDate >= new Date();
   });

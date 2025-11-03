@@ -11,6 +11,12 @@ const menuSchema = new mongoose.Schema({
     required: true,
     enum: ['snacks', 'beverages', 'meals', 'desserts', 'breakfast']
   },
+  itemType: {
+    type: String,
+    required: true,
+    enum: ['homemade', 'packaged'],
+    default: 'homemade'
+  },
   price: {
     type: Number,
     required: true,
@@ -40,6 +46,13 @@ const menuSchema = new mongoose.Schema({
   },
   expiryDate: {
     type: Date
+  },
+  preparedDate: {
+    type: Date
+  },
+  image: {
+    type: String,
+    default: null
   },
   discount: {
     type: {
