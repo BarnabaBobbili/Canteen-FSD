@@ -3,6 +3,8 @@
  * Pure utility functions for supplier data processing
  */
 
+import { validateName, validateEmail as sharedValidateEmail } from '../Shared/validationHelpers';
+
 /**
  * Validate email format
  * @param {string} email - Email address to validate
@@ -20,12 +22,16 @@ export const validateEmail = (email) => {
 export const validateSupplierForm = (form) => {
   const errors = {};
 
-  if (!form.supplierName || form.supplierName.trim() === '') {
-    errors.supplierName = 'Supplier name is required';
+  // Validate supplier name (letters only, min 3 characters)
+  const supplierNameError = validateName(form.supplierName, 'Supplier name');
+  if (supplierNameError) {
+    errors.supplierName = supplierNameError;
   }
 
-  if (!form.contactPerson || form.contactPerson.trim() === '') {
-    errors.contactPerson = 'Contact person is required';
+  // Validate contact person (letters only, min 3 characters)
+  const contactPersonError = validateName(form.contactPerson, 'Contact person');
+  if (contactPersonError) {
+    errors.contactPerson = contactPersonError;
   }
 
   if (!form.email || !validateEmail(form.email)) {

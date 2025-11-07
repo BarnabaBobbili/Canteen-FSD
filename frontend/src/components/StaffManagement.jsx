@@ -17,7 +17,8 @@ import {
   calculateDepartmentDistribution,
   countActiveStaff,
   countInactiveStaff,
-  filterStaff
+  filterStaff,
+  validateStaffForm
 } from './Staff/staffHelpers';
 
 const StaffManagement = () => {
@@ -27,6 +28,7 @@ const StaffManagement = () => {
   const [modalMode, setModalMode] = useState('add');
   const [currentForm, setCurrentForm] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -64,6 +66,14 @@ const StaffManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setApiError('');
+    setErrors({});
+
+    // Validate form
+    const validationErrors = validateStaffForm(currentForm, modalMode);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     try {
       const url = modalMode === 'add'
@@ -148,6 +158,7 @@ const StaffManagement = () => {
 
   const openModal = (mode, item = {}) => {
     setModalMode(mode);
+    setErrors({});
     setApiError('');
 
     if (mode === 'add') {
@@ -171,6 +182,7 @@ const StaffManagement = () => {
   const closeModal = () => {
     setShowModal(false);
     setCurrentForm({});
+    setErrors({});
     setApiError('');
   };
 
@@ -233,6 +245,7 @@ const StaffManagement = () => {
         onChange={setCurrentForm}
         onSubmit={handleSubmit}
         onClose={closeModal}
+        errors={errors}
         apiError={apiError}
       />
 

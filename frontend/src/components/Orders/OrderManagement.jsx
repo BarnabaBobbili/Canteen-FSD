@@ -55,9 +55,16 @@ const OrderManagement = () => {
   const validateForm = () => {
     const errors = {};
 
-    // Customer Name validation
+    // Customer Name validation (letters and spaces only, min 3 characters)
     if (!currentForm.customerName || currentForm.customerName.trim() === '') {
       errors.customerName = 'Customer name is required';
+    } else {
+      const trimmedName = currentForm.customerName.trim();
+      if (trimmedName.length < 3) {
+        errors.customerName = 'Customer name must be at least 3 characters';
+      } else if (!/^[a-zA-Z\s]+$/.test(trimmedName)) {
+        errors.customerName = 'Customer name can only contain letters and spaces';
+      }
     }
 
     // Email validation (optional but must be valid if provided)
@@ -77,9 +84,9 @@ const OrderManagement = () => {
     }
 
     // Order Items validation
-    if (!currentForm.items || currentForm.items.length === 0) {
+    /*if (!currentForm.items || currentForm.items.length === 0) {
       errors.items = 'Please add at least one item to the order';
-    }
+    }*/
 
     return errors;
   };
@@ -228,9 +235,9 @@ const OrderManagement = () => {
   const displayedOrders = filteredOrders.slice(0, displayLimit);
   const hasMoreOrders = totalFilteredCount > displayLimit;
 
-  return (
-    <DashboardLayout>
-      <div className="p-6">
+  const content = (
+    <>
+    <div className="p-6">
         {apiError && <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg">{apiError}</div>}
         {successMessage && <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg">{successMessage}</div>}
 
@@ -400,8 +407,11 @@ const OrderManagement = () => {
         confirmButtonClass="bg-red-600 hover:bg-red-700"
         icon="danger"
       />
-    </DashboardLayout>
+    </>
   );
+
+  // Conditionally wrap in DashboardLayout only for admin
+  return user?.role === 'admin' ? <DashboardLayout>{content}</DashboardLayout> : content;
 };
 
 export default OrderManagement;

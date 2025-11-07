@@ -29,7 +29,9 @@ const Login = () => {
   // Always redirect to default dashboard for security
   const getDefaultRedirect = (userRole) => {
     if (userRole === 'admin') return '/admin';
+    if (userRole === 'manager') return '/manager';
     if (userRole === 'cashier') return '/cashier';
+    if (userRole === 'staff') return '/kitchen';
     return '/dashboard';
   };
 

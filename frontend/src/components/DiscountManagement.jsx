@@ -32,7 +32,7 @@ import {
 } from './Discount/discountService';
 
 const DiscountManagement = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   // Data states
   const [discountedItems, setDiscountedItems] = useState([]);
@@ -291,9 +291,8 @@ const DiscountManagement = () => {
   const filteredAllMenuItems = filterAndSortItems(allMenuItems, allItemsSearch, categoryFilter, expiryFilter, sortBy);
   const filteredMostOrderedItems = filterAndSortItems(mostOrderedItems, popularSearch, categoryFilter, expiryFilter, sortBy);
 
-  return (
-    <DashboardLayout>
-      <div className="p-6">
+  const content = (
+    <div className="p-6">
         <DiscountHeader
           onRefresh={refreshData}
           loading={loading}
@@ -420,9 +419,11 @@ const DiscountManagement = () => {
           confirmButtonClass="bg-red-600 hover:bg-red-700"
           icon="danger"
         />
-      </div>
-    </DashboardLayout>
+    </div>
   );
+
+  // Conditionally wrap in DashboardLayout only for admin
+  return user?.role === 'admin' ? <DashboardLayout>{content}</DashboardLayout> : content;
 };
 
 export default DiscountManagement;

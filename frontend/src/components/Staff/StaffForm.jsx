@@ -8,6 +8,7 @@ const StaffForm = ({
   onChange,
   onSubmit,
   onClose,
+  errors = {},
   apiError
 }) => {
   if (!show) return null;
@@ -40,9 +41,16 @@ const StaffForm = ({
                 type="text"
                 value={formData.name || ''}
                 onChange={(e) => onChange({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  errors.name ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
+                }`}
                 required
               />
+              {errors.name && (
+                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                  <span>⚠️</span> {errors.name}
+                </p>
+              )}
             </div>
 
             {/* Email */}
@@ -52,9 +60,16 @@ const StaffForm = ({
                 type="email"
                 value={formData.email || ''}
                 onChange={(e) => onChange({ ...formData, email: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  errors.email ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
+                }`}
                 required
               />
+              {errors.email && (
+                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                  <span>⚠️</span> {errors.email}
+                </p>
+              )}
             </div>
 
             {/* Password - Only for Add Mode */}
@@ -65,9 +80,16 @@ const StaffForm = ({
                   type="password"
                   value={formData.password || ''}
                   onChange={(e) => onChange({ ...formData, password: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                    errors.password ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
+                  }`}
                   required={mode === 'add'}
                 />
+                {errors.password && (
+                  <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                    <span>⚠️</span> {errors.password}
+                  </p>
+                )}
               </div>
             )}
 
@@ -78,9 +100,16 @@ const StaffForm = ({
                 type="tel"
                 value={formData.phone || ''}
                 onChange={(e) => onChange({ ...formData, phone: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  errors.phone ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
+                }`}
                 required
               />
+              {errors.phone && (
+                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                  <span>⚠️</span> {errors.phone}
+                </p>
+              )}
             </div>
 
             {/* Role */}

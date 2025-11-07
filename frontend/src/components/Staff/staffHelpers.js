@@ -3,6 +3,49 @@
  * Pure utility functions for staff data processing
  */
 
+import { validateName, validateEmail, validatePhone } from '../Shared/validationHelpers';
+
+/**
+ * Validate staff form
+ * @param {Object} form - Staff form data
+ * @param {string} mode - Form mode ('add' or 'edit')
+ * @returns {Object} Object containing validation errors (empty if valid)
+ */
+export const validateStaffForm = (form, mode = 'add') => {
+  const errors = {};
+
+  // Validate name (letters only, min 3 characters)
+  const nameError = validateName(form.name, 'Name');
+  if (nameError) {
+    errors.name = nameError;
+  }
+
+  // Validate email
+  if (!form.email || form.email.trim() === '') {
+    errors.email = 'Email is required';
+  } else if (!validateEmail(form.email)) {
+    errors.email = 'Please enter a valid email address';
+  }
+
+  // Validate password (only for add mode)
+  if (mode === 'add' && (!form.password || form.password.trim() === '')) {
+    errors.password = 'Password is required';
+  }
+
+  // Validate phone
+  const phoneError = validatePhone(form.phone);
+  if (phoneError) {
+    errors.phone = phoneError;
+  }
+
+  // Validate role
+  if (!form.role) {
+    errors.role = 'Role is required';
+  }
+
+  return errors;
+};
+
 /**
  * Calculate role distribution from staff array
  * @param {Array} staff - Array of staff members

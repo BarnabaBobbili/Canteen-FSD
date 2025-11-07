@@ -8,7 +8,10 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
-import CashierDashboard from './components/CashierDashboard';
+import CashierDashboard from './components/Cashier/CashierDashboard';
+import KitchenDashboard from './components/Kitchen/KitchenDashboard';
+import ManagerDashboard from './components/Manager/ManagerDashboard';
+import ManagerLayout from './components/Manager/ManagerLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import MenuManagement from './components/Menu/MenuManagement';
 import OrderManagement from './components/Orders/OrderManagement';
@@ -117,11 +120,31 @@ function App() {
               }
             />
 
+            {/* ========== STAFF/KITCHEN ROUTES ========== */}
+            <Route
+              path="/kitchen"
+              element={
+                <ProtectedRoute roles={['staff']}>
+                  <KitchenDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* ========== MANAGER ROUTES ========== */}
+            <Route
+              path="/manager"
+              element={
+                <ProtectedRoute roles={['manager']}>
+                  <ManagerDashboard />
+                </ProtectedRoute>
+              }
+            />
+
             {/* ========== REGULAR USER ROUTES (without /admin prefix) ========== */}
             <Route
               path="/dashboard"
               element={
-                <ProtectedRoute roles={['manager', 'staff', 'customer']}>
+                <ProtectedRoute roles={['customer']}>
                   <Dashboard />
                 </ProtectedRoute>
               }
@@ -130,8 +153,10 @@ function App() {
             <Route
               path="/orders"
               element={
-                <ProtectedRoute roles={['manager', 'cashier', 'staff']}>
-                  <OrderManagement />
+                <ProtectedRoute roles={['manager']}>
+                  <ManagerLayout>
+                    <OrderManagement />
+                  </ManagerLayout>
                 </ProtectedRoute>
               }
             />
@@ -139,8 +164,10 @@ function App() {
             <Route
               path="/menu"
               element={
-                <ProtectedRoute roles={['manager', 'staff']}>
-                  <MenuManagement />
+                <ProtectedRoute roles={['manager']}>
+                  <ManagerLayout>
+                    <MenuManagement />
+                  </ManagerLayout>
                 </ProtectedRoute>
               }
             />
@@ -148,35 +175,10 @@ function App() {
             <Route
               path="/inventory"
               element={
-                <ProtectedRoute roles={['manager', 'staff']}>
-                  <InventoryManagement />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/staff"
-              element={
                 <ProtectedRoute roles={['manager']}>
-                  <StaffManagement />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/activities"
-              element={
-                <ProtectedRoute roles={['manager']}>
-                  <ActivityLog />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/suppliers"
-              element={
-                <ProtectedRoute roles={['manager']}>
-                  <SupplierManagement />
+                  <ManagerLayout>
+                    <InventoryManagement />
+                  </ManagerLayout>
                 </ProtectedRoute>
               }
             />
@@ -185,7 +187,9 @@ function App() {
               path="/discounts"
               element={
                 <ProtectedRoute roles={['manager']}>
-                  <DiscountManagement />
+                  <ManagerLayout>
+                    <DiscountManagement />
+                  </ManagerLayout>
                 </ProtectedRoute>
               }
             />
