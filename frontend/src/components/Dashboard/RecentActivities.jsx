@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Activity, ChevronRight } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const RecentActivities = ({ recentActivity, loading }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const getActivityIconColor = (icon) => {
     switch (icon) {
@@ -34,7 +36,7 @@ const RecentActivities = ({ recentActivity, loading }) => {
           <span className="truncate">Recent Activity</span>
         </h3>
         <button
-          onClick={() => navigate('/activities')}
+          onClick={() => navigate(user?.role === 'admin' ? '/admin/activities' : '/activities')}
           className="flex items-center gap-0.5 sm:gap-1 text-xs sm:text-sm text-sky-600 hover:text-sky-700 font-medium flex-shrink-0"
         >
           <span className="hidden sm:inline">View More</span>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  ShoppingCart, UtensilsCrossed, Package, Tag, LogOut, Menu, LayoutDashboard, X, Sparkles, ChevronLeft, ChevronRight
+  ShoppingCart, UtensilsCrossed, Package, Tag, LogOut, Menu, LayoutDashboard, X
 } from 'lucide-react';
 
 const ManagerLayout = ({ children }) => {
@@ -10,38 +10,32 @@ const ManagerLayout = ({ children }) => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true); // Default collapsed
 
   const navItems = [
     {
       name: 'Dashboard',
       path: '/manager',
-      icon: LayoutDashboard,
-      gradient: 'from-purple-500 to-violet-600'
+      icon: LayoutDashboard
     },
     {
       name: 'Orders',
       path: '/orders',
-      icon: ShoppingCart,
-      gradient: 'from-blue-500 to-cyan-600'
+      icon: ShoppingCart
     },
     {
       name: 'Menu',
       path: '/menu',
-      icon: UtensilsCrossed,
-      gradient: 'from-emerald-500 to-teal-600'
+      icon: UtensilsCrossed
     },
     {
       name: 'Inventory',
       path: '/inventory',
-      icon: Package,
-      gradient: 'from-orange-500 to-amber-600'
+      icon: Package
     },
     {
       name: 'Discounts',
       path: '/discounts',
-      icon: Tag,
-      gradient: 'from-pink-500 to-rose-600'
+      icon: Tag
     }
   ];
 
@@ -51,37 +45,31 @@ const ManagerLayout = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-slate-50">
-      {/* Modern Sidebar */}
-      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 fixed md:static inset-y-0 left-0 z-50 ${sidebarCollapsed ? 'w-20' : 'w-72'} bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white transition-all duration-300 ease-in-out shadow-2xl`}>
+    <div className="flex h-screen bg-gray-50">
+      {/* DashStack Sidebar */}
+      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 fixed md:static inset-y-0 left-0 z-50 w-64 sm:w-72 bg-white border-r border-gray-200 transition-all duration-300 ease-in-out`}>
         <div className="flex flex-col h-full">
-          {/* Modern Header */}
-          <div className="p-6 border-b border-white/10 backdrop-blur-sm">
-            <div className="flex items-center justify-between">
-              <div className={`flex items-center gap-3 ${sidebarCollapsed ? 'justify-center w-full' : ''}`}>
-                <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-3 rounded-xl shadow-lg">
-                  <Sparkles className="w-6 h-6" />
-                </div>
-                {!sidebarCollapsed && (
-                  <div>
-                    <h2 className="text-xl font-bold bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent">
-                      Manager Portal
-                    </h2>
-                    <p className="text-sm text-purple-200">{user?.name}</p>
-                  </div>
-                )}
+          {/* Sidebar Header */}
+          <div className="p-4 sm:p-6 border-b border-gray-200 flex items-center justify-between">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="bg-indigo-600 p-2 rounded-lg flex-shrink-0">
+                <Menu className="w-5 h-5 text-white" />
               </div>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="md:hidden text-white hover:bg-white/10 p-2 rounded-lg transition-all"
-              >
-                <X size={20} />
-              </button>
+              <div className="min-w-0 flex-1">
+                <h2 className="font-bold text-gray-900 text-base sm:text-lg truncate">DashStack</h2>
+                <p className="text-xs text-gray-500 truncate">Manager Portal</p>
+              </div>
             </div>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="md:hidden text-gray-500 hover:text-gray-700"
+            >
+              <X size={20} />
+            </button>
           </div>
 
-          {/* Modern Navigation */}
-          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+          {/* Navigation */}
+          <nav className="flex-1 overflow-y-auto py-4 px-3">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -91,52 +79,39 @@ const ManagerLayout = ({ children }) => {
                     navigate(item.path);
                     if (window.innerWidth < 768) setSidebarOpen(false);
                   }}
-                  title={sidebarCollapsed ? item.name : ''}
-                  className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} px-4 py-3.5 rounded-xl transition-all duration-200 group ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
                     isActive
-                      ? `bg-gradient-to-r ${item.gradient} shadow-lg shadow-purple-500/20 scale-105`
-                      : 'text-purple-100 hover:bg-white/10 hover:scale-102'
+                      ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                      : 'text-gray-700 hover:bg-gray-100 font-medium'
                   }`}
                 >
-                  <div className={`${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'} p-2 rounded-lg transition-all`}>
-                    <item.icon size={20} />
-                  </div>
-                  {!sidebarCollapsed && (
-                    <>
-                      <span className="font-semibold">{item.name}</span>
-                      {isActive && (
-                        <div className="ml-auto w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                      )}
-                    </>
-                  )}
+                  <item.icon size={20} className="flex-shrink-0" />
+                  <span className="truncate text-sm">{item.name}</span>
                 </button>
               );
             })}
           </nav>
 
-          {/* Collapse Toggle Button */}
-          <div className="p-4 border-t border-white/10">
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden md:flex w-full items-center justify-center gap-3 px-4 py-3.5 text-purple-200 hover:bg-white/10 rounded-xl transition-all hover:scale-102 group mb-2"
-              title={sidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-            >
-              <div className="bg-white/5 group-hover:bg-white/10 p-2 rounded-lg transition-all">
-                {sidebarCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          {/* User Info & Logout */}
+          <div className="border-t border-gray-200 p-4">
+            <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+              <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
+              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="px-2 py-1 bg-indigo-100 text-indigo-600 rounded text-xs font-medium">
+                  Manager
+                </span>
+                <span className="px-2 py-1 bg-green-100 text-green-600 rounded text-xs font-medium">
+                  Active
+                </span>
               </div>
-              {!sidebarCollapsed && <span className="font-semibold">Collapse</span>}
-            </button>
-
-            {/* Modern Logout */}
+            </div>
             <button
               onClick={handleLogout}
-              title={sidebarCollapsed ? 'Logout' : ''}
-              className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} px-4 py-3.5 text-red-200 hover:bg-red-500/20 rounded-xl transition-all hover:scale-102 group`}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 text-sm font-medium transition-colors"
             >
-              <div className="bg-red-500/10 group-hover:bg-red-500/20 p-2 rounded-lg transition-all">
-                <LogOut size={20} />
-              </div>
-              {!sidebarCollapsed && <span className="font-semibold">Logout</span>}
+              <LogOut size={16} />
+              <span>Logout</span>
             </button>
           </div>
         </div>
@@ -144,29 +119,49 @@ const ManagerLayout = ({ children }) => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Modern Top Bar */}
-        <div className="bg-white/80 backdrop-blur-lg shadow-sm border-b border-purple-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden text-purple-600 hover:bg-purple-100 p-2 rounded-lg transition-all"
-          >
-            <Menu size={24} />
-          </button>
-          <div className="flex items-center gap-4 ml-auto">
-            <div className="flex items-center gap-3 bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-2.5 rounded-xl border border-purple-200 shadow-sm">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-md">
-                {user?.name?.charAt(0).toUpperCase()}
+        {/* DashStack Top Bar */}
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+          <div className="py-4 px-4 md:px-6">
+            <div className="flex justify-between items-center">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900 truncate">
+                  {navItems.find(item => item.path === location.pathname)?.name || 'Dashboard'}
+                </h1>
               </div>
-              <div className="text-left">
-                <p className="text-sm font-bold text-gray-800">{user?.name}</p>
-                <p className="text-xs font-medium text-purple-600">Manager</p>
+              <div className="flex items-center gap-3 ml-4">
+                {/* Search Button */}
+                <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+                {/* Notification Button */}
+                <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors relative">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                {/* Mobile Menu Button */}
+                <button
+                  onClick={() => setSidebarOpen(!sidebarOpen)}
+                  className="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <Menu size={20} />
+                </button>
+                {/* User Avatar */}
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                    {user?.name?.charAt(0).toUpperCase()}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Content Area with subtle pattern */}
-        <div className="flex-1 overflow-auto">
+        {/* Content Area */}
+        <div className="flex-1 overflow-auto p-4 md:p-6">
           {children}
         </div>
       </div>
@@ -174,7 +169,7 @@ const ManagerLayout = ({ children }) => {
       {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

@@ -23,35 +23,74 @@ const OrderAnalyticsSection = ({
 
   return (
     <div className="mt-6 md:mt-8">
-      <div className="flex items-center justify-between mb-3 sm:mb-4">
-        <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-1.5 sm:gap-2">
-          <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-sky-500" />
-          <span className="truncate">Orders Analytics</span>
-        </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-bold text-gray-900">Sales Details</h3>
+        {/* Date Filter Dropdown */}
+        <div className="relative">
+          <select
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent cursor-pointer"
+          >
+            {filterOptions.map((filter) => (
+              <option key={filter.value} value={filter.value}>
+                {filter.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      <div className="space-y-4 sm:space-y-6">
-        {/* Date Filter */}
-        <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
-          <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-            <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-            <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Filter by Period</h4>
+      <div className="space-y-6">
+        {/* Analytics Summary Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-indigo-50 rounded-lg">
+                <CheckCircle className="w-6 h-6 text-indigo-600" />
+              </div>
+            </div>
+            <p className="text-sm text-gray-600 font-medium mb-1">Total Orders</p>
+            <h3 className="text-3xl font-bold text-gray-900">{analytics.totalOrders}</h3>
+            <div className="flex items-center gap-1 mt-2 text-green-600">
+              <TrendingUp className="w-4 h-4" />
+              <span className="text-sm font-semibold">12.5%</span>
+              <span className="text-xs text-gray-500">from last period</span>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {filterOptions.map((filter) => (
-              <button
-                key={filter.value}
-                onClick={() => setDateFilter(filter.value)}
-                className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
-                  dateFilter === filter.value
-                    ? 'bg-sky-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                <span className="hidden sm:inline">{filter.label}</span>
-                <span className="sm:hidden">{filter.shortLabel}</span>
-              </button>
-            ))}
+
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-green-50 rounded-lg">
+                <DollarSign className="w-6 h-6 text-green-600" />
+              </div>
+            </div>
+            <p className="text-sm text-gray-600 font-medium mb-1">Total Revenue</p>
+            <h3 className="text-3xl font-bold text-gray-900">
+              ₹{analytics.totalRevenue.toFixed(2)}
+            </h3>
+            <div className="flex items-center gap-1 mt-2 text-green-600">
+              <TrendingUp className="w-4 h-4" />
+              <span className="text-sm font-semibold">8.2%</span>
+              <span className="text-xs text-gray-500">from last period</span>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-purple-50 rounded-lg">
+                <BarChart3 className="w-6 h-6 text-purple-600" />
+              </div>
+            </div>
+            <p className="text-sm text-gray-600 font-medium mb-1">Avg Order Value</p>
+            <h3 className="text-3xl font-bold text-gray-900">
+              ₹{analytics.averageOrderValue.toFixed(2)}
+            </h3>
+            <div className="flex items-center gap-1 mt-2 text-green-600">
+              <TrendingUp className="w-4 h-4" />
+              <span className="text-sm font-semibold">3.1%</span>
+              <span className="text-xs text-gray-500">from last period</span>
+            </div>
           </div>
         </div>
 
@@ -96,54 +135,87 @@ const OrderAnalyticsSection = ({
         </div>
 
         {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Orders Trend Chart */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
-            <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+            <h4 className="font-semibold text-gray-900 mb-4 text-base">
               Orders Trend
             </h4>
             {analytics.chartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
+              <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={analytics.chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip />
-                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 12, fill: '#6b7280' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: '#6b7280' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                    }}
+                  />
                   <Line
                     type="monotone"
                     dataKey="count"
-                    stroke="#f97316"
-                    strokeWidth={2}
+                    stroke="#6366f1"
+                    strokeWidth={3}
                     name="Orders"
+                    dot={{ fill: '#6366f1', r: 4 }}
+                    activeDot={{ r: 6 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[250px] sm:h-[300px] flex items-center justify-center text-gray-500 text-sm">
+              <div className="h-[300px] flex items-center justify-center text-gray-400 text-sm">
                 No data for selected period
               </div>
             )}
           </div>
 
           {/* Revenue Trend Chart */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
-            <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+            <h4 className="font-semibold text-gray-900 mb-4 text-base">
               Revenue Trend
             </h4>
             {analytics.chartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
+              <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={analytics.chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip />
-                  <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Bar dataKey="revenue" fill="#10b981" name="Revenue (₹)" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 12, fill: '#6b7280' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: '#6b7280' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                    }}
+                  />
+                  <Bar
+                    dataKey="revenue"
+                    fill="#10b981"
+                    name="Revenue (₹)"
+                    radius={[8, 8, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[250px] sm:h-[300px] flex items-center justify-center text-gray-500 text-sm">
+              <div className="h-[300px] flex items-center justify-center text-gray-400 text-sm">
                 No data for selected period
               </div>
             )}
@@ -151,13 +223,13 @@ const OrderAnalyticsSection = ({
         </div>
 
         {/* Order Status Distribution & Recent Orders */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
-            <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+            <h4 className="font-semibold text-gray-900 mb-4 text-base">
               Order Status Distribution
             </h4>
             {analytics.statusChartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
+              <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
                     data={analytics.statusChartData}
@@ -165,51 +237,59 @@ const OrderAnalyticsSection = ({
                     cy="50%"
                     labelLine={false}
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
+                    outerRadius={90}
                     fill="#8884d8"
                     dataKey="value"
                   >
                     {analytics.statusChartData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={['#f97316', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'][index % 5]}
+                        fill={['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][index % 5]}
                       />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[250px] sm:h-[300px] flex items-center justify-center text-gray-500 text-sm">
+              <div className="h-[300px] flex items-center justify-center text-gray-400 text-sm">
                 No orders data available
               </div>
             )}
           </div>
 
           {/* Completed Orders List */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-lg">
-            <h4 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">
-              Recent Completed Orders ({completedOrders.length})
+          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+            <h4 className="font-semibold text-gray-900 mb-4 text-base">
+              Recent Completed Orders
             </h4>
-            <div className="space-y-2 max-h-[250px] sm:max-h-[300px] overflow-y-auto">
+            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
               {completedOrders.slice(0, 10).map((order, idx) => (
                 <div
                   key={order._id || idx}
-                  className="flex items-center justify-between gap-2 p-2 sm:p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-gray-900 text-xs sm:text-sm truncate">
+                    <div className="font-semibold text-gray-900 text-sm truncate">
                       {order.customerName || 'Customer'}
                     </div>
                     <div className="text-xs text-gray-500 truncate">
-                      {new Date(order.createdAt).toLocaleDateString()}
-                      <span className="hidden sm:inline">
-                        {' '}at {new Date(order.createdAt).toLocaleTimeString()}
-                      </span>
+                      {new Date(order.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <div className="font-bold text-green-600 text-xs sm:text-sm">
+                    <div className="font-bold text-green-600 text-sm">
                       ₹{order.totalAmount?.toFixed(2) || '0.00'}
                     </div>
                     <div className="text-xs text-gray-500">
@@ -219,7 +299,7 @@ const OrderAnalyticsSection = ({
                 </div>
               ))}
               {completedOrders.length === 0 && (
-                <div className="text-center py-8 text-gray-500 text-sm">
+                <div className="text-center py-12 text-gray-400 text-sm">
                   No completed orders in selected period
                 </div>
               )}

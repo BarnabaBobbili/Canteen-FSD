@@ -237,21 +237,23 @@ const OrderManagement = () => {
 
   const content = (
     <>
-    <div className="p-6">
-        {apiError && <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg">{apiError}</div>}
-        {successMessage && <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg">{successMessage}</div>}
+    <div>
+        {apiError && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 mb-4 rounded-lg">{apiError}</div>}
+        {successMessage && <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 mb-4 rounded-lg">{successMessage}</div>}
 
-        <div className="bg-white rounded-xl shadow-lg mb-6 p-6">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 p-6">
           {/* Search Bar and Buttons */}
-          <div className="flex gap-4 mb-4">
-            <SearchBar
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              placeholder="Search orders by name, email, or phone..."
-            />
+          <div className="flex gap-3 mb-4 flex-wrap">
+            <div className="flex-1 min-w-[300px]">
+              <SearchBar
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder="Search orders by name, email, or phone..."
+              />
+            </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm"
             >
               <Filter size={16} />
               Filters
@@ -259,9 +261,9 @@ const OrderManagement = () => {
             </button>
             <button
               onClick={() => openModal('add')}
-              className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm"
             >
-              <Plus size={20} /> Add Order
+              <Plus size={18} /> Add Order
             </button>
           </div>
 
@@ -277,50 +279,62 @@ const OrderManagement = () => {
           />
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Customer Name</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Phone</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Order Type</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Total</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayedOrders.map((order) => (
-                <tr key={order._id} className="border-b hover:bg-gray-50">
-                  <td className="px-6 py-4">{order.customerName}</td>
-                  <td className="px-6 py-4">{order.customerEmail || '-'}</td>
-                  <td className="px-6 py-4">{order.customerPhone}</td>
-                  <td className="px-6 py-4 capitalize">{order.orderType}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      order.status === 'completed' ? 'bg-green-100 text-green-700' :
-                      order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-red-100 text-red-700'
-                    }`}>
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">₹{order.totalAmount}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <button onClick={() => openModal('edit', order)} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
-                        <Edit2 size={16} />
-                      </button>
-                      <button onClick={() => handleDelete(order._id)} className="p-1 text-red-600 hover:bg-red-50 rounded">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Customer Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Phone</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Order Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Total</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {displayedOrders.map((order) => (
+                  <tr key={order._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{order.customerName}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{order.customerEmail || '-'}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{order.customerPhone}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 capitalize">{order.orderType}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex px-2 py-1 rounded-md text-xs font-semibold ${
+                        order.status === 'completed' ? 'bg-green-100 text-green-700' :
+                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                        order.status === 'preparing' ? 'bg-blue-100 text-blue-700' :
+                        order.status === 'ready' ? 'bg-indigo-100 text-indigo-700' :
+                        'bg-red-100 text-red-700'
+                      }`}>
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm font-semibold text-gray-900">₹{order.totalAmount}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => openModal('edit', order)}
+                          className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Edit2 size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(order._id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* View More / Show Completed Orders Section */}
@@ -335,7 +349,7 @@ const OrderManagement = () => {
             {hasMoreOrders && (
               <button
                 onClick={() => setDisplayLimit(displayLimit + 10)}
-                className="px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
               >
                 View More ({totalFilteredCount - displayLimit} more)
               </button>
@@ -343,10 +357,10 @@ const OrderManagement = () => {
 
             <button
               onClick={() => setShowCompletedReady(!showCompletedReady)}
-              className={`px-6 py-2 rounded-lg border-2 transition-colors ${
+              className={`px-6 py-2 rounded-lg border-2 transition-colors font-medium ${
                 showCompletedReady
-                  ? 'bg-sky-500 text-white border-sky-500 hover:bg-sky-600'
-                  : 'bg-white text-sky-600 border-sky-500 hover:bg-sky-50'
+                  ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700'
+                  : 'bg-white text-indigo-600 border-indigo-600 hover:bg-indigo-50'
               }`}
             >
               {showCompletedReady ? 'Hide' : 'Show'} Completed & Ready

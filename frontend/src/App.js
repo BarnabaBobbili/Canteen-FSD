@@ -2,10 +2,21 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import HomePage from './components/HomePage';
-import Login from './components/Login';
-import Signup from './components/Signup';
+// User-facing pages (refactored modular versions)
+import LandingPage from './components/UserPages/LandingPage';
+import OrderPage from './components/UserPages/OrderPage';
+import CartPage from './components/UserPages/CartPage';
+import CheckoutPage from './components/UserPages/CheckoutPage';
+import OrderConfirmationPage from './components/UserPages/OrderConfirmationPage';
+import OrderTrackingPage from './components/UserPages/OrderTrackingPage';
+import ProfilePage from './components/UserPages/ProfilePage';
+import UserLogin from './components/UserPages/Auth/UserLogin';
+import UserSignup from './components/UserPages/Auth/UserSignup';
+import ContactUs from './components/ContactUs';
+import StaffLogin from './components/Staff/StaffLogin';
+import StaffSignup from './components/Staff/StaffSignup';
 import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
 import CashierDashboard from './components/Cashier/CashierDashboard';
@@ -27,13 +38,36 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <AuthProvider>
-        <Router>
-          <div className="App">
-            <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+        <CartProvider>
+          <Router>
+            <div className="App">
+              <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/order" element={<OrderPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
+              <Route path="/order-tracking" element={<OrderTrackingPage />} />
+              <Route path="/contactus" element={<ContactUs />} />
+
+            {/* User Auth Routes */}
+            <Route path="/login" element={<UserLogin />} />
+            <Route path="/signup" element={<UserSignup />} />
+
+            {/* User Profile (Protected) */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute roles={['customer']}>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Staff Auth Routes */}
+            <Route path="/staff/login" element={<StaffLogin />} />
+            <Route path="/staff/signup" element={<StaffSignup />} />
 
             {/* Protected Routes */}
 
@@ -194,16 +228,17 @@ function App() {
               }
             />
 
-            {/* Future routes for other management components */}
-            {/*
-            <Route path="/feedback" element={<ProtectedRoute roles={['admin', 'manager']}><FeedbackManagement /></ProtectedRoute>} />
-            <Route path="/payments" element={<ProtectedRoute roles={['admin', 'manager', 'cashier']}><PaymentBilling /></ProtectedRoute>} />
-            */}
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
-  </GoogleOAuthProvider>
+              {/* Future routes for other management components */}
+              {/*
+              <Route path="/feedback" element={<ProtectedRoute roles={['admin', 'manager']}><FeedbackManagement /></ProtectedRoute>} />
+              <Route path="/payments" element={<ProtectedRoute roles={['admin', 'manager', 'cashier']}><PaymentBilling /></ProtectedRoute>} />
+              */}
+                </Routes>
+              </div>
+            </Router>
+        </CartProvider>
+      </AuthProvider>
+    </GoogleOAuthProvider>
   );
 }
 
