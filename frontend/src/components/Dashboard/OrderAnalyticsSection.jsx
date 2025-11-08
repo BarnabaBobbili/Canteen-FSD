@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  BarChart3, Filter, CheckCircle, TrendingUp, DollarSign
+  BarChart3, CheckCircle, TrendingUp, DollarSign
 } from 'lucide-react';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
+  Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
 
 const OrderAnalyticsSection = ({

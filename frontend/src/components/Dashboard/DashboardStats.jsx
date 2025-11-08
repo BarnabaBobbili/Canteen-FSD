@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   ShoppingCart, UtensilsCrossed, Package, Users,
-  TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight
+  ArrowUpRight, ArrowDownRight
 } from 'lucide-react';
 
 /**
@@ -68,7 +68,6 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
       {statCards.map((card, index) => {
         const Icon = card.icon;
         const changeColor = card.change.isPositive ? 'text-green-600' : 'text-red-600';
-        const ChangeTrendIcon = card.change.isPositive ? TrendingUp : TrendingDown;
         const ChangeArrowIcon = card.change.isPositive ? ArrowUpRight : ArrowDownRight;
 
         return (

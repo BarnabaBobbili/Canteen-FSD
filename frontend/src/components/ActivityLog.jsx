@@ -11,7 +11,7 @@ import ActivityDetailModal from './ActivityLog/ActivityDetailModal';
 import ActivityPagination from './ActivityLog/ActivityPagination';
 
 const ActivityLog = () => {
-  const { token, user } = useAuth();
+  const { token } = useAuth();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,6 +34,7 @@ const ActivityLog = () => {
 
   useEffect(() => {
     fetchActivities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.page, filters]);
 
   const fetchActivities = async () => {

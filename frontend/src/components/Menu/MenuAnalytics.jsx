@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import {
   BarChart, Bar, PieChart, Pie, XAxis, YAxis,
-  CartesianGrid, Tooltip, Legend, Cell, ResponsiveContainer
+  CartesianGrid, Tooltip, Cell, ResponsiveContainer
 } from 'recharts';
 
 const COLORS = ['#f97316', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];

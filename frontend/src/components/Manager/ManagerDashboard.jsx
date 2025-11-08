@@ -10,10 +10,7 @@ import {
   Clock,
   TrendingUp,
   AlertCircle,
-  ArrowRight,
-  Sparkles,
-  Activity,
-  BarChart3
+  ArrowRight
 } from 'lucide-react';
 import ManagerLayout from './ManagerLayout';
 import API_BASE_URL from '../../config/api';
@@ -32,6 +29,7 @@ const ManagerDashboard = () => {
 
   useEffect(() => {
     loadStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadStats = async () => {
