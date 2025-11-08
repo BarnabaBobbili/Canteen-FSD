@@ -59,17 +59,16 @@ testActivity.js
 testing/
 *.csv
 
+# Don't track .gitignore changes
+.gitignore
+
 # Development Documentation (temporary implementation notes)
-FINAL_GUIDE.md
-SETUP_INSTRUCTIONS.md
-AUTHENTICATION_CHANGES.md
-IMPLEMENTATION_SUMMARY.md
-GOOGLE_OAUTH_SETUP.md
-SIDEBAR_IMPLEMENTATION.md
+*.md
+!README.md
 FRONTEND_SUMMARY.txt
-CODEBASE_SUMMARY.md
-REFACTORING_SUMMARY.md
-DEPLOYMENT_GUIDE.md
+
+# Don't track .gitignore changes
+.gitignore
 
 # Accidental/Error Files
 nul

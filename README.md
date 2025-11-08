@@ -81,23 +81,93 @@ CanteenNew/
 ├── frontend/                 # React frontend application
 │   ├── public/              # Static files
 │   ├── src/
-│   │   ├── components/      # React components
-│   │   │   ├── ActivityLog.jsx
-│   │   │   ├── CanteenManagement.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── DashboardLayout.jsx
-│   │   │   ├── HomePage.jsx
-│   │   │   ├── InventoryForm.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── MenuForm.jsx
-│   │   │   ├── OrderForm.jsx
-│   │   │   ├── ProtectedRoute.jsx
-│   │   │   ├── Signup.jsx
-│   │   │   ├── StaffManagement.jsx
-│   │   │   ├── SupplierForm.jsx
-│   │   │   └── SupplierManagement.jsx
+│   │   ├── components/      # React components (modular architecture)
+│   │   │   ├── Dashboard/           # Dashboard module
+│   │   │   │   ├── Dashboard.jsx
+│   │   │   │   ├── WelcomeCard.jsx
+│   │   │   │   ├── QuickAccessModules.jsx
+│   │   │   │   ├── DashboardStats.jsx
+│   │   │   │   ├── RecentActivities.jsx
+│   │   │   │   ├── UserInfo.jsx
+│   │   │   │   ├── OrderAnalyticsSection.jsx
+│   │   │   │   ├── ActivityModal.jsx
+│   │   │   │   ├── dashboardHelpers.js
+│   │   │   │   ├── useDashboardAnalytics.js
+│   │   │   │   └── useDashboardActivities.js
+│   │   │   │
+│   │   │   ├── Discount/            # Discount module
+│   │   │   │   ├── DiscountManagement.jsx
+│   │   │   │   ├── DiscountForm.jsx
+│   │   │   │   ├── DiscountTabs.jsx
+│   │   │   │   ├── ActiveDiscountsTab.jsx
+│   │   │   │   ├── AllMenuItemsTab.jsx
+│   │   │   │   ├── MostOrderedTab.jsx
+│   │   │   │   ├── DiscountHeader.jsx
+│   │   │   │   ├── DiscountActionButtons.jsx
+│   │   │   │   ├── DiscountFilters.jsx
+│   │   │   │   ├── LowStockModal.jsx
+│   │   │   │   ├── ExpiringItemsModal.jsx
+│   │   │   │   ├── discountHelpers.js
+│   │   │   │   ├── discountService.js
+│   │   │   │   └── useDiscountFilters.js
+│   │   │   │
+│   │   │   ├── Staff/               # Staff module
+│   │   │   │   ├── StaffManagement.jsx
+│   │   │   │   ├── StaffHeader.jsx
+│   │   │   │   ├── StaffAnalytics.jsx
+│   │   │   │   ├── StaffTable.jsx
+│   │   │   │   ├── StaffForm.jsx
+│   │   │   │   └── staffHelpers.js
+│   │   │   │
+│   │   │   ├── Activity/            # Activity Log module
+│   │   │   │   ├── ActivityLog.jsx
+│   │   │   │   ├── ActivityFilters.jsx
+│   │   │   │   ├── ActivityTable.jsx
+│   │   │   │   ├── ActivityDetailModal.jsx
+│   │   │   │   ├── ActivityPagination.jsx
+│   │   │   │   └── activityHelpers.js
+│   │   │   │
+│   │   │   ├── Supplier/            # Supplier module
+│   │   │   │   ├── SupplierManagement.jsx
+│   │   │   │   ├── SupplierHeader.jsx
+│   │   │   │   ├── SupplierStats.jsx
+│   │   │   │   ├── SupplierTable.jsx
+│   │   │   │   ├── SupplierForm.jsx
+│   │   │   │   └── supplierHelpers.js
+│   │   │   │
+│   │   │   ├── Menu/                # Menu module
+│   │   │   │   ├── MenuManagement.jsx
+│   │   │   │   ├── MenuForm.jsx
+│   │   │   │   └── MenuAnalytics.jsx
+│   │   │   │
+│   │   │   ├── Orders/              # Orders module
+│   │   │   │   ├── OrderManagement.jsx
+│   │   │   │   ├── OrderForm.jsx
+│   │   │   │   └── OrderAnalytics.jsx
+│   │   │   │
+│   │   │   ├── Inventory/           # Inventory module
+│   │   │   │   ├── InventoryManagement.jsx
+│   │   │   │   ├── InventoryForm.jsx
+│   │   │   │   └── InventoryAnalytics.jsx
+│   │   │   │
+│   │   │   ├── Shared/              # Shared/Reusable components
+│   │   │   │   ├── ConfirmationModal.jsx
+│   │   │   │   ├── SearchBar.jsx
+│   │   │   │   ├── OrderFilterBar.jsx
+│   │   │   │   ├── MenuFilterBar.jsx
+│   │   │   │   └── InventoryFilterBar.jsx
+│   │   │   │
+│   │   │   ├── DashboardLayout.jsx  # Main layout wrapper
+│   │   │   ├── HomePage.jsx         # Public homepage
+│   │   │   ├── Login.jsx            # Login page
+│   │   │   ├── Signup.jsx           # Signup page
+│   │   │   ├── ProtectedRoute.jsx   # Route guard
+│   │   │   └── AccessDeniedPage.jsx # 403 page
+│   │   │
 │   │   ├── context/         # React Context for state
 │   │   │   └── AuthContext.jsx
+│   │   ├── config/          # Configuration files
+│   │   │   └── api.js       # API base URL config
 │   │   ├── App.js           # Main app component
 │   │   └── index.js         # Entry point
 │   ├── .env                 # Frontend environment variables
@@ -127,7 +197,8 @@ CanteenNew/
 │   │   ├── suppliers.js
 │   │   └── users.js
 │   ├── middleware/          # Custom middleware
-│   │   └── auth.js
+│   │   ├── auth.js
+│   │   └── activityLogger.js
 │   ├── seed.js              # Basic seed data
 │   ├── seedWeeklyData.js    # Comprehensive weekly data
 │   ├── server.js            # Express server entry point
@@ -182,32 +253,32 @@ npm install
 
 ### Backend Environment Variables
 
-Create or verify `backend/.env`:
+Create `backend/.env` file:
 
 ```env
 # MongoDB Connection
-MONGODB_URI=mongodb+srv://your_username:your_password@cluster.mongodb.net/?appName=Canteen
+MONGODB_URI=your_mongodb_connection_string
 
 # Server Port
 PORT=5001
 
-# JWT Secret Key (change in production)
-JWT_SECRET=canteen-secret-key-2024-change-in-production-environment
+# JWT Secret (use a strong random string)
+JWT_SECRET=your_jwt_secret_key
 
-# Google OAuth Client ID
-GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+# Google OAuth Client ID (optional)
+GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
 ### Frontend Environment Variables
 
-Create or verify `frontend/.env`:
+Create `frontend/.env` file:
 
 ```env
-# Google OAuth Client ID
-REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+# Google OAuth Client ID (optional)
+REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
 
-# Optional: API Base URL (defaults to http://localhost:5001/api)
-# REACT_APP_API_URL=http://localhost:5001/api
+# API Base URL (optional, defaults to http://localhost:5001/api)
+REACT_APP_API_URL=http://localhost:5001/api
 ```
 
 ### Getting MongoDB URI
