@@ -35,6 +35,7 @@ const ProfilePage = () => {
 
     loadProfileData();
     loadFavorites();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, navigate]);
 
   const loadProfileData = async () => {

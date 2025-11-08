@@ -3,7 +3,7 @@
  * Pure utility functions for supplier data processing
  */
 
-import { validateName, validateEmail as sharedValidateEmail } from '../Shared/validationHelpers';
+import { validateName } from '../Shared/validationHelpers';
 
 /**
  * Validate email format

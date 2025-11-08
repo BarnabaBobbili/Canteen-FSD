@@ -23,6 +23,7 @@ const OrderTrackingPage = () => {
 
     // Fetch order details
     fetchOrderDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderDetails.orderId, navigate]);
 
   const fetchOrderDetails = async () => {
@@ -57,6 +58,7 @@ const OrderTrackingPage = () => {
     }, 10000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderDetails.orderId]);
 
   const statusSteps = [
@@ -139,7 +141,6 @@ const OrderTrackingPage = () => {
               const Icon = step.icon;
               const isActive = index === currentStepIndex;
               const isCompleted = index < currentStepIndex;
-              const isPending = index > currentStepIndex;
 
               return (
                 <div key={step.id} className="relative">

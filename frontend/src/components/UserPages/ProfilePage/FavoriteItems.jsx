@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Plus, ChefHat, Trash2 } from 'lucide-react';
+import { Heart, Plus, ChefHat } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import API_BASE_URL from '../../../config/api';
 
@@ -22,6 +22,7 @@ const FavoriteItems = ({ favoriteIds, onRemoveFavorite }) => {
     } else {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [favoriteIds]);
 
   const loadFavoriteItems = async () => {
