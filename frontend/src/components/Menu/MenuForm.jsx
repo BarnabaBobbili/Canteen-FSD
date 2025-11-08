@@ -10,6 +10,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
     if (currentForm.image && !currentForm.image.startsWith('data:')) {
       setImagePreview(currentForm.image);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentForm._id]); // Only trigger when editing a different item
 
   const handleFileChange = async (e) => {

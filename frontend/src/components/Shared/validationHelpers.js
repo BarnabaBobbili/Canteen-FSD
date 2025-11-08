@@ -51,7 +51,7 @@ export const validatePhone = (phone) => {
 
   // Basic phone validation - at least 10 digits
   const phoneRegex = /\d{10,}/;
-  if (!phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))) {
+  if (!phoneRegex.test(phone.replace(/[\s\-()]/g, ''))) {
     return 'Phone number must contain at least 10 digits';
   }
 

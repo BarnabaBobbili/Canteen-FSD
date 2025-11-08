@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { UserPlus, User, Lock, AlertCircle, Eye, EyeOff, ChefHat, Mail, Phone } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 
 const StaffSignup = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { register, googleLogin, isAuthenticated, user } = useAuth();
 
   const [formData, setFormData] = useState({

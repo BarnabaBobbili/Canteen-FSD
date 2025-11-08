@@ -48,6 +48,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
       return sum + (item.price * item.quantity);
     }, 0);
     setCurrentForm({ ...currentForm, totalAmount: total, items: selectedItems });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItems]);
 
   const filteredMenuItems = menuItems.filter(item =>
