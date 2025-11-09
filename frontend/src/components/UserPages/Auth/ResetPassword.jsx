@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Lock, Eye, EyeOff, ChefHat, AlertCircle, CheckCircle } from 'lucide-react';
+import { Lock, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 import API_BASE_URL from '../../../config/api';
 
 /**

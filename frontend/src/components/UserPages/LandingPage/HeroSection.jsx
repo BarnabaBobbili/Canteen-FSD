@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowRight, TrendingUp } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
-import { useTheme } from '../../../context/ThemeContext';
 
 /**
  * Hero section component for landing page
@@ -10,7 +9,6 @@ import { useTheme } from '../../../context/ThemeContext';
 const HeroSection = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { theme } = useTheme();
 
   return (
     <div className="relative pt-20 sm:pt-24 md:pt-32 pb-12 sm:pb-20 overflow-hidden">

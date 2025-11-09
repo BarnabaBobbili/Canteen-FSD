@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../DashboardLayout';
 import API_BASE_URL from '../../config/api';
 import {
   MessageSquare, Star, ThumbsUp, ThumbsDown, Meh,
-  Search, Filter, Send, Eye
+  Search, Send, Eye
 } from 'lucide-react';
 
 const FeedbackManagement = () => {
-  const { token, user } = useAuth();
+  const { token } = useAuth();
   const [feedbacks, setFeedbacks] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,12 +20,7 @@ const FeedbackManagement = () => {
   const [response, setResponse] = useState('');
   const [submittingResponse, setSubmittingResponse] = useState(false);
 
-  useEffect(() => {
-    fetchFeedbacks();
-    fetchStats();
-  }, []);
-
-  const fetchFeedbacks = async () => {
+  const fetchFeedbacks = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/feedback`, {
         headers: {
@@ -44,9 +39,9 @@ const FeedbackManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/feedback/stats`, {
         headers: {
@@ -63,7 +58,13 @@ const FeedbackManagement = () => {
     } catch (error) {
       console.error('Error fetching stats:', error.message || 'Unknown error');
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (!token) return;
+    fetchFeedbacks();
+    fetchStats();
+  }, [fetchFeedbacks, fetchStats, token]);
 
   const handleSubmitResponse = async () => {
     if (!response.trim()) return;
@@ -86,7 +87,6 @@ const FeedbackManagement = () => {
         setShowDetailsModal(false);
         setSelectedFeedback(null);
       } else {
-        const errorText = await res.text();
         console.error('Failed to submit response:', res.status, res.statusText);
         alert('Failed to submit response. Please try again.');
       }

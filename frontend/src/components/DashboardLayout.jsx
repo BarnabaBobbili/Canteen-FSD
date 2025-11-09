@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import {
   ShoppingCart, UtensilsCrossed, Package, Users, Truck, Tag,
   MessageSquare, CreditCard, LogOut, Menu, LayoutDashboard, Activity,
-  X, AlertCircle, Bell, Search, ChevronDown, Settings
+  AlertCircle, Bell, Search, ChevronDown, Settings
 } from 'lucide-react';
 
 const DashboardLayout = ({ children }) => {

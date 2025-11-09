@@ -3,8 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../DashboardLayout';
 import API_BASE_URL from '../../config/api';
 import {
-  CreditCard, DollarSign, TrendingUp, TrendingDown, Search,
-  Filter, Eye, RefreshCw, Download
+  CreditCard, DollarSign, TrendingUp, TrendingDown, Search, Eye
 } from 'lucide-react';
 
 const PaymentManagement = () => {

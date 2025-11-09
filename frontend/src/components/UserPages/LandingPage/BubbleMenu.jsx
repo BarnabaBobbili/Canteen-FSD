@@ -177,7 +177,7 @@ export default function BubbleMenu() {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isMenuOpen]);
+  }, [isMenuOpen, menuItems]);
 
   // Scroll detection for logo animation
   useEffect(() => {
@@ -342,13 +342,13 @@ export default function BubbleMenu() {
                     aria-label={item.ariaLabel || item.label}
                     className="pill-link group w-full rounded-full border-3 sm:border-4 border-gray-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center relative transition-[background,color,box-shadow,transform] duration-300 ease-in-out cursor-pointer"
                     style={{
-                      ['--item-rot']: `${item.rotation ?? 0}deg`,
-                      ['--pill-bg']: theme === 'dark'
+                      '--item-rot': `${item.rotation ?? 0}deg`,
+                      '--pill-bg': theme === 'dark'
                         ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
                         : 'linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)',
-                      ['--pill-color']: menuContentColor,
-                      ['--hover-bg']: item.hoverStyles?.bgColor || '#f3f4f6',
-                      ['--hover-color']: item.hoverStyles?.textColor || menuContentColor,
+                      '--pill-color': menuContentColor,
+                      '--hover-bg': item.hoverStyles?.bgColor || '#f3f4f6',
+                      '--hover-color': item.hoverStyles?.textColor || menuContentColor,
                       background: 'var(--pill-bg)',
                       color: 'var(--pill-color)',
                       minWidth: '160px',

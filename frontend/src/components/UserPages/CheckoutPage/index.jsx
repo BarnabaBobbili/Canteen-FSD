@@ -8,7 +8,6 @@ import DeliveryOptions from './DeliveryOptions';
 import PaymentMethods from './PaymentMethods';
 import OrderSummary from './OrderSummary';
 import TestPaymentModal from './TestPaymentModal';
-import API_BASE_URL from '../../../config/api';
 import { processOnlinePayment } from '../../../services/paymentService';
 
 /**
@@ -24,7 +23,7 @@ const CheckoutPage = () => {
   const { cart, clearCart, getCartTotal } = useCart();
   const [deliveryOption, setDeliveryOption] = useState('dine-in');
   const [phoneNumber, setPhoneNumber] = useState(user?.phone || '');
-  const [paymentMethod, setPaymentMethod] = useState('online');
+  const paymentMethod = 'online'; // Currently only online payment is supported
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [showTestPaymentModal, setShowTestPaymentModal] = useState(false);
   const [testPaymentDetails, setTestPaymentDetails] = useState(null);

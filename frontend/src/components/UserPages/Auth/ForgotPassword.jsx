@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, ArrowLeft, ChefHat, AlertCircle, CheckCircle } from 'lucide-react';
+import { Mail, ArrowLeft, AlertCircle, CheckCircle } from 'lucide-react';
 import API_BASE_URL from '../../../config/api';
 
 /**

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Mail, CheckCircle, XCircle, Loader, ChefHat } from 'lucide-react';
+import { CheckCircle, XCircle, Loader, ChefHat } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import API_BASE_URL from '../../../config/api';
 
@@ -15,11 +15,7 @@ const VerifyEmail = () => {
   const [status, setStatus] = useState('verifying'); // verifying | success | error
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    verifyEmail();
-  }, [token]);
-
-  const verifyEmail = async () => {
+  const verifyEmail = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/verify-email/${token}`);
       const data = await response.json();
@@ -49,7 +45,11 @@ const VerifyEmail = () => {
       setStatus('error');
       setMessage('An error occurred during verification. Please try again.');
     }
-  };
+  }, [token, navigate, setAuthData]);
+
+  useEffect(() => {
+    verifyEmail();
+  }, [verifyEmail]);
 
   return (
     <div className="min-h-screen bg-white relative flex items-center justify-center p-6" style={{
