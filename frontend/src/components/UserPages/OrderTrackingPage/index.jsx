@@ -1,57 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Package, ChefHat, CheckCircle, Clock, Store, Truck } from 'lucide-react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { ArrowLeft, Package, ChefHat, CheckCircle, Clock, Store, Truck, XCircle } from 'lucide-react';
 import API_BASE_URL from '../../../config/api';
 
 /**
  * Order Tracking Page
  * Shows real-time order status with progress indicator
+ * Supports both authenticated (via state) and public (via URL orderNumber) access
  */
 const OrderTrackingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { orderNumber } = useParams();
   const orderDetails = location.state || {};
   const [orderStatus, setOrderStatus] = useState('pending');
   const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Redirect if no order details
+  // Determine tracking mode: authenticated (via orderId in state) or public (via orderNumber in URL)
+  const trackingMode = orderNumber ? 'public' : 'authenticated';
+
+  // Fetch order details
   useEffect(() => {
-    if (!orderDetails.orderId) {
+    // For authenticated mode, require orderId
+    if (trackingMode === 'authenticated' && !orderDetails.orderId) {
       navigate('/order');
+      return;
+    }
+
+    // For public mode, require orderNumber
+    if (trackingMode === 'public' && !orderNumber) {
+      setError('Invalid order number');
+      setLoading(false);
       return;
     }
 
     // Fetch order details
     fetchOrderDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderDetails.orderId, navigate]);
+  }, [orderDetails.orderId, orderNumber, navigate]);
 
   const fetchOrderDetails = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem('token');
       const headers = {};
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
+      // Use orderNumber for public mode, orderId for authenticated mode
+      const identifier = trackingMode === 'public' ? orderNumber : orderDetails.orderId;
+
       const response = await fetch(
-        `${API_BASE_URL}/orders/${orderDetails.orderId}`,
+        `${API_BASE_URL}/orders/${identifier}`,
         { headers }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        setOrder(data);
-        setOrderStatus(data.status);
+      if (!response.ok) {
+        throw new Error('Order not found');
       }
+
+      const data = await response.json();
+      setOrder(data);
+      setOrderStatus(data.status);
+      setError('');
     } catch (error) {
       console.error('Failed to fetch order:', error);
+      setError(error.message || 'Failed to fetch order details');
+    } finally {
+      setLoading(false);
     }
   };
 
   // Poll for order updates every 10 seconds
   useEffect(() => {
-    if (!orderDetails.orderId) return;
+    const identifier = trackingMode === 'public' ? orderNumber : orderDetails.orderId;
+    if (!identifier) return;
 
     const interval = setInterval(() => {
       fetchOrderDetails();
@@ -59,7 +85,7 @@ const OrderTrackingPage = () => {
 
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderDetails.orderId]);
+  }, [orderDetails.orderId, orderNumber]);
 
   const statusSteps = [
     {
@@ -103,8 +129,35 @@ const OrderTrackingPage = () => {
 
   const currentStepIndex = getStepIndex(orderStatus);
 
-  if (!orderDetails.orderId) {
-    return null;
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-gray-900"></div>
+          <p className="mt-4 text-lg font-bold text-gray-900">Loading order details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error || !order) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <div className="bg-white border-4 border-gray-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.4)] p-8 max-w-md w-full text-center">
+          <XCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
+          <h2 className="text-2xl font-black text-gray-900 mb-2">Order Not Found</h2>
+          <p className="text-gray-600 font-medium mb-6">{error}</p>
+          <button
+            onClick={() => navigate('/')}
+            className="px-6 py-3 bg-gray-900 text-white font-black border-4 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.6)] transition-all"
+          >
+            Go to Home
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -124,7 +177,9 @@ const OrderTrackingPage = () => {
             </button>
             <div>
               <h1 className="text-2xl font-black text-gray-900">Track Your Order</h1>
-              <p className="text-gray-600 text-sm font-medium">Order #{orderDetails.orderNumber}</p>
+              <p className="text-gray-600 text-sm font-medium">
+                Order #{trackingMode === 'public' ? orderNumber : orderDetails.orderNumber || order?.orderNumber}
+              </p>
             </div>
           </div>
         </div>
@@ -206,6 +261,24 @@ const OrderTrackingPage = () => {
             })}
           </div>
         </div>
+
+        {/* OTP Display for Public Mode */}
+        {trackingMode === 'public' && order.otp && !order.otpVerified && orderStatus !== 'completed' && orderStatus !== 'cancelled' && (
+          <div className="bg-yellow-50 border-4 border-yellow-600 shadow-[4px_4px_0px_0px_rgba(202,138,4,0.4)] p-6 mb-6 transform -rotate-1">
+            <h3 className="text-lg font-black text-yellow-900 mb-3 text-center">Your Pickup OTP</h3>
+            <div className="bg-white border-3 border-yellow-600 p-4 text-center mb-3">
+              <p className="text-5xl font-black text-yellow-900 tracking-widest">{order.otp}</p>
+            </div>
+            <p className="text-center text-sm font-bold text-yellow-900">
+              Show this OTP to staff when collecting your order
+            </p>
+            {order.otpExpires && (
+              <p className="text-center text-xs font-medium text-yellow-700 mt-2">
+                ⏱️ Valid until {new Date(order.otpExpires).toLocaleTimeString()}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Order Details */}
         {order && (

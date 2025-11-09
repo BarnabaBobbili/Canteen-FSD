@@ -96,7 +96,7 @@ export const generateFallbackActivities = (orders, menuItems, getTimeDifference)
   orders.forEach(order => {
     const orderDate = new Date(order.createdAt);
     fallbackActivities.push({
-      text: `Order #${order._id?.slice(-6)} - ${order.customerName || 'Customer'} (${order.status})`,
+      text: `Order ${order.orderNumber || `#${order._id?.slice(-6)}`} - ${order.customerName || 'Customer'} (${order.status})`,
       detail: `${order.items?.length || 0} items, ₹${order.totalAmount?.toFixed(2) || '0.00'}`,
       time: getTimeDifference(orderDate),
       timestamp: orderDate,
@@ -112,7 +112,7 @@ export const generateFallbackActivities = (orders, menuItems, getTimeDifference)
     if (order.updatedAt && order.updatedAt !== order.createdAt) {
       const updateDate = new Date(order.updatedAt);
       fallbackActivities.push({
-        text: `Order #${order._id?.slice(-6)} status changed to ${order.status}`,
+        text: `Order ${order.orderNumber || `#${order._id?.slice(-6)}`} status changed to ${order.status}`,
         detail: order.customerName || 'Customer',
         time: getTimeDifference(updateDate),
         timestamp: updateDate,

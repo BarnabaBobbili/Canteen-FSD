@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useCart } from '../../../context/CartContext';
@@ -7,28 +7,75 @@ import UserDetails from './UserDetails';
 import DeliveryOptions from './DeliveryOptions';
 import PaymentMethods from './PaymentMethods';
 import OrderSummary from './OrderSummary';
+import TestPaymentModal from './TestPaymentModal';
 import API_BASE_URL from '../../../config/api';
+import { processOnlinePayment } from '../../../services/paymentService';
 
 /**
  * Main Checkout Page Orchestrator
  * Uses Cart Context for state management
+ *
+ * Auto-logs out staff members (admin, manager, cashier, staff) when they access this page
+ * This ensures staff can only browse as customers or guests
  */
 const CheckoutPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { cart, clearCart, getCartTotal } = useCart();
-  const [deliveryOption, setDeliveryOption] = useState('pickup');
-  const [paymentMethod, setPaymentMethod] = useState('cash');
-  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [deliveryOption, setDeliveryOption] = useState('dine-in');
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone || '');
+  const [paymentMethod, setPaymentMethod] = useState('online');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [showTestPaymentModal, setShowTestPaymentModal] = useState(false);
+  const [testPaymentDetails, setTestPaymentDetails] = useState(null);
+  const [testPaymentCallbacks, setTestPaymentCallbacks] = useState(null);
+
+  // Auto-logout staff roles when they access checkout page
+  useEffect(() => {
+    if (user && ['admin', 'manager', 'cashier', 'staff'].includes(user.role)) {
+      logout();
+    }
+  }, [user, logout]);
 
   // Redirect if cart is empty
   if (!cart || cart.length === 0) {
     return (
-      <div className="min-h-screen bg-white relative" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%23fafafa'/%3E%3Cpath d='M10 10h80v80H10z' fill='none' stroke='%23e5e5e5' stroke-width='0.5'/%3E%3C/svg%3E")`,
-        fontFamily: '"Comic Sans MS", "Marker Felt", cursive'
+      <div className="min-h-screen relative overflow-hidden" style={{
+        fontFamily: '"Arial Black", "Hiragino Sans", sans-serif',
+        background: `linear-gradient(135deg, #fff5f7 0%, #fffacd 25%, #e0f7fa 50%, #fce4ec 75%, #fff9c4 100%)`
       }}>
+        {/* Colorful manga gradient overlays */}
+        <div className="fixed top-0 left-0 w-full h-1/3 pointer-events-none opacity-20" style={{
+          background: 'radial-gradient(ellipse at top, rgba(255,182,193,0.6) 0%, transparent 70%)'
+        }}></div>
+        <div className="fixed bottom-0 right-0 w-full h-1/3 pointer-events-none opacity-20" style={{
+          background: 'radial-gradient(ellipse at bottom right, rgba(135,206,250,0.6) 0%, transparent 70%)'
+        }}></div>
+
+        {/* Colorful manga speed lines from center */}
+        <div className="fixed inset-0 pointer-events-none opacity-[0.05]" style={{
+          background: `
+            repeating-conic-gradient(
+              from 0deg at 50% 50%,
+              transparent 0deg,
+              transparent 2deg,
+              rgba(255,105,180,0.4) 2deg,
+              rgba(255,105,180,0.4) 3deg,
+              transparent 3deg,
+              transparent 5deg,
+              rgba(135,206,250,0.4) 5deg,
+              rgba(135,206,250,0.4) 6deg
+            )
+          `
+        }}></div>
+
+        {/* Manga sparkle effects */}
+        <div className="fixed inset-0 pointer-events-none opacity-20">
+          <div className="absolute top-20 left-20 w-3 h-3 bg-pink-400 rounded-full animate-pulse"></div>
+          <div className="absolute top-40 right-40 w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute bottom-32 left-32 w-2 h-2 bg-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-20 right-20 w-3 h-3 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 text-center">
           <h2 className="text-2xl font-black text-gray-900 mb-4">Your cart is empty</h2>
           <p className="text-gray-600 mb-8 font-medium">Add some items to proceed with checkout</p>
@@ -43,77 +90,110 @@ const CheckoutPage = () => {
     );
   }
 
+  const openTestPaymentModal = (options, onSuccess, onFailure) => {
+    setTestPaymentDetails(options);
+    setTestPaymentCallbacks({ onSuccess, onFailure });
+    setShowTestPaymentModal(true);
+  };
+
+  const handleTestPaymentSuccess = (paymentResponse) => {
+    setShowTestPaymentModal(false);
+    if (testPaymentCallbacks?.onSuccess) {
+      testPaymentCallbacks.onSuccess(paymentResponse);
+    }
+  };
+
+  const handleTestPaymentClose = () => {
+    setShowTestPaymentModal(false);
+    if (testPaymentCallbacks?.onFailure) {
+      testPaymentCallbacks.onFailure(new Error('Payment cancelled by user'));
+    }
+    setIsPlacingOrder(false);
+  };
+
   const handlePlaceOrder = async () => {
-    // Validate delivery address if delivery option selected
-    if (deliveryOption === 'delivery' && !deliveryAddress.trim()) {
-      alert('Please enter your delivery address');
+    // Validate phone number
+    if (!phoneNumber || phoneNumber.trim() === '') {
+      alert('Please enter your phone number');
+      return;
+    }
+
+    // Validate phone format (10 digits)
+    if (!/^[0-9]{10}$/.test(phoneNumber)) {
+      alert('Phone number must be exactly 10 digits');
       return;
     }
 
     setIsPlacingOrder(true);
 
     try {
+      // Calculate total items quantity
+      const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      // Add ₹5 per item for takeaway (separate from item price)
+      const takeawayCharge = deliveryOption === 'takeaway' ? totalQuantity * 5 : 0;
+
       const orderData = {
         items: cart.map(item => ({
-          itemId: item._id,
           itemName: item.itemName,
           quantity: item.quantity,
-          price: item.price
+          price: item.price // Keep original price, don't mutate
         })),
-        totalAmount: getCartTotal() * 1.05, // Including 5% tax
-        orderType: deliveryOption === 'pickup' ? 'counter' : 'online',
-        paymentMethod: paymentMethod,
-        deliveryAddress: deliveryOption === 'delivery' ? deliveryAddress : null,
+        totalAmount: (getCartTotal() * 1.05) + takeawayCharge, // Including 5% tax + takeaway charges
+        orderType: deliveryOption, // 'dine-in' or 'takeaway'
+        paymentMethod: paymentMethod, // Use state instead of hardcoded value
         customerName: user?.name || 'Guest',
-        customerPhone: user?.phone || '',
+        customerPhone: phoneNumber,
         customerEmail: user?.email || ''
       };
 
-      const token = localStorage.getItem('token');
-      const headers = {
-        'Content-Type': 'application/json',
-      };
-
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(`${API_BASE_URL}/orders`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(orderData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to place order');
-      }
-
-      const result = await response.json();
-
-      // Clear cart
-      clearCart();
-
-      // Navigate to order confirmation with order details
-      navigate('/order-confirmation', {
-        state: {
-          orderId: result._id,
-          orderNumber: result.orderNumber,
-          estimatedTime: deliveryOption === 'pickup' ? '15-20' : '30-40',
-          deliveryOption,
-          paymentMethod,
-          total: Math.round(getCartTotal() * 1.05)
-        }
-      });
+      // Process online payment with Razorpay (or test modal)
+      processOnlinePayment(
+        orderData,
+        (order) => {
+          // Payment successful
+          clearCart();
+          navigate('/order-confirmation', {
+            state: {
+              orderId: order._id,
+              orderNumber: order.orderNumber,
+              estimatedTime: deliveryOption === 'dine-in' ? '15-20' : '20-25',
+              deliveryOption,
+              paymentMethod: 'online',
+              total: Math.round(orderData.totalAmount),
+              paymentStatus: 'completed'
+            }
+          });
+          setIsPlacingOrder(false);
+        },
+        (error) => {
+          // Payment failed
+          console.error('Payment failed:', error);
+          alert(error.message || 'Payment failed. Please try again.');
+          setIsPlacingOrder(false);
+        },
+        openTestPaymentModal
+      );
     } catch (error) {
       console.error('Failed to place order:', error);
-      alert('Failed to place order. Please try again.');
-    } finally {
+      alert(error.message || 'Failed to place order. Please try again.');
       setIsPlacingOrder(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white relative" style={{
+    <>
+      {/* Test Payment Modal */}
+      {showTestPaymentModal && testPaymentDetails && (
+        <TestPaymentModal
+          isOpen={showTestPaymentModal}
+          onSuccess={handleTestPaymentSuccess}
+          onClose={handleTestPaymentClose}
+          orderDetails={testPaymentDetails}
+        />
+      )}
+
+      <div className="min-h-screen bg-white relative" style={{
       backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%23fafafa'/%3E%3Cpath d='M10 10h80v80H10z' fill='none' stroke='%23e5e5e5' stroke-width='0.5'/%3E%3C/svg%3E")`,
       fontFamily: '"Comic Sans MS", "Marker Felt", cursive'
     }}>
@@ -143,9 +223,8 @@ const CheckoutPage = () => {
             {/* User Details */}
             <UserDetails
               user={user}
-              deliveryOption={deliveryOption}
-              deliveryAddress={deliveryAddress}
-              onAddressChange={setDeliveryAddress}
+              phone={phoneNumber}
+              onPhoneChange={setPhoneNumber}
             />
 
             {/* Delivery Options */}
@@ -155,16 +234,13 @@ const CheckoutPage = () => {
             />
 
             {/* Payment Methods */}
-            <PaymentMethods
-              selectedMethod={paymentMethod}
-              onMethodChange={setPaymentMethod}
-            />
+            <PaymentMethods />
           </div>
 
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-1">
             <div className="sticky top-6 space-y-6">
-              <OrderSummary />
+              <OrderSummary deliveryOption={deliveryOption} />
 
               {/* Place Order Button */}
               <button
@@ -196,6 +272,7 @@ const CheckoutPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

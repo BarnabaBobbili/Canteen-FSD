@@ -141,57 +141,66 @@ const ManagerDashboard = () => {
         {/* DashStack Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Today's Orders */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+          <div
+            className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all"
+            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
+          >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-indigo-50 rounded-lg">
-                <ShoppingBag className="w-6 h-6 text-indigo-600" />
+              <div className="p-3 rounded-lg" style={{ backgroundColor: '#EEF2FF' }}>
+                <ShoppingBag className="w-6 h-6" style={{ color: '#4A6CF7' }} />
               </div>
             </div>
-            <p className="text-sm text-gray-600 font-medium mb-1">Today's Orders</p>
-            <h3 className="text-3xl font-bold text-gray-900 mb-3">{stats.totalOrders}</h3>
+            <p className="text-sm font-medium mb-1" style={{ color: '#6B7280' }}>Today's Orders</p>
+            <h3 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>{stats.totalOrders}</h3>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1 text-green-600">
                 <TrendingUp className="w-4 h-4" />
                 <span className="text-sm font-semibold">12.5%</span>
               </div>
-              <span className="text-xs text-gray-500">from yesterday</span>
+              <span className="text-xs" style={{ color: '#9CA3AF' }}>from yesterday</span>
             </div>
           </div>
 
           {/* Today's Revenue */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+          <div
+            className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all"
+            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
+          >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-50 rounded-lg">
-                <DollarSign className="w-6 h-6 text-green-600" />
+              <div className="p-3 rounded-lg" style={{ backgroundColor: '#ECFDF5' }}>
+                <DollarSign className="w-6 h-6" style={{ color: '#10B981' }} />
               </div>
             </div>
-            <p className="text-sm text-gray-600 font-medium mb-1">Today's Revenue</p>
-            <h3 className="text-3xl font-bold text-gray-900 mb-3">₹{stats.todayRevenue.toFixed(0)}</h3>
+            <p className="text-sm font-medium mb-1" style={{ color: '#6B7280' }}>Today's Revenue</p>
+            <h3 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>₹{stats.todayRevenue.toFixed(0)}</h3>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1 text-green-600">
                 <TrendingUp className="w-4 h-4" />
                 <span className="text-sm font-semibold">8.2%</span>
               </div>
-              <span className="text-xs text-gray-500">from yesterday</span>
+              <span className="text-xs" style={{ color: '#9CA3AF' }}>from yesterday</span>
             </div>
           </div>
 
           {/* Pending Orders */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+          <div
+            className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all"
+            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
+          >
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-yellow-50 rounded-lg">
-                <Clock className="w-6 h-6 text-yellow-600" />
+              <div className="p-3 rounded-lg" style={{ backgroundColor: '#FFF7ED' }}>
+                <Clock className="w-6 h-6" style={{ color: '#F59E0B' }} />
               </div>
               {stats.pendingOrders > 0 && (
-                <span className="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold">
+                <span className="px-2 py-1 rounded text-xs font-semibold" style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}>
                   Action Needed
                 </span>
               )}
             </div>
-            <p className="text-sm text-gray-600 font-medium mb-1">Pending Orders</p>
-            <h3 className="text-3xl font-bold text-gray-900 mb-3">{stats.pendingOrders}</h3>
+            <p className="text-sm font-medium mb-1" style={{ color: '#6B7280' }}>Pending Orders</p>
+            <h3 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>{stats.pendingOrders}</h3>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">Requires attention</span>
+              <span className="text-xs" style={{ color: '#9CA3AF' }}>Requires attention</span>
             </div>
           </div>
         </div>
@@ -199,44 +208,47 @@ const ManagerDashboard = () => {
         {/* Management Cards Section */}
         <div>
           <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Quick Access</h2>
+            <h2 className="text-xl font-bold" style={{ color: '#111827' }}>Quick Access</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {managementCards.map((card) => {
               const colorMap = {
-                'Orders Management': { bg: 'bg-indigo-50', icon: 'bg-indigo-50', iconColor: 'text-indigo-600', border: 'border-indigo-100' },
-                'Menu Management': { bg: 'bg-green-50', icon: 'bg-green-50', iconColor: 'text-green-600', border: 'border-green-100' },
-                'Inventory': { bg: 'bg-orange-50', icon: 'bg-orange-50', iconColor: 'text-orange-600', border: 'border-orange-100' },
-                'Discounts': { bg: 'bg-pink-50', icon: 'bg-pink-50', iconColor: 'text-pink-600', border: 'border-pink-100' }
+                'Orders Management': { bg: '#EEF2FF', icon: '#4A6CF7' },
+                'Menu Management': { bg: '#ECFDF5', icon: '#10B981' },
+                'Inventory': { bg: '#FFF7ED', icon: '#F59E0B' },
+                'Discounts': { bg: '#FCE7F3', icon: '#EC4899' }
               };
-              const colors = colorMap[card.title];
+              // Add safe fallback for undefined colors
+              const colors = colorMap[card.title] || { bg: '#F3F4F6', icon: '#6B7280' };
 
               return (
                 <div
                   key={card.path}
                   onClick={() => navigate(card.path)}
-                  className={`bg-white rounded-xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all cursor-pointer group`}
+                  className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all cursor-pointer group"
+                  style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className={`p-3 ${colors.icon} rounded-lg`}>
-                      <card.icon className={`${colors.iconColor}`} size={24} />
+                    <div className="p-3 rounded-lg" style={{ backgroundColor: colors.bg }}>
+                      <card.icon size={24} style={{ color: colors.icon }} />
                     </div>
                     {card.alert && (
-                      <span className="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold flex items-center gap-1">
+                      <span className="px-2 py-1 rounded text-xs font-semibold flex items-center gap-1" style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}>
                         <AlertCircle size={14} />
                         Alert
                       </span>
                     )}
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{card.title}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{card.description}</p>
+                  <h3 className="text-lg font-bold mb-2" style={{ color: '#111827' }}>{card.title}</h3>
+                  <p className="text-sm mb-4" style={{ color: '#6B7280' }}>{card.description}</p>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-2xl font-bold text-gray-900 mb-1">{card.stat}</p>
-                      <p className="text-xs font-medium text-gray-500">{card.statLabel}</p>
+                      <p className="text-2xl font-bold mb-1" style={{ color: '#111827' }}>{card.stat}</p>
+                      <p className="text-xs font-medium" style={{ color: '#9CA3AF' }}>{card.statLabel}</p>
                     </div>
                     <button
-                      className={`bg-gradient-to-r ${card.gradient} text-white px-4 py-2 rounded-lg flex items-center gap-2 group-hover:gap-3 transition-all shadow-sm group-hover:shadow-md`}
+                      className="text-white px-4 py-2 rounded-lg flex items-center gap-2 group-hover:gap-3 transition-all shadow-sm"
+                      style={{ backgroundColor: '#4A6CF7' }}
                     >
                       <span className="font-semibold text-sm">View</span>
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />

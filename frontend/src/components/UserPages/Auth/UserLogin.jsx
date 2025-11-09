@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { LogIn, User, Lock, AlertCircle, Eye, EyeOff, ChefHat, ArrowLeft } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
+import { getDefaultRedirect } from '../../Shared/Auth/authHelpers';
 
 /**
  * User (Customer) Login Page
@@ -22,7 +23,7 @@ const UserLogin = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const redirectPath = user.role === 'customer' ? '/order' : '/dashboard';
+      const redirectPath = getDefaultRedirect(user.role);
       navigate(redirectPath, { replace: true });
     }
   }, [isAuthenticated, navigate, user]);
@@ -36,7 +37,7 @@ const UserLogin = () => {
       const result = await login(formData.email, formData.password);
 
       if (result.success) {
-        const redirectPath = result.user?.role === 'customer' ? '/order' : '/dashboard';
+        const redirectPath = getDefaultRedirect(result.user?.role);
         navigate(redirectPath, { replace: true });
       } else {
         setError(result.message || 'Login failed. Please check your credentials.');
@@ -56,7 +57,7 @@ const UserLogin = () => {
       const result = await googleLogin(credentialResponse.credential);
 
       if (result.success) {
-        const redirectPath = result.user?.role === 'customer' ? '/order' : '/dashboard';
+        const redirectPath = getDefaultRedirect(result.user?.role);
         navigate(redirectPath, { replace: true });
       } else {
         setError(result.message || 'Google login failed. Please try again.');
@@ -217,6 +218,14 @@ const UserLogin = () => {
           </form>
 
           <div className="mt-6 text-center space-y-3">
+            <p className="text-gray-600 font-medium">
+              <button
+                onClick={() => navigate('/forgot-password')}
+                className="text-gray-900 hover:text-gray-600 font-black underline decoration-wavy decoration-2 underline-offset-2"
+              >
+                Forgot Password?
+              </button>
+            </p>
             <p className="text-gray-600 font-medium">
               Don't have an account?{' '}
               <button

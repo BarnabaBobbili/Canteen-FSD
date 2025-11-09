@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Package, Clock, CheckCircle, XCircle, ChefHat } from 'lucide-react';
+import { Package, Clock, CheckCircle, XCircle, ChefHat, MessageSquare } from 'lucide-react';
 
 /**
  * Order History component for user profile
@@ -131,18 +131,30 @@ const OrderHistory = ({ orders, loading }) => {
             </button>
           )}
 
-          {/* Reorder Button */}
+          {/* Action Buttons for Completed Orders */}
           {order.status === 'completed' && (
-            <button
-              className="w-full mt-4 py-2 bg-gray-900 border-4 border-gray-900 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.6)] transition-all font-black transform hover:scale-105 hover:-rotate-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                // TODO: Add reorder functionality
-                navigate('/order');
-              }}
-            >
-              Reorder
-            </button>
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <button
+                className="py-2 bg-gray-900 border-4 border-gray-900 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.6)] transition-all font-black transform hover:scale-105 hover:-rotate-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // TODO: Add reorder functionality
+                  navigate('/order');
+                }}
+              >
+                Reorder
+              </button>
+              <button
+                className="py-2 flex items-center justify-center gap-2 border-4 border-gray-900 bg-white text-gray-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)] transition-all font-black transform hover:rotate-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/feedback');
+                }}
+              >
+                <MessageSquare className="w-4 h-4" />
+                Feedback
+              </button>
+            </div>
           )}
         </div>
       ))}

@@ -6,12 +6,13 @@ import { useCart } from '../../../context/CartContext';
  * Order Summary component for checkout
  * Uses Cart Context for data
  */
-const OrderSummary = () => {
+const OrderSummary = ({ deliveryOption = 'dine-in' }) => {
   const { cart, getCartTotal, getCartQuantity } = useCart();
   const subtotal = getCartTotal();
   const tax = Math.round(subtotal * 0.05);
-  const total = subtotal + tax;
   const quantity = getCartQuantity();
+  const takeawayCharge = deliveryOption === 'takeaway' ? quantity * 5 : 0;
+  const total = subtotal + tax + takeawayCharge;
 
   return (
     <div className="bg-white border-4 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] p-6">
@@ -74,6 +75,12 @@ const OrderSummary = () => {
           <span>Tax (5%)</span>
           <span>₹{tax}</span>
         </div>
+        {deliveryOption === 'takeaway' && (
+          <div className="flex justify-between text-orange-600 font-bold">
+            <span>Takeaway Charges (₹5 × {quantity})</span>
+            <span>₹{takeawayCharge}</span>
+          </div>
+        )}
       </div>
 
       {/* Total */}

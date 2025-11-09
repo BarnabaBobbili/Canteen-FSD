@@ -17,12 +17,24 @@ const CartPanel = React.memo(({
   onPlaceOrder
 }) => {
   // Memoize cart total
-  const total = useMemo(() => calculateCartTotal(cart), [cart]);
+  const subtotal = useMemo(() => calculateCartTotal(cart), [cart]);
 
   // Memoize total items count
   const totalItems = useMemo(() =>
     cart.reduce((sum, item) => sum + item.quantity, 0),
     [cart]
+  );
+
+  // Calculate takeaway charges
+  const takeawayCharge = useMemo(() =>
+    orderType === 'takeaway' ? totalItems * 5 : 0,
+    [orderType, totalItems]
+  );
+
+  // Final total
+  const total = useMemo(() =>
+    subtotal + takeawayCharge,
+    [subtotal, takeawayCharge]
   );
 
   // Memoized validation
@@ -98,9 +110,8 @@ const CartPanel = React.memo(({
             onChange={(e) => setOrderType(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-sky-500 bg-white"
           >
-            <option value="counter">🏪 Counter</option>
-            <option value="dine-in">🍽️ Dine-in</option>
-            <option value="online">📱 Online</option>
+            <option value="dine-in">🍽️ Dine-In</option>
+            <option value="takeaway">🛍️ Takeaway</option>
           </select>
         </div>
       </div>
@@ -176,15 +187,25 @@ const CartPanel = React.memo(({
       {/* Total & Place Order */}
       <div className="border-t border-gray-200 pt-3">
         <div className="bg-sky-50 rounded p-3 mb-3">
+          {cart.length > 0 && (
+            <>
+              <div className="flex justify-between items-center text-sm text-gray-600 mb-1">
+                <span>Subtotal ({totalItems} items):</span>
+                <span className="font-semibold">₹{subtotal.toFixed(2)}</span>
+              </div>
+              {orderType === 'takeaway' && (
+                <div className="flex justify-between items-center text-sm text-orange-600 mb-1">
+                  <span>Takeaway Charges (₹5 × {totalItems}):</span>
+                  <span className="font-semibold">₹{takeawayCharge.toFixed(2)}</span>
+                </div>
+              )}
+              <div className="border-t border-gray-300 my-2"></div>
+            </>
+          )}
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-gray-600">Total:</span>
             <span className="text-2xl font-bold text-sky-600">₹{total.toFixed(2)}</span>
           </div>
-          {cart.length > 0 && (
-            <div className="text-xs text-gray-500 mt-1">
-              {totalItems} items
-            </div>
-          )}
         </div>
 
         <button

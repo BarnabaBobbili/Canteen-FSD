@@ -195,7 +195,8 @@ const OrderManagement = () => {
       // Search filter
       const matchesSearch = order.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.customerEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customerPhone?.includes(searchTerm);
+        order.customerPhone?.includes(searchTerm) ||
+        order.orderNumber?.toLowerCase().includes(searchTerm.toLowerCase());
 
       // Status filter
       const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
@@ -248,7 +249,7 @@ const OrderManagement = () => {
               <SearchBar
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
-                placeholder="Search orders by name, email, or phone..."
+                placeholder="Search by order number, name, email, or phone..."
               />
             </div>
             <button
@@ -284,6 +285,7 @@ const OrderManagement = () => {
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Order Number</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Customer Name</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Phone</th>
@@ -296,6 +298,7 @@ const OrderManagement = () => {
               <tbody className="divide-y divide-gray-200">
                 {displayedOrders.map((order) => (
                   <tr key={order._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 text-sm font-bold text-indigo-600">{order.orderNumber}</td>
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{order.customerName}</td>
                     <td className="px-6 py-4 text-sm text-gray-600">{order.customerEmail || '-'}</td>
                     <td className="px-6 py-4 text-sm text-gray-600">{order.customerPhone}</td>

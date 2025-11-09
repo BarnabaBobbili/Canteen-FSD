@@ -77,46 +77,43 @@ const KitchenDashboard = () => {
     }
   };
 
-  // Tab configuration with modern colors
+  // Tab configuration with DashStack colors
   const tabs = [
     {
       id: 'pending',
       label: 'Pending',
       icon: Clock,
       count: pendingOrders.length,
-      bgColor: 'bg-slate-600',
-      activeColor: 'bg-slate-700',
-      textColor: 'text-slate-700',
-      borderColor: 'border-slate-600'
+      bgColor: '#4A6CF7',
+      textColor: '#4A6CF7'
     },
     {
       id: 'preparing',
       label: 'Preparing',
       icon: Flame,
       count: preparingOrders.length,
-      bgColor: 'bg-amber-500',
-      activeColor: 'bg-amber-600',
-      textColor: 'text-amber-600',
-      borderColor: 'border-amber-500'
+      bgColor: '#F59E0B',
+      textColor: '#F59E0B'
     },
     {
       id: 'ready',
       label: 'Ready',
       icon: CheckCircle2,
       count: readyOrders.length,
-      bgColor: 'bg-emerald-600',
-      activeColor: 'bg-emerald-700',
-      textColor: 'text-emerald-600',
-      borderColor: 'border-emerald-600'
+      bgColor: '#10B981',
+      textColor: '#10B981'
     }
   ];
 
   const currentTab = tabs.find(t => t.id === activeTab);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen" style={{ backgroundColor: '#F9FAFB' }}>
       {/* Modern Header with Gradient - STICKY */}
-      <div className="sticky top-0 z-50 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white shadow-xl">
+      <div
+        className="sticky top-0 z-50 text-white shadow-xl"
+        style={{ background: 'linear-gradient(135deg, #4A6CF7 0%, #818CF8 100%)' }}
+      >
         <div className="px-4 sm:px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="bg-white/20 backdrop-blur-sm p-3 rounded-xl shadow-lg">
@@ -124,7 +121,7 @@ const KitchenDashboard = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Kitchen Display</h1>
-              <p className="text-sm text-emerald-50 font-medium">
+              <p className="text-sm font-medium opacity-90">
                 {user?.name} • {new Date().toLocaleTimeString()}
               </p>
             </div>
@@ -133,7 +130,8 @@ const KitchenDashboard = () => {
             <button
               onClick={loadOrders}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white/90 text-emerald-700 rounded-lg hover:bg-white font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-lg font-semibold text-sm shadow-md hover:shadow-lg transition-all duration-200"
+              style={{ color: '#4A6CF7' }}
             >
               <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
               <span className="hidden sm:inline">Refresh</span>
@@ -154,19 +152,15 @@ const KitchenDashboard = () => {
             <div className="flex items-center justify-between gap-4">
               {/* Dropdown Selector */}
               <div className="flex-1 max-w-md">
-                <label className="block text-xs font-semibold text-emerald-50 mb-2">
+                <label className="block text-xs font-semibold mb-2 opacity-90">
                   SELECT ORDER STATUS
                 </label>
                 <div className="relative">
                   <select
                     value={activeTab}
                     onChange={(e) => setActiveTab(e.target.value)}
-                    className={`
-                      w-full appearance-none ${currentTab.bgColor} text-white font-bold text-lg
-                      px-5 py-4 pr-12 rounded-xl shadow-lg cursor-pointer
-                      focus:outline-none focus:ring-4 focus:ring-white/30
-                      transition-all duration-200 hover:shadow-xl
-                    `}
+                    className="w-full appearance-none text-white font-bold text-lg px-5 py-4 pr-12 rounded-xl shadow-lg cursor-pointer focus:outline-none focus:ring-4 transition-all duration-200 hover:shadow-xl"
+                    style={{ backgroundColor: currentTab.bgColor, '--tw-ring-color': 'rgba(255, 255, 255, 0.3)' }}
                   >
                     {tabs.map((tab) => (
                       <option key={tab.id} value={tab.id}>
@@ -221,7 +215,7 @@ const KitchenDashboard = () => {
       {/* Orders Display - Full Width Single Section View */}
       <div className="px-4 sm:px-6 py-6">
         {/* Section Header */}
-        <div className={`mb-6 p-4 rounded-2xl ${currentTab.bgColor} text-white shadow-lg`}>
+        <div className="mb-6 p-4 rounded-2xl text-white shadow-lg" style={{ backgroundColor: currentTab.bgColor }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {React.createElement(currentTab.icon, { size: 28 })}
@@ -253,16 +247,19 @@ const KitchenDashboard = () => {
         {/* Empty State */}
         {getActiveOrders().length === 0 && (
           <div className="text-center py-16">
-            <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full ${currentTab.bgColor} bg-opacity-10 mb-4`}>
+            <div
+              className="inline-flex items-center justify-center w-24 h-24 rounded-full mb-4"
+              style={{ backgroundColor: `${currentTab.bgColor}20` }}
+            >
               {React.createElement(currentTab.icon, {
                 size: 48,
-                className: currentTab.textColor
+                style: { color: currentTab.textColor }
               })}
             </div>
-            <h3 className="text-2xl font-bold text-slate-700 mb-2">
+            <h3 className="text-2xl font-bold mb-2" style={{ color: '#374151' }}>
               No {currentTab.label} Orders
             </h3>
-            <p className="text-slate-500">
+            <p style={{ color: '#6B7280' }}>
               All clear! No orders in this section right now.
             </p>
           </div>

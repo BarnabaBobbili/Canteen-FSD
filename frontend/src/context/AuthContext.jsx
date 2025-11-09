@@ -96,6 +96,18 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Registration failed');
       }
 
+      // Check if email verification is required
+      if (data.requiresVerification) {
+        // Don't set user/token, verification email has been sent
+        return {
+          success: true,
+          requiresVerification: true,
+          message: data.message,
+          email: data.email
+        };
+      }
+
+      // For staff members, token is provided immediately
       setUser(data.user);
       setToken(data.token);
       localStorage.setItem('token', data.token);
@@ -138,6 +150,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
   };
 
+  // Helper function for email verification page to set auth data
+  const setAuthData = (userData, authToken) => {
+    setUser(userData);
+    setToken(authToken);
+    localStorage.setItem('token', authToken);
+  };
+
   const value = {
     user,
     token,
@@ -146,6 +165,7 @@ export const AuthProvider = ({ children }) => {
     register,
     googleLogin,
     logout,
+    setAuthData,
     isAuthenticated: !!user,
     hasRole: (roles) => {
       if (!user) return false;

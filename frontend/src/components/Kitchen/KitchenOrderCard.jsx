@@ -84,7 +84,12 @@ const KitchenOrderCard = ({ order, onStatusUpdate, currentStatus }) => {
               <User size={18} />
             </div>
             <div>
-              <h3 className="font-bold text-lg text-slate-800">{order.customerName}</h3>
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-bold text-lg text-slate-800">{order.customerName}</h3>
+                <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">
+                  {order.orderNumber}
+                </span>
+              </div>
               <div className="flex items-center gap-1.5 text-slate-600 text-sm">
                 <Phone size={14} />
                 <span>{order.customerPhone}</span>

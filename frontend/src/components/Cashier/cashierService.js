@@ -49,7 +49,9 @@ export const placeOrder = async (orderData, token) => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to place order');
+    const errorData = await response.json().catch(() => ({}));
+    console.error('Order placement failed:', errorData);
+    throw new Error(errorData.message || 'Failed to place order');
   }
 
   return response.json();

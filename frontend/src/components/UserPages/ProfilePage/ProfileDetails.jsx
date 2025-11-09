@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, Save, Edit2, X } from 'lucide-react';
+import ChangePassword from './ChangePassword';
 
 /**
  * Profile Details component for editing user information
@@ -34,12 +35,6 @@ const ProfileDetails = ({ user, onUpdate, updating }) => {
       newErrors.name = 'Name is required';
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-
     if (formData.phone && !/^[0-9]{10}$/.test(formData.phone)) {
       newErrors.phone = 'Phone number must be 10 digits';
     }
@@ -55,7 +50,13 @@ const ProfileDetails = ({ user, onUpdate, updating }) => {
       return;
     }
 
-    const success = await onUpdate(formData);
+    // Only send name and phone (email is read-only)
+    const updateData = {
+      name: formData.name,
+      phone: formData.phone
+    };
+
+    const success = await onUpdate(updateData);
     if (success) {
       setIsEditing(false);
     }
@@ -72,9 +73,10 @@ const ProfileDetails = ({ user, onUpdate, updating }) => {
   };
 
   return (
-    <div className="bg-white border-4 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] p-6 transform rotate-1">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-black text-gray-900 underline decoration-wavy decoration-2 underline-offset-4">Profile Details</h2>
+    <div className="space-y-6">
+      <div className="bg-white border-4 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] p-6 transform rotate-1">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-black text-gray-900 underline decoration-wavy decoration-2 underline-offset-4">Profile Details</h2>
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
@@ -111,7 +113,7 @@ const ProfileDetails = ({ user, onUpdate, updating }) => {
           )}
         </div>
 
-        {/* Email */}
+        {/* Email - Read Only */}
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">
             Email Address
@@ -122,17 +124,12 @@ const ProfileDetails = ({ user, onUpdate, updating }) => {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              disabled={!isEditing}
-              className={`w-full pl-10 pr-4 py-3 border-3 border-gray-900 focus:outline-none shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)] font-medium transform focus:-rotate-1 transition-all ${
-                isEditing ? 'bg-white' : 'bg-gray-50 text-gray-900'
-              } ${errors.email ? 'border-red-500' : ''}`}
+              disabled={true}
+              className="w-full pl-10 pr-4 py-3 border-3 border-gray-900 bg-gray-50 text-gray-900 font-medium shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] cursor-not-allowed"
               placeholder="your@email.com"
             />
           </div>
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600 font-bold">{errors.email}</p>
-          )}
+          <p className="mt-1 text-xs text-gray-600 font-medium">Email cannot be changed for security reasons</p>
         </div>
 
         {/* Phone */}
@@ -203,6 +200,10 @@ const ProfileDetails = ({ user, onUpdate, updating }) => {
         )}
       </form>
     </div>
+
+    {/* Change Password Section */}
+    <ChangePassword />
+  </div>
   );
 };
 

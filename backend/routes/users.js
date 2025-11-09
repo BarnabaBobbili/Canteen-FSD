@@ -3,6 +3,54 @@ const router = express.Router();
 const User = require('../models/User');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
+// Get current user's profile (must come BEFORE /:id routes)
+router.get('/profile', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Update current user's profile (must come BEFORE /:id routes)
+router.put('/profile', authenticateToken, async (req, res) => {
+  try {
+    // Don't allow email updates (security/identity)
+    delete req.body.email;
+
+    // Don't allow role or status updates (security)
+    delete req.body.role;
+    delete req.body.status;
+
+    // Only allow name and phone updates
+    const allowedUpdates = {
+      name: req.body.name,
+      phone: req.body.phone
+    };
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      allowedUpdates,
+      {
+        new: true,
+        runValidators: true
+      }
+    ).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 // Get all users (admin only)
 router.get('/', authenticateToken, authorizeRoles('admin', 'manager'), async (req, res) => {
   try {

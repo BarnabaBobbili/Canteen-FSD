@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 // User-facing pages (refactored modular versions)
 import LandingPage from './components/UserPages/LandingPage';
@@ -14,6 +15,9 @@ import OrderTrackingPage from './components/UserPages/OrderTrackingPage';
 import ProfilePage from './components/UserPages/ProfilePage';
 import UserLogin from './components/UserPages/Auth/UserLogin';
 import UserSignup from './components/UserPages/Auth/UserSignup';
+import VerifyEmail from './components/UserPages/Auth/VerifyEmail';
+import ForgotPassword from './components/UserPages/Auth/ForgotPassword';
+import ResetPassword from './components/UserPages/Auth/ResetPassword';
 import ContactUs from './components/ContactUs';
 import StaffLogin from './components/Staff/StaffLogin';
 import StaffSignup from './components/Staff/StaffSignup';
@@ -31,15 +35,19 @@ import StaffManagement from './components/StaffManagement';
 import ActivityLog from './components/ActivityLog';
 import SupplierManagement from './components/SupplierManagement';
 import DiscountManagement from './components/DiscountManagement';
+import PaymentManagement from './components/Payments/PaymentManagement';
+import FeedbackManagement from './components/Feedback/FeedbackManagement';
+import FeedbackForm from './components/UserPages/FeedbackPage/FeedbackForm';
 
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || 'your-google-client-id';
 
 function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <AuthProvider>
-        <CartProvider>
-          <Router>
+      <ThemeProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Router>
             <div className="App">
               <Routes>
               {/* Public Routes */}
@@ -49,11 +57,15 @@ function App() {
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
               <Route path="/order-tracking" element={<OrderTrackingPage />} />
+              <Route path="/track-order/:orderNumber" element={<OrderTrackingPage />} />
               <Route path="/contactus" element={<ContactUs />} />
 
             {/* User Auth Routes */}
             <Route path="/login" element={<UserLogin />} />
             <Route path="/signup" element={<UserSignup />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
             {/* User Profile (Protected) */}
             <Route
@@ -64,6 +76,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* User Feedback Form */}
+            <Route path="/feedback" element={<FeedbackForm />} />
 
             {/* Staff Auth Routes */}
             <Route path="/staff/login" element={<StaffLogin />} />
@@ -144,6 +159,24 @@ function App() {
               }
             />
 
+            <Route
+              path="/admin/payments"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <PaymentManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/feedback"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <FeedbackManagement />
+                </ProtectedRoute>
+              }
+            />
+
             {/* ========== CASHIER ROUTES ========== */}
             <Route
               path="/cashier"
@@ -164,7 +197,7 @@ function App() {
               }
             />
 
-            {/* ========== MANAGER ROUTES ========== */}
+            {/* ========== MANAGER ROUTES (with /manager prefix) ========== */}
             <Route
               path="/manager"
               element={
@@ -174,18 +207,8 @@ function App() {
               }
             />
 
-            {/* ========== REGULAR USER ROUTES (without /admin prefix) ========== */}
             <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute roles={['customer']}>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/orders"
+              path="/manager/orders"
               element={
                 <ProtectedRoute roles={['manager']}>
                   <ManagerLayout>
@@ -196,7 +219,7 @@ function App() {
             />
 
             <Route
-              path="/menu"
+              path="/manager/menu"
               element={
                 <ProtectedRoute roles={['manager']}>
                   <ManagerLayout>
@@ -207,7 +230,7 @@ function App() {
             />
 
             <Route
-              path="/inventory"
+              path="/manager/inventory"
               element={
                 <ProtectedRoute roles={['manager']}>
                   <ManagerLayout>
@@ -218,7 +241,7 @@ function App() {
             />
 
             <Route
-              path="/discounts"
+              path="/manager/discounts"
               element={
                 <ProtectedRoute roles={['manager']}>
                   <ManagerLayout>
@@ -228,16 +251,43 @@ function App() {
               }
             />
 
-              {/* Future routes for other management components */}
-              {/*
-              <Route path="/feedback" element={<ProtectedRoute roles={['admin', 'manager']}><FeedbackManagement /></ProtectedRoute>} />
-              <Route path="/payments" element={<ProtectedRoute roles={['admin', 'manager', 'cashier']}><PaymentBilling /></ProtectedRoute>} />
-              */}
+            <Route
+              path="/manager/payments"
+              element={
+                <ProtectedRoute roles={['manager']}>
+                  <ManagerLayout>
+                    <PaymentManagement />
+                  </ManagerLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/manager/feedbacks"
+              element={
+                <ProtectedRoute roles={['manager']}>
+                  <ManagerLayout>
+                    <FeedbackManagement />
+                  </ManagerLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* ========== CUSTOMER ROUTES ========== */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute roles={['customer']}>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
                 </Routes>
               </div>
             </Router>
-        </CartProvider>
-      </AuthProvider>
+          </CartProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </GoogleOAuthProvider>
   );
 }

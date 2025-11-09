@@ -48,9 +48,6 @@ const OrderFilterBar = ({
             <option value="all">All Types</option>
             <option value="dine-in">Dine-In</option>
             <option value="takeaway">Takeaway</option>
-            <option value="delivery">Delivery</option>
-            <option value="online">Online</option>
-            <option value="counter">Counter</option>
           </select>
         </div>
 

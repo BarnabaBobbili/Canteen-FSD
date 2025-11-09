@@ -42,14 +42,20 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
     }
   }, [modalMode, currentForm.items]);
 
-  // Calculate total whenever selected items change
+  // Calculate total whenever selected items change or orderType changes
   useEffect(() => {
-    const total = selectedItems.reduce((sum, item) => {
+    const subtotal = selectedItems.reduce((sum, item) => {
       return sum + (item.price * item.quantity);
     }, 0);
+
+    // Add ₹5 per item for takeaway orders
+    const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+    const takeawayCharge = currentForm.orderType === 'takeaway' ? totalQuantity * 5 : 0;
+    const total = subtotal + takeawayCharge;
+
     setCurrentForm({ ...currentForm, totalAmount: total, items: selectedItems });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItems]);
+  }, [selectedItems, currentForm.orderType]);
 
   const filteredMenuItems = menuItems.filter(item =>
     item.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -157,7 +163,6 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
         >
           <option value="dine-in">Dine-In</option>
           <option value="takeaway">Takeaway</option>
-          <option value="delivery">Delivery</option>
         </select>
       </div>
 
@@ -311,11 +316,30 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
 
       {/* Total Amount */}
       <div className="mb-4 border-t pt-4">
-        <div className="flex justify-between items-center bg-sky-50 p-4 rounded-lg">
-          <span className="text-lg font-bold text-gray-900">Total Amount:</span>
-          <span className="text-2xl font-bold text-sky-600">
-            ₹{(currentForm.totalAmount || 0).toFixed(2)}
-          </span>
+        <div className="bg-sky-50 p-4 rounded-lg space-y-2">
+          {currentForm.orderType === 'takeaway' && selectedItems.length > 0 && (
+            <>
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>Subtotal:</span>
+                <span className="font-semibold">
+                  ₹{selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm text-orange-600">
+                <span>Takeaway Charges (₹5 × {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}):</span>
+                <span className="font-semibold">
+                  ₹{(selectedItems.reduce((sum, item) => sum + item.quantity, 0) * 5).toFixed(2)}
+                </span>
+              </div>
+              <div className="border-t border-gray-300 my-1"></div>
+            </>
+          )}
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-bold text-gray-900">Total Amount:</span>
+            <span className="text-2xl font-bold text-sky-600">
+              ₹{(currentForm.totalAmount || 0).toFixed(2)}
+            </span>
+          </div>
         </div>
       </div>
 

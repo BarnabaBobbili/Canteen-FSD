@@ -19,7 +19,7 @@ const CashierDashboard = () => {
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
-  const [orderType, setOrderType] = useState('counter');
+  const [orderType, setOrderType] = useState('dine-in');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [successMessage, setSuccessMessage] = useState('');
@@ -82,11 +82,16 @@ const CashierDashboard = () => {
       const orderData = {
         items: cart.map(item => {
           // Calculate actual price with discount
-          const actualPrice = item.discount?.type !== 'none' && item.discount?.value > 0
+          let actualPrice = item.discount?.type !== 'none' && item.discount?.value > 0
             ? item.discount.type === 'percentage'
               ? item.price - (item.price * item.discount.value / 100)
               : item.price - item.discount.value
             : item.price;
+
+          // Add ₹5 extra for takeaway orders
+          if (orderType === 'takeaway') {
+            actualPrice += 5;
+          }
 
           return {
             itemName: item.itemName,
@@ -94,7 +99,9 @@ const CashierDashboard = () => {
             price: actualPrice
           };
         }),
-        totalAmount: calculateCartTotal(cart),
+        totalAmount: orderType === 'takeaway'
+          ? calculateCartTotal(cart) + (cart.reduce((sum, item) => sum + item.quantity, 0) * 5)
+          : calculateCartTotal(cart),
         customerName: customerName.trim(),
         customerEmail: customerEmail.trim() || undefined,
         customerPhone: customerPhone.trim(),
@@ -103,6 +110,7 @@ const CashierDashboard = () => {
         createdBy: user._id
       };
 
+      console.log('Placing order with data:', orderData);
       await cashierService.placeOrder(orderData, token);
 
       setSuccessMessage('Order placed successfully!');
@@ -112,8 +120,9 @@ const CashierDashboard = () => {
       setCustomerPhone('');
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
-      setError('Failed to place order');
-      setTimeout(() => setError(''), 3000);
+      console.error('Order placement error:', error);
+      setError(`Failed to place order: ${error.message}`);
+      setTimeout(() => setError(''), 5000);
     }
   };
 

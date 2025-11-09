@@ -102,10 +102,42 @@ const ProfilePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white relative" style={{
-      backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%23fafafa'/%3E%3Cpath d='M10 10h80v80H10z' fill='none' stroke='%23e5e5e5' stroke-width='0.5'/%3E%3C/svg%3E")`,
-      fontFamily: '"Comic Sans MS", "Marker Felt", cursive'
+    <div className="min-h-screen relative overflow-hidden" style={{
+      fontFamily: '"Arial Black", "Hiragino Sans", sans-serif',
+      background: `linear-gradient(135deg, #fff5f7 0%, #fffacd 25%, #e0f7fa 50%, #fce4ec 75%, #fff9c4 100%)`
     }}>
+      {/* Colorful manga gradient overlays */}
+      <div className="fixed top-0 left-0 w-full h-1/3 pointer-events-none opacity-20" style={{
+        background: 'radial-gradient(ellipse at top, rgba(255,182,193,0.6) 0%, transparent 70%)'
+      }}></div>
+      <div className="fixed bottom-0 right-0 w-full h-1/3 pointer-events-none opacity-20" style={{
+        background: 'radial-gradient(ellipse at bottom right, rgba(135,206,250,0.6) 0%, transparent 70%)'
+      }}></div>
+
+      {/* Colorful manga speed lines from center */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.05]" style={{
+        background: `
+          repeating-conic-gradient(
+            from 0deg at 50% 50%,
+            transparent 0deg,
+            transparent 2deg,
+            rgba(255,105,180,0.4) 2deg,
+            rgba(255,105,180,0.4) 3deg,
+            transparent 3deg,
+            transparent 5deg,
+            rgba(135,206,250,0.4) 5deg,
+            rgba(135,206,250,0.4) 6deg
+          )
+        `
+      }}></div>
+
+      {/* Manga sparkle effects */}
+      <div className="fixed inset-0 pointer-events-none opacity-20">
+        <div className="absolute top-20 left-20 w-3 h-3 bg-pink-400 rounded-full animate-pulse"></div>
+        <div className="absolute top-40 right-40 w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute bottom-32 left-32 w-2 h-2 bg-yellow-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-20 right-20 w-3 h-3 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+      </div>
       {/* Header */}
       <div className="bg-white border-b-4 border-gray-900 shadow-[0px_4px_0px_0px_rgba(0,0,0,0.2)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">

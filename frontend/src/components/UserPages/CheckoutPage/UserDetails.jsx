@@ -1,15 +1,17 @@
 import React from 'react';
-import { User, Phone, Mail, MapPin } from 'lucide-react';
+import { User, Phone, Mail } from 'lucide-react';
 
 /**
- * User details display component
+ * User details display and input component
  * @param {Object} props
  * @param {Object} props.user - User object from AuthContext
- * @param {string} props.deliveryOption - Current delivery option ('pickup' or 'delivery')
- * @param {string} props.deliveryAddress - Delivery address if delivery option selected
- * @param {Function} props.onAddressChange - Handler for address change
+ * @param {string} props.phone - Phone number state
+ * @param {Function} props.onPhoneChange - Phone change handler
  */
-const UserDetails = ({ user, deliveryOption, deliveryAddress, onAddressChange }) => {
+const UserDetails = ({ user, phone, onPhoneChange }) => {
+  // Validate phone format (10 digits for Indian numbers)
+  const isValidPhone = phone ? /^[0-9]{10}$/.test(phone) : true;
+
   return (
     <div className="bg-white border-4 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] p-6">
       <h2 className="text-xl font-black text-gray-900 mb-4 underline decoration-wavy decoration-2 underline-offset-4">Your Details</h2>
@@ -17,10 +19,10 @@ const UserDetails = ({ user, deliveryOption, deliveryAddress, onAddressChange })
       <div className="space-y-4">
         {/* Name */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 border-2 border-gray-900 bg-gray-900 flex items-center justify-center">
+          <div className="w-10 h-10 border-2 border-gray-900 bg-gray-900 flex items-center justify-center flex-shrink-0">
             <User className="w-5 h-5 text-white" />
           </div>
-          <div>
+          <div className="flex-1">
             <p className="text-xs text-gray-500 font-bold">Name</p>
             <p className="font-black text-gray-900">{user?.name || 'Guest User'}</p>
           </div>
@@ -29,47 +31,42 @@ const UserDetails = ({ user, deliveryOption, deliveryAddress, onAddressChange })
         {/* Email */}
         {user?.email && (
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 border-2 border-gray-900 bg-gray-900 flex items-center justify-center">
+            <div className="w-10 h-10 border-2 border-gray-900 bg-gray-900 flex items-center justify-center flex-shrink-0">
               <Mail className="w-5 h-5 text-white" />
             </div>
-            <div>
+            <div className="flex-1">
               <p className="text-xs text-gray-500 font-bold">Email</p>
-              <p className="font-black text-gray-900">{user.email}</p>
+              <p className="font-black text-gray-900 break-all">{user.email}</p>
             </div>
           </div>
         )}
 
-        {/* Phone */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 border-2 border-gray-900 bg-gray-900 flex items-center justify-center">
+        {/* Phone - Editable */}
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 border-2 border-gray-900 bg-gray-900 flex items-center justify-center flex-shrink-0">
             <Phone className="w-5 h-5 text-white" />
           </div>
-          <div>
-            <p className="text-xs text-gray-500 font-bold">Phone</p>
-            <p className="font-black text-gray-900">{user?.phone || 'Not provided'}</p>
+          <div className="flex-1">
+            <label className="text-xs text-gray-500 font-bold block mb-1">
+              Phone Number <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => onPhoneChange(e.target.value)}
+              placeholder="Enter your 10-digit phone number"
+              required
+              maxLength="10"
+              className="w-full px-3 py-2 border-2 border-gray-900 font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2"
+            />
+            {!phone && (
+              <p className="text-xs text-red-600 font-medium mt-1">Phone number is required</p>
+            )}
+            {phone && !isValidPhone && (
+              <p className="text-xs text-red-600 font-medium mt-1">Phone number must be exactly 10 digits</p>
+            )}
           </div>
         </div>
-
-        {/* Delivery Address (only shown for delivery option) */}
-        {deliveryOption === 'delivery' && (
-          <div className="pt-4 border-t-2 border-dashed border-gray-400">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 border-2 border-gray-900 bg-gray-900 flex items-center justify-center flex-shrink-0">
-                <MapPin className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1">
-                <p className="text-xs text-gray-500 font-bold mb-2">Delivery Address</p>
-                <textarea
-                  value={deliveryAddress}
-                  onChange={(e) => onAddressChange(e.target.value)}
-                  placeholder="Enter your delivery address..."
-                  className="w-full px-3 py-2 border-3 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)] focus:outline-none text-gray-900 placeholder-gray-500 font-medium resize-none transform focus:-rotate-1 transition-all"
-                  rows="3"
-                />
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -53,6 +53,9 @@ const OrderItem = ({ order, menuItems, onUpdateOrder, onCancelOrder }) => {
         <div onClick={() => setExpanded(!expanded)} className="flex-1 cursor-pointer">
           <div className="flex items-center gap-2">
             <h3 className="font-bold text-sm">{order.customerName}</h3>
+            <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
+              {order.orderNumber}
+            </span>
             <span className={`${getStatusColor(order.status)} text-white text-xs px-2 py-0.5 rounded`}>
               {order.status}
             </span>

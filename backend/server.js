@@ -37,7 +37,9 @@ const suppliersRoutes = require('./routes/suppliers');
 const discountsRoutes = require('./routes/discounts');
 const feedbackRoutes = require('./routes/feedback');
 const paymentsRoutes = require('./routes/payments');
+const paymentRoutes = require('./routes/payment');
 const activitiesRoutes = require('./routes/activities');
+const dishRatingsRoutes = require('./routes/dishRatings');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
@@ -49,7 +51,9 @@ app.use('/api/suppliers', suppliersRoutes);
 app.use('/api/discounts', discountsRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/payments', paymentsRoutes);
+app.use('/api/payment', paymentRoutes);
 app.use('/api/activities', activitiesRoutes);
+app.use('/api/dish-ratings', dishRatingsRoutes);
 
 // Root Route
 app.get('/', (req, res) => {

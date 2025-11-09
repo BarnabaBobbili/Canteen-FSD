@@ -30,8 +30,8 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
       value: loading ? '...' : stats.activeOrders?.toLocaleString() || '0',
       change: orderChange,
       icon: ShoppingCart,
-      bgColor: 'bg-indigo-50',
-      iconColor: 'text-indigo-600',
+      bgColor: '#EEF2FF',
+      iconColor: '#4A6CF7',
       changeLabel: 'from past week',
     },
     {
@@ -39,8 +39,8 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
       value: loading ? '...' : stats.menuItems?.toLocaleString() || '0',
       change: menuChange,
       icon: UtensilsCrossed,
-      bgColor: 'bg-yellow-50',
-      iconColor: 'text-yellow-600',
+      bgColor: '#FFF7ED',
+      iconColor: '#F59E0B',
       changeLabel: 'from last month',
     },
     {
@@ -48,8 +48,8 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
       value: loading ? '...' : `${stats.stockLevel}%` || '0%',
       change: stockChange,
       icon: Package,
-      bgColor: 'bg-green-50',
-      iconColor: 'text-green-600',
+      bgColor: '#ECFDF5',
+      iconColor: '#10B981',
       changeLabel: 'from yesterday',
     },
     {
@@ -57,8 +57,8 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
       value: loading ? '...' : stats.inventoryItems?.toLocaleString() || '0',
       change: inventoryChange,
       icon: Users,
-      bgColor: 'bg-pink-50',
-      iconColor: 'text-pink-600',
+      bgColor: '#F5F3FF',
+      iconColor: '#8B5CF6',
       changeLabel: 'from last update',
     },
   ];
@@ -73,20 +73,21 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
         return (
           <div
             key={index}
-            className="bg-white rounded-xl p-5 sm:p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200"
+            className="bg-white rounded-xl p-5 sm:p-6 border border-gray-100 hover:shadow-lg transition-all duration-200"
+            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
           >
             {/* Header with Icon */}
             <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 ${card.bgColor} rounded-lg`}>
-                <Icon className={`w-6 h-6 ${card.iconColor}`} />
+              <div className="p-3 rounded-lg" style={{ backgroundColor: card.bgColor }}>
+                <Icon className="w-6 h-6" style={{ color: card.iconColor }} />
               </div>
             </div>
 
             {/* Title */}
-            <p className="text-sm text-gray-600 font-medium mb-1">{card.title}</p>
+            <p className="text-sm font-medium mb-1" style={{ color: '#6B7280' }}>{card.title}</p>
 
             {/* Value */}
-            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: '#111827' }}>
               {card.value}
             </h3>
 
@@ -98,7 +99,7 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
                   {card.change.value}%
                 </span>
               </div>
-              <span className="text-xs text-gray-500">{card.changeLabel}</span>
+              <span className="text-xs" style={{ color: '#9CA3AF' }}>{card.changeLabel}</span>
             </div>
           </div>
         );

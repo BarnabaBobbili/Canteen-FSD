@@ -1,33 +1,33 @@
 import React from 'react';
-import { Store, Truck } from 'lucide-react';
+import { Store, ShoppingBag } from 'lucide-react';
 
 /**
- * Delivery options selector
+ * Order type selector
  * @param {Object} props
- * @param {string} props.selectedOption - Current selected option ('pickup' or 'delivery')
+ * @param {string} props.selectedOption - Current selected option ('dine-in' or 'takeaway')
  * @param {Function} props.onOptionChange - Handler for option change
  */
 const DeliveryOptions = ({ selectedOption, onOptionChange }) => {
   const options = [
     {
-      id: 'pickup',
-      label: 'Pickup from Canteen',
-      description: 'Ready in 15-20 minutes',
+      id: 'dine-in',
+      label: 'Dine-In',
+      description: 'Eat at the canteen',
       icon: Store,
       bgColor: 'from-[#FF7A00] to-[#FF7A00]',
     },
     {
-      id: 'delivery',
-      label: 'Delivery',
-      description: 'Delivered to your location',
-      icon: Truck,
+      id: 'takeaway',
+      label: 'Takeaway',
+      description: 'Take your order to go',
+      icon: ShoppingBag,
       bgColor: 'from-[#8FCB9B] to-[#8FCB9B]',
     },
   ];
 
   return (
     <div className="bg-white border-4 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] p-6">
-      <h2 className="text-xl font-black text-gray-900 mb-4 underline decoration-wavy decoration-2 underline-offset-4">Delivery Method</h2>
+      <h2 className="text-xl font-black text-gray-900 mb-4 underline decoration-wavy decoration-2 underline-offset-4">Order Type</h2>
 
       <div className="grid gap-4">
         {options.map((option, index) => {

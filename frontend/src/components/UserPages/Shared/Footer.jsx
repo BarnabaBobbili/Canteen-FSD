@@ -6,7 +6,7 @@ import { ChefHat } from 'lucide-react';
  */
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 border-t-4 border-gray-900 text-gray-400 py-8" style={{ fontFamily: '"Comic Sans MS", "Marker Felt", cursive' }}>
+    <footer className="relative border-t-4 border-gray-900 text-gray-400 py-8" style={{ fontFamily: '"Comic Sans MS", "Marker Felt", cursive' }}>
       <div className="max-w-7xl mx-auto px-6 text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
           <div className="bg-white border-2 border-white p-1.5">
