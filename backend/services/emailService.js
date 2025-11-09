@@ -2,20 +2,45 @@ const nodemailer = require('nodemailer');
 
 /**
  * Email Service for sending verification and password reset emails
- * Uses nodemailer with Gmail SMTP (or other email service)
+ * Supports Gmail (development) and SendGrid (production)
  */
 
-// Create transporter
+// Create transporter based on environment
 const createTransporter = () => {
-  // For development, you can use ethereal.email for testing
-  // For production, use your actual email service credentials
-  return nodemailer.createTransport({
-    service: process.env.EMAIL_SERVICE || 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD
-    }
-  });
+  const emailService = process.env.EMAIL_SERVICE || 'gmail';
+
+  if (emailService === 'sendgrid') {
+    // SendGrid configuration (works reliably on Render)
+    return nodemailer.createTransport({
+      host: 'smtp.sendgrid.net',
+      port: 587,
+      secure: false, // Use TLS
+      auth: {
+        user: 'apikey', // This is literal 'apikey'
+        pass: process.env.SENDGRID_API_KEY
+      }
+    });
+  } else if (emailService === 'gmail') {
+    // Gmail configuration (development only - may not work on Render)
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+  } else {
+    // Generic SMTP configuration
+    return nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: process.env.SMTP_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+      }
+    });
+  }
 };
 
 /**
