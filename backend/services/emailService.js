@@ -1,27 +1,27 @@
 const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
 /**
  * Email Service for sending verification and password reset emails
- * Supports Gmail (development) and SendGrid (production)
+ * Supports Gmail (development) and SendGrid Web API (production)
+ *
+ * IMPORTANT: Railway/Render block SMTP ports, so use SendGrid Web API for production
  */
 
-// Create transporter based on environment
+// Initialize SendGrid if API key is provided
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
+
+/**
+ * Create transporter based on environment (for Gmail only)
+ * SendGrid uses Web API, not SMTP
+ */
 const createTransporter = () => {
   const emailService = process.env.EMAIL_SERVICE || 'gmail';
 
-  if (emailService === 'sendgrid') {
-    // SendGrid configuration (works reliably on Render)
-    return nodemailer.createTransport({
-      host: 'smtp.sendgrid.net',
-      port: 587,
-      secure: false, // Use TLS
-      auth: {
-        user: 'apikey', // This is literal 'apikey'
-        pass: process.env.SENDGRID_API_KEY
-      }
-    });
-  } else if (emailService === 'gmail') {
-    // Gmail configuration (development only - may not work on Render)
+  if (emailService === 'gmail') {
+    // Gmail configuration (development only)
     return nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -44,14 +44,66 @@ const createTransporter = () => {
 };
 
 /**
+ * Send email using appropriate service
+ * @param {Object} mailOptions - Email options
+ * @returns {Promise<Object>} Result object with success status
+ */
+const sendEmail = async (mailOptions) => {
+  const emailService = process.env.EMAIL_SERVICE || 'gmail';
+
+  try {
+    if (emailService === 'sendgrid') {
+      // Use SendGrid Web API (HTTPS - works on Railway/Render)
+      if (!process.env.SENDGRID_API_KEY) {
+        throw new Error('SENDGRID_API_KEY not configured');
+      }
+
+      // Convert attachments to SendGrid format (base64 content required)
+      const sendgridAttachments = (mailOptions.attachments || []).map(att => {
+        // If content is a Buffer, convert to base64
+        const content = Buffer.isBuffer(att.content)
+          ? att.content.toString('base64')
+          : att.content;
+
+        return {
+          content: content,
+          filename: att.filename,
+          type: att.contentType || att.type || 'application/octet-stream',
+          disposition: att.disposition || 'attachment'
+        };
+      });
+
+      const msg = {
+        to: mailOptions.to,
+        from: process.env.EMAIL_USER || 'noreply@canteen.com',
+        subject: mailOptions.subject,
+        html: mailOptions.html,
+        attachments: sendgridAttachments
+      };
+
+      await sgMail.send(msg);
+      console.log('✅ Email sent via SendGrid Web API to:', mailOptions.to);
+      return { success: true };
+    } else {
+      // Use nodemailer SMTP (Gmail for development)
+      const transporter = createTransporter();
+      await transporter.sendMail(mailOptions);
+      console.log('✅ Email sent via SMTP to:', mailOptions.to);
+      return { success: true };
+    }
+  } catch (error) {
+    console.error('❌ Error sending email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+/**
  * Send email verification link
  * @param {string} email - Recipient email
  * @param {string} name - User name
  * @param {string} verificationToken - Verification token
  */
 const sendVerificationEmail = async (email, name, verificationToken) => {
-  const transporter = createTransporter();
-
   const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verify-email/${verificationToken}`;
 
   const mailOptions = {
@@ -98,14 +150,7 @@ const sendVerificationEmail = async (email, name, verificationToken) => {
     `
   };
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log('Verification email sent to:', email);
-    return { success: true };
-  } catch (error) {
-    console.error('Error sending verification email:', error);
-    return { success: false, error: error.message };
-  }
+  return sendEmail(mailOptions);
 };
 
 /**
@@ -115,8 +160,6 @@ const sendVerificationEmail = async (email, name, verificationToken) => {
  * @param {string} resetToken - Password reset token
  */
 const sendPasswordResetEmail = async (email, name, resetToken) => {
-  const transporter = createTransporter();
-
   const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password/${resetToken}`;
 
   const mailOptions = {
@@ -170,14 +213,7 @@ const sendPasswordResetEmail = async (email, name, resetToken) => {
     `
   };
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log('Password reset email sent to:', email);
-    return { success: true };
-  } catch (error) {
-    console.error('Error sending password reset email:', error);
-    return { success: false, error: error.message };
-  }
+  return sendEmail(mailOptions);
 };
 
 /**
@@ -188,8 +224,6 @@ const sendPasswordResetEmail = async (email, name, resetToken) => {
  * @param {string} otp - 6-digit OTP
  */
 const sendOrderConfirmationEmail = async (email, name, order, otp) => {
-  const transporter = createTransporter();
-
   const trackingUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/track-order/${order.orderNumber}`;
 
   const itemsList = order.items.map(item =>
@@ -276,14 +310,7 @@ const sendOrderConfirmationEmail = async (email, name, order, otp) => {
     `
   };
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log('Order confirmation email sent to:', email);
-    return { success: true };
-  } catch (error) {
-    console.error('Error sending order confirmation email:', error);
-    return { success: false, error: error.message };
-  }
+  return sendEmail(mailOptions);
 };
 
 /**
@@ -294,8 +321,6 @@ const sendOrderConfirmationEmail = async (email, name, order, otp) => {
  * @param {Buffer} pdfBuffer - PDF bill buffer (optional, will be attached if provided)
  */
 const sendOrderCompletionEmail = async (email, name, order, pdfBuffer = null) => {
-  const transporter = createTransporter();
-
   const trackingUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/track-order/${order.orderNumber}`;
 
   const itemsList = order.items.map(item =>
@@ -379,14 +404,7 @@ const sendOrderCompletionEmail = async (email, name, order, pdfBuffer = null) =>
     }] : []
   };
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log('Order completion email sent to:', email);
-    return { success: true };
-  } catch (error) {
-    console.error('Error sending order completion email:', error);
-    return { success: false, error: error.message };
-  }
+  return sendEmail(mailOptions);
 };
 
 module.exports = {

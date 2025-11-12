@@ -66,6 +66,7 @@ testing/
 *.md
 !README.md
 FRONTEND_SUMMARY.txt
+MD Documentation/
 
 # Don't track .gitignore changes
 .gitignore

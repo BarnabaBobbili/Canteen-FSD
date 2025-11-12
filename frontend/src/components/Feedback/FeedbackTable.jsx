@@ -1,0 +1,123 @@
+import React from 'react';
+import { Star, ThumbsUp, ThumbsDown, Meh, Eye } from 'lucide-react';
+import { getSentimentColor, getStatusColor } from './feedbackHelpers';
+
+const renderStars = (rating) => {
+  return (
+    <div className="flex items-center gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <Star
+          key={star}
+          size={16}
+          className={star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
+        />
+      ))}
+    </div>
+  );
+};
+
+const getSentimentIcon = (sentiment) => {
+  switch (sentiment) {
+    case 'positive':
+      return <ThumbsUp className="w-5 h-5 text-green-600" />;
+    case 'negative':
+      return <ThumbsDown className="w-5 h-5 text-red-600" />;
+    default:
+      return <Meh className="w-5 h-5 text-yellow-600" />;
+  }
+};
+
+const FeedbackTable = ({ feedbacks, loading, onViewDetails }) => {
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Customer
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Rating
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Sentiment
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Comments
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
+                  Loading feedbacks...
+                </td>
+              </tr>
+            ) : feedbacks.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
+                  No feedbacks found
+                </td>
+              </tr>
+            ) : (
+              feedbacks.map((feedback) => (
+                <tr key={feedback._id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4">
+                    <div className="text-sm font-medium text-gray-900">{feedback.customerName}</div>
+                    <div className="text-sm text-gray-500">{feedback.customerEmail}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    {renderStars(feedback.rating)}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
+                      {getSentimentIcon(feedback.sentiment)}
+                      <span className={`inline-flex px-2 py-1 rounded-md text-xs font-semibold ${getSentimentColor(feedback.sentiment)}`}>
+                        {feedback.sentiment}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900 max-w-xs truncate">
+                      {feedback.comments || '-'}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex px-2 py-1 rounded-md text-xs font-semibold ${getStatusColor(feedback.status)}`}>
+                      {feedback.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {new Date(feedback.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => onViewDetails(feedback)}
+                      className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                      title="View Details & Respond"
+                    >
+                      <Eye size={16} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default FeedbackTable;
