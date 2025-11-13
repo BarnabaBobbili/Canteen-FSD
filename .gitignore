@@ -185,3 +185,7 @@ dist
 *.pem
 .vercel
 .turbo
+
+API_KEY_CHECKLIST.txt
+
+Inventory Management Dashboard (Community).svg
