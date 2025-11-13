@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Star } from 'lucide-react';
 
 const renderStars = (rating) => {
@@ -16,35 +17,36 @@ const renderStars = (rating) => {
 };
 
 const FeedbackQualityMetrics = ({ stats }) => {
+  const { t } = useTranslation();
   if (!stats) return null;
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
-      <h2 className="text-lg font-bold mb-4">Quality Metrics</h2>
+      <h2 className="text-lg font-bold mb-4">{t('feedback.qualityMetrics')}</h2>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div>
-          <div className="text-sm text-gray-600 mb-1">Food Quality</div>
+          <div className="text-sm text-gray-600 mb-1">{t('feedback.foodQuality')}</div>
           <div className="flex items-center gap-2">
             <div className="text-xl font-bold text-gray-900">{stats.avgFoodQuality?.toFixed(1) || 'N/A'}</div>
             {renderStars(Math.round(stats.avgFoodQuality || 0))}
           </div>
         </div>
         <div>
-          <div className="text-sm text-gray-600 mb-1">Service Quality</div>
+          <div className="text-sm text-gray-600 mb-1">{t('feedback.serviceQuality')}</div>
           <div className="flex items-center gap-2">
             <div className="text-xl font-bold text-gray-900">{stats.avgServiceQuality?.toFixed(1) || 'N/A'}</div>
             {renderStars(Math.round(stats.avgServiceQuality || 0))}
           </div>
         </div>
         <div>
-          <div className="text-sm text-gray-600 mb-1">Cleanliness</div>
+          <div className="text-sm text-gray-600 mb-1">{t('feedback.cleanliness')}</div>
           <div className="flex items-center gap-2">
             <div className="text-xl font-bold text-gray-900">{stats.avgCleanliness?.toFixed(1) || 'N/A'}</div>
             {renderStars(Math.round(stats.avgCleanliness || 0))}
           </div>
         </div>
         <div>
-          <div className="text-sm text-gray-600 mb-1">Value for Money</div>
+          <div className="text-sm text-gray-600 mb-1">{t('feedback.valueForMoney')}</div>
           <div className="flex items-center gap-2">
             <div className="text-xl font-bold text-gray-900">{stats.avgValueForMoney?.toFixed(1) || 'N/A'}</div>
             {renderStars(Math.round(stats.avgValueForMoney || 0))}

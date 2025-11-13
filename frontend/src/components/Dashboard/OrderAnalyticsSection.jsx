@@ -6,6 +6,7 @@ import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
+import { useSettings } from '../../context/SettingsContext';
 
 const OrderAnalyticsSection = ({
   dateFilter,
@@ -13,6 +14,7 @@ const OrderAnalyticsSection = ({
   analytics,
   completedOrders
 }) => {
+  const { formatCurrency, currencySymbol } = useSettings();
   const filterOptions = [
     { value: 'week', label: 'Last Week', shortLabel: '1W' },
     { value: 'month', label: 'Last Month', shortLabel: '1M' },
@@ -30,7 +32,8 @@ const OrderAnalyticsSection = ({
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent cursor-pointer"
+            className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent cursor-pointer"
+            style={{ '--tw-ring-color': '#1570EF' }}
           >
             {filterOptions.map((filter) => (
               <option key={filter.value} value={filter.value}>
@@ -46,8 +49,8 @@ const OrderAnalyticsSection = ({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-indigo-50 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-indigo-600" />
+              <div className="p-3 rounded-lg" style={{ backgroundColor: '#E0F2FE' }}>
+                <CheckCircle className="w-6 h-6" style={{ color: '#1570EF' }} />
               </div>
             </div>
             <p className="text-sm text-gray-600 font-medium mb-1">Total Orders</p>
@@ -67,7 +70,7 @@ const OrderAnalyticsSection = ({
             </div>
             <p className="text-sm text-gray-600 font-medium mb-1">Total Revenue</p>
             <h3 className="text-3xl font-bold text-gray-900">
-              ₹{analytics.totalRevenue.toFixed(2)}
+              {formatCurrency(analytics.totalRevenue)}
             </h3>
             <div className="flex items-center gap-1 mt-2 text-green-600">
               <TrendingUp className="w-4 h-4" />
@@ -84,7 +87,7 @@ const OrderAnalyticsSection = ({
             </div>
             <p className="text-sm text-gray-600 font-medium mb-1">Avg Order Value</p>
             <h3 className="text-3xl font-bold text-gray-900">
-              ₹{analytics.averageOrderValue.toFixed(2)}
+              {formatCurrency(analytics.averageOrderValue)}
             </h3>
             <div className="flex items-center gap-1 mt-2 text-green-600">
               <TrendingUp className="w-4 h-4" />
@@ -96,7 +99,7 @@ const OrderAnalyticsSection = ({
 
         {/* Analytics Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
+          <div className="rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg" style={{ background: 'linear-gradient(135deg, #1570EF 0%, #3B82F6 100%)' }}>
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-white/20 rounded-lg backdrop-blur">
                 <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -115,7 +118,7 @@ const OrderAnalyticsSection = ({
               <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold mb-1">
-              ₹{analytics.totalRevenue.toFixed(2)}
+              {formatCurrency(analytics.totalRevenue)}
             </h3>
             <p className="text-green-100 text-xs sm:text-sm">Total Revenue</p>
           </div>
@@ -128,7 +131,7 @@ const OrderAnalyticsSection = ({
               <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold mb-1">
-              ₹{analytics.averageOrderValue.toFixed(2)}
+              {formatCurrency(analytics.averageOrderValue)}
             </h3>
             <p className="text-purple-100 text-xs sm:text-sm">Average Order Value</p>
           </div>
@@ -165,10 +168,10 @@ const OrderAnalyticsSection = ({
                   <Line
                     type="monotone"
                     dataKey="count"
-                    stroke="#6366f1"
+                    stroke="#1570EF"
                     strokeWidth={3}
                     name="Orders"
-                    dot={{ fill: '#6366f1', r: 4 }}
+                    dot={{ fill: '#1570EF', r: 4 }}
                     activeDot={{ r: 6 }}
                   />
                 </LineChart>
@@ -209,7 +212,7 @@ const OrderAnalyticsSection = ({
                   <Bar
                     dataKey="revenue"
                     fill="#10b981"
-                    name="Revenue (₹)"
+                    name={`Revenue (${currencySymbol})`}
                     radius={[8, 8, 0, 0]}
                   />
                 </BarChart>
@@ -244,7 +247,7 @@ const OrderAnalyticsSection = ({
                     {analytics.statusChartData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][index % 5]}
+                        fill={['#1570EF', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'][index % 5]}
                       />
                     ))}
                   </Pie>
@@ -290,7 +293,7 @@ const OrderAnalyticsSection = ({
                   </div>
                   <div className="text-right flex-shrink-0">
                     <div className="font-bold text-green-600 text-sm">
-                      ₹{order.totalAmount?.toFixed(2) || '0.00'}
+                      {formatCurrency(order.totalAmount || 0)}
                     </div>
                     <div className="text-xs text-gray-500">
                       {order.items?.length || 0} items

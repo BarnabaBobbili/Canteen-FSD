@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Users, UserCheck, UserX, Shield, Briefcase
 } from 'lucide-react';
@@ -17,46 +18,48 @@ const StaffAnalytics = ({
   roleDistribution,
   departmentDistribution
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-6 mb-6">
-      <h3 className="text-xl font-bold text-gray-800">Staff Analytics</h3>
+      <h3 className="text-xl font-bold text-gray-800">{t('staff.analyticsTitle')}</h3>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-gradient-to-r from-sky-500 to-sky-600 p-6 rounded-xl shadow-lg text-white">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold">Total Staff</h3>
+            <h3 className="text-lg font-semibold">{t('staff.totalStaff')}</h3>
             <Users size={24} />
           </div>
           <p className="text-4xl font-bold">{totalStaff}</p>
-          <p className="text-sm mt-2 opacity-90">All employees</p>
+          <p className="text-sm mt-2 opacity-90">{t('staff.allEmployees')}</p>
         </div>
 
         <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-xl shadow-lg text-white">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold">Active</h3>
+            <h3 className="text-lg font-semibold">{t('common.active')}</h3>
             <UserCheck size={24} />
           </div>
           <p className="text-4xl font-bold">{activeCount}</p>
-          <p className="text-sm mt-2 opacity-90">Currently working</p>
+          <p className="text-sm mt-2 opacity-90">{t('staff.currentlyWorking')}</p>
         </div>
 
         <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 rounded-xl shadow-lg text-white">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold">Inactive</h3>
+            <h3 className="text-lg font-semibold">{t('common.inactive')}</h3>
             <UserX size={24} />
           </div>
           <p className="text-4xl font-bold">{inactiveCount}</p>
-          <p className="text-sm mt-2 opacity-90">Not working</p>
+          <p className="text-sm mt-2 opacity-90">{t('staff.notWorking')}</p>
         </div>
 
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-xl shadow-lg text-white">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold">Departments</h3>
+            <h3 className="text-lg font-semibold">{t('staff.departments')}</h3>
             <Briefcase size={24} />
           </div>
           <p className="text-4xl font-bold">{departmentCount}</p>
-          <p className="text-sm mt-2 opacity-90">Active departments</p>
+          <p className="text-sm mt-2 opacity-90">{t('staff.activeDepartments')}</p>
         </div>
       </div>
 
@@ -66,7 +69,7 @@ const StaffAnalytics = ({
         <div className="bg-white p-6 rounded-xl shadow-lg">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <Shield size={20} className="text-sky-500" />
-            Role Distribution
+            {t('staff.roleDistribution')}
           </h3>
           {roleDistribution.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
@@ -90,7 +93,7 @@ const StaffAnalytics = ({
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="text-center py-8 text-gray-500">No staff data available</div>
+            <div className="text-center py-8 text-gray-500">{t('staff.noStaffData')}</div>
           )}
         </div>
 
@@ -98,7 +101,7 @@ const StaffAnalytics = ({
         <div className="bg-white p-6 rounded-xl shadow-lg">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <Briefcase size={20} className="text-blue-500" />
-            Department Distribution
+            {t('staff.departmentDistribution')}
           </h3>
           {departmentDistribution.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
@@ -111,7 +114,7 @@ const StaffAnalytics = ({
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="text-center py-8 text-gray-500">No department data available</div>
+            <div className="text-center py-8 text-gray-500">{t('staff.noDepartmentData')}</div>
           )}
         </div>
       </div>

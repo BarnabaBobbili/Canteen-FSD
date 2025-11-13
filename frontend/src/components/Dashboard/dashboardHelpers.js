@@ -87,9 +87,10 @@ export const formatActivities = (activities, getTimeDifference) => {
  * @param {Array} orders - All orders
  * @param {Array} menuItems - All menu items
  * @param {Function} getTimeDifference - Function to calculate time difference
+ * @param {Function} formatCurrency - Function to format currency with conversion
  * @returns {Array} Generated activities
  */
-export const generateFallbackActivities = (orders, menuItems, getTimeDifference) => {
+export const generateFallbackActivities = (orders, menuItems, getTimeDifference, formatCurrency) => {
   const fallbackActivities = [];
 
   // Add order activities
@@ -97,7 +98,7 @@ export const generateFallbackActivities = (orders, menuItems, getTimeDifference)
     const orderDate = new Date(order.createdAt);
     fallbackActivities.push({
       text: `Order ${order.orderNumber || `#${order._id?.slice(-6)}`} - ${order.customerName || 'Customer'} (${order.status})`,
-      detail: `${order.items?.length || 0} items, ₹${order.totalAmount?.toFixed(2) || '0.00'}`,
+      detail: `${order.items?.length || 0} items, ${formatCurrency ? formatCurrency(order.totalAmount || 0) : `₹${order.totalAmount?.toFixed(2) || '0.00'}`}`,
       time: getTimeDifference(orderDate),
       timestamp: orderDate,
       icon: order.status === 'completed' ? 'completed' :
@@ -130,7 +131,7 @@ export const generateFallbackActivities = (orders, menuItems, getTimeDifference)
     const createdDate = new Date(item.createdAt || new Date());
     fallbackActivities.push({
       text: `Menu item "${item.itemName}" added`,
-      detail: `${item.category} - ₹${item.price}`,
+      detail: `${item.category} - ${formatCurrency ? formatCurrency(item.price || 0) : `₹${item.price}`}`,
       time: getTimeDifference(createdDate),
       timestamp: createdDate,
       icon: 'menu',

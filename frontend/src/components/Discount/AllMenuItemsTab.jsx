@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShoppingCart, Tag, Plus } from 'lucide-react';
 
 const AllMenuItemsTab = ({
@@ -6,12 +7,14 @@ const AllMenuItemsTab = ({
   onEdit,
   formatDate
 }) => {
+  const { t } = useTranslation();
+
   if (items.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
         <ShoppingCart size={48} className="mx-auto mb-4 opacity-50" />
-        <p className="text-lg">No menu items available</p>
-        <p className="text-sm">Add menu items to get started</p>
+        <p className="text-lg">{t('discounts.noMenuItems')}</p>
+        <p className="text-sm">{t('discounts.addMenuItemsToStart')}</p>
       </div>
     );
   }
@@ -21,13 +24,13 @@ const AllMenuItemsTab = ({
       <table className="w-full">
         <thead className="bg-gray-50 border-b border-gray-200">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Item Name</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Expiry</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Discount</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('menu.itemName')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('menu.category')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('menu.price')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('inventory.stock')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('inventory.expiry')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('discounts.discount')}</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('common.actions')}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
@@ -37,7 +40,7 @@ const AllMenuItemsTab = ({
               <td className="px-6 py-4 text-sm text-gray-600 capitalize">{item.category}</td>
               <td className="px-6 py-4 text-sm text-gray-900">Rs. {item.price.toFixed(2)}</td>
               <td className="px-6 py-4 text-sm text-gray-600">
-                {item.stockQuantity !== undefined ? `${item.stockQuantity}` : 'N/A'}
+                {item.stockQuantity !== undefined ? `${item.stockQuantity}` : t('common.notAvailable')}
               </td>
               <td className="px-6 py-4 text-sm text-gray-600">
                 {item.expiryDate ? (
@@ -51,18 +54,18 @@ const AllMenuItemsTab = ({
                     {formatDate(item.expiryDate)}
                   </span>
                 ) : (
-                  <span className="text-gray-400">N/A</span>
+                  <span className="text-gray-400">{t('common.notAvailable')}</span>
                 )}
               </td>
               <td className="px-6 py-4 text-sm">
                 {item.discount?.type !== 'none' && item.discount?.value > 0 ? (
                   <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">
                     {item.discount.type === 'percentage'
-                      ? `${item.discount.value}% OFF`
-                      : `Rs. ${item.discount.value} OFF`}
+                      ? `${item.discount.value}${t('discounts.percentOff')}`
+                      : `Rs. ${item.discount.value}${t('discounts.amountOff')}`}
                   </span>
                 ) : (
-                  <span className="text-gray-400">None</span>
+                  <span className="text-gray-400">{t('common.none')}</span>
                 )}
               </td>
               <td className="px-6 py-4 text-sm">
@@ -77,12 +80,12 @@ const AllMenuItemsTab = ({
                   {item.discount?.type !== 'none' && item.discount?.value > 0 ? (
                     <>
                       <Tag size={14} />
-                      Edit Discount
+                      {t('discounts.editDiscount')}
                     </>
                   ) : (
                     <>
                       <Plus size={14} />
-                      Add Discount
+                      {t('discounts.addDiscount')}
                     </>
                   )}
                 </button>

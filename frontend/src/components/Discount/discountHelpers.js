@@ -1,6 +1,9 @@
 /**
  * Utility functions for discount calculations and formatting
  */
+import i18n from '../../i18n/i18n';
+
+const { t } = i18n;
 
 /**
  * Calculate the final price after applying discount
@@ -40,8 +43,8 @@ export const getDiscountBadgeColor = (reason) => {
  * @returns {string} - Formatted date string
  */
 export const formatDate = (date) => {
-  if (!date) return 'N/A';
-  return new Date(date).toLocaleDateString('en-US', {
+  if (!date) return t('common.notAvailable');
+  return new Date(date).toLocaleDateString(i18n.language, {
     year: 'numeric',
     month: 'short',
     day: 'numeric'

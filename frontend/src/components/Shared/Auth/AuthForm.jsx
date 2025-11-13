@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import {
@@ -35,6 +36,7 @@ const AuthForm = ({
   showBackButton = true,
   role = 'customer'
 }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { register, login, googleLogin, isAuthenticated, user } = useAuth();
 
@@ -115,10 +117,10 @@ const AuthForm = ({
           navigate(redirectPath, { replace: true, state: null });
         }
       } else {
-        setError(result.message || `${mode === 'signup' ? 'Registration' : 'Login'} failed. Please try again.`);
+        setError(result.message || t(mode === 'signup' ? 'auth.registrationFailed' : 'auth.loginFailed'));
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError(t('auth.anErrorOccurred'));
     } finally {
       setLoading(false);
     }
@@ -140,17 +142,17 @@ const AuthForm = ({
         const redirectPath = getDefaultRedirect(result.user?.role || formData.role);
         navigate(redirectPath, { replace: true, state: null });
       } else {
-        setError(result.message || 'Google authentication failed. Please try again.');
+        setError(result.message || t('auth.googleAuthFailed'));
       }
     } catch (err) {
-      setError('An error occurred during Google authentication. Please try again.');
+      setError(t('auth.googleAuthError'));
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleError = () => {
-    setError('Google authentication failed. Please try again.');
+    setError(t('auth.googleAuthFailed'));
   };
 
   const handleDemoLogin = (email, password) => {
@@ -200,23 +202,23 @@ const AuthForm = ({
               <Mail className="w-16 h-16 text-gray-900" />
             </div>
             <h2 className={`text-3xl font-bold text-gray-900 mb-4 ${variant === 'sketch' ? 'underline decoration-wavy decoration-2 underline-offset-4' : ''}`}>
-              Check Your Email
+              {t('auth.checkYourEmail')}
             </h2>
             <p className={`text-gray-600 mb-6 ${variant === 'sketch' ? 'font-medium' : ''}`}>
-              We've sent a verification link to <strong>{userEmail}</strong>
+              {t('auth.verificationLinkSent')} <strong>{userEmail}</strong>
             </p>
             <p className={`text-gray-600 mb-8 ${variant === 'sketch' ? 'font-medium' : ''}`}>
-              Please check your inbox and click the verification link to complete your registration.
+              {t('auth.checkInbox')}
             </p>
             <div className="space-y-3">
               <button
                 onClick={() => navigate('/login')}
                 className={style.button}
               >
-                Go to Login
+                {t('auth.goToLogin')}
               </button>
               <p className={`text-sm text-gray-500 ${variant === 'sketch' ? 'font-medium' : ''}`}>
-                Didn't receive the email? Check your spam folder or contact support.
+                {t('auth.noEmail')}
               </p>
             </div>
           </div>
@@ -249,10 +251,10 @@ const AuthForm = ({
                 </div>
                 <div className={variant === 'sketch' ? "text-gray-900" : "text-white"}>
                   <h1 className={`text-3xl ${variant === 'sketch' ? 'font-black' : 'font-bold'}`}>
-                    {variant === 'sketch' ? 'Canteen Delight' : 'Smart Canteen'}
+                    {variant === 'sketch' ? t('auth.canteenDelight') : t('auth.smartCanteen')}
                   </h1>
                   <p className={variant === 'sketch' ? "text-gray-600 font-medium" : "text-sky-100"}>
-                    {mode === 'login' ? 'Management System' : 'Join Our Community'}
+                    {mode === 'login' ? t('auth.managementSystem') : t('auth.joinOurCommunity')}
                   </p>
                 </div>
               </div>
@@ -264,10 +266,10 @@ const AuthForm = ({
                   </div>
                   <div>
                     <h3 className={variant === 'sketch' ? "font-black" : "font-semibold"}>
-                      {mode === 'login' ? 'Role-Based Access' : 'Quick Registration'}
+                      {mode === 'login' ? t('auth.roleBasedAccess') : t('auth.quickRegistration')}
                     </h3>
                     <p className={`text-sm ${variant === 'sketch' ? 'text-gray-600 font-medium' : 'text-sky-100'}`}>
-                      {mode === 'login' ? 'Secure login for all roles' : 'Create your account in minutes'}
+                      {mode === 'login' ? t('auth.secureLoginForAllRoles') : t('auth.createAccountInMinutes')}
                     </p>
                   </div>
                 </div>
@@ -276,9 +278,9 @@ const AuthForm = ({
                     <Lock className={`w-5 h-5 ${variant === 'sketch' ? 'text-white' : ''}`} />
                   </div>
                   <div>
-                    <h3 className={variant === 'sketch' ? "font-black" : "font-semibold"}>Secure & Protected</h3>
+                    <h3 className={variant === 'sketch' ? "font-black" : "font-semibold"}>{t('auth.secureAndProtected')}</h3>
                     <p className={`text-sm ${variant === 'sketch' ? 'text-gray-600 font-medium' : 'text-sky-100'}`}>
-                      {mode === 'login' ? 'JWT-based authentication' : 'Your data is encrypted and safe'}
+                      {mode === 'login' ? t('auth.jwtAuthentication') : t('auth.dataEncrypted')}
                     </p>
                   </div>
                 </div>
@@ -295,16 +297,16 @@ const AuthForm = ({
               className={`mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-bold border-2 border-transparent hover:border-gray-900 p-2 transform hover:rotate-3`}
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>Back to Home</span>
+              <span>{t('auth.backToHome')}</span>
             </button>
           )}
 
           <div className="mb-8">
             <h2 className={`text-3xl font-bold text-gray-900 mb-2 ${variant === 'sketch' ? 'underline decoration-wavy decoration-2 underline-offset-4' : ''}`}>
-              {title || (mode === 'login' ? 'Welcome Back!' : 'Create Account')}
+              {title || t(mode === 'login' ? 'auth.welcomeBack' : 'auth.createAccount')}
             </h2>
             <p className={`text-gray-600 ${variant === 'sketch' ? 'font-medium' : ''}`}>
-              {subtitle || (mode === 'login' ? 'Sign in to access your dashboard' : 'Sign up to start ordering')}
+              {subtitle || t(mode === 'login' ? 'auth.signInToDashboard' : 'auth.signUpToOrder')}
             </p>
           </div>
 
@@ -331,7 +333,7 @@ const AuthForm = ({
 
               <div className="mb-6 flex items-center">
                 <div className={style.divider}></div>
-                <span className={`px-4 text-gray-500 text-sm ${variant === 'sketch' ? 'font-black' : ''}`}>OR</span>
+                <span className={`px-4 text-gray-500 text-sm ${variant === 'sketch' ? 'font-black' : ''}`}>{t('common.or')}</span>
                 <div className={style.divider}></div>
               </div>
             </>
@@ -342,7 +344,7 @@ const AuthForm = ({
               <>
                 <div>
                   <label className={`block text-sm font-medium text-gray-700 mb-2 ${variant === 'sketch' ? 'font-black' : ''}`}>
-                    Full Name
+                    {t('common.fullName')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -352,7 +354,7 @@ const AuthForm = ({
                       value={formData.name}
                       onChange={handleChange}
                       className={style.input}
-                      placeholder="John Doe"
+                      placeholder={t('common.fullNamePlaceholder')}
                       required
                     />
                   </div>
@@ -360,7 +362,7 @@ const AuthForm = ({
 
                 <div>
                   <label className={`block text-sm font-medium text-gray-700 mb-2 ${variant === 'sketch' ? 'font-black' : ''}`}>
-                    Email Address
+                    {t('common.emailAddress')}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -370,7 +372,7 @@ const AuthForm = ({
                       value={formData.email}
                       onChange={handleChange}
                       className={style.input}
-                      placeholder="your@email.com"
+                      placeholder={t('common.emailPlaceholder')}
                       required
                     />
                   </div>
@@ -378,7 +380,7 @@ const AuthForm = ({
 
                 <div>
                   <label className={`block text-sm font-medium text-gray-700 mb-2 ${variant === 'sketch' ? 'font-black' : ''}`}>
-                    Phone Number
+                    {t('common.phoneNumber')}
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -388,7 +390,7 @@ const AuthForm = ({
                       value={formData.phone}
                       onChange={handleChange}
                       className={style.input}
-                      placeholder="1234567890"
+                      placeholder={t('common.phonePlaceholder')}
                       required
                     />
                   </div>
@@ -398,7 +400,7 @@ const AuthForm = ({
 
             {mode === 'login' && (
               <div>
-                <label className={`block text-sm font-medium text-gray-700 mb-2`}>Email Address</label>
+                <label className={`block text-sm font-medium text-gray-700 mb-2`}>{t('common.emailAddress')}</label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                   <input
@@ -406,7 +408,7 @@ const AuthForm = ({
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className={style.input}
-                    placeholder="your@email.com"
+                    placeholder={t('common.emailPlaceholder')}
                     required
                   />
                 </div>
@@ -415,7 +417,7 @@ const AuthForm = ({
 
             <div>
               <label className={`block text-sm font-medium text-gray-700 mb-2 ${variant === 'sketch' && mode === 'signup' ? 'font-black' : ''}`}>
-                Password
+                {t('common.password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -425,7 +427,7 @@ const AuthForm = ({
                   value={formData.password}
                   onChange={mode === 'login' ? (e) => setFormData({ ...formData, password: e.target.value }) : handleChange}
                   className={style.input}
-                  placeholder="••••••••"
+                  placeholder={t('common.passwordPlaceholder')}
                   required
                 />
                 <button
@@ -441,7 +443,7 @@ const AuthForm = ({
             {mode === 'signup' && (
               <div>
                 <label className={`block text-sm font-medium text-gray-700 mb-2 ${variant === 'sketch' ? 'font-black' : ''}`}>
-                  Confirm Password
+                  {t('common.confirmPassword')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -451,7 +453,7 @@ const AuthForm = ({
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     className={style.input}
-                    placeholder="••••••••"
+                    placeholder={t('common.passwordPlaceholder')}
                     required
                   />
                   <button
@@ -471,11 +473,11 @@ const AuthForm = ({
               className={`${style.button} disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {loading ? (
-                <>Processing...</>
+                <>{t('common.processing')}</>
               ) : (
                 <>
                   {mode === 'login' ? <LogIn size={20} /> : <UserPlus size={20} />}
-                  {mode === 'login' ? 'Sign In' : 'Create Account'}
+                  {mode === 'login' ? t('auth.signIn') : t('auth.createAccount')}
                 </>
               )}
             </button>
@@ -485,7 +487,7 @@ const AuthForm = ({
             <>
               <div className="mt-6 flex items-center">
                 <div className={style.divider}></div>
-                <span className="px-4 text-gray-500 text-sm">OR</span>
+                <span className="px-4 text-gray-500 text-sm">{t('common.or')}</span>
                 <div className={style.divider}></div>
               </div>
 
@@ -505,7 +507,7 @@ const AuthForm = ({
 
           {showDemoAccounts && mode === 'login' && (
             <div className="mt-8 pt-8 border-t border-gray-200">
-              <p className="text-sm text-gray-600 mb-4 text-center">Quick Access - Demo Accounts:</p>
+              <p className="text-sm text-gray-600 mb-4 text-center">{t('auth.demoAccounts')}</p>
               <div className="grid grid-cols-2 gap-3">
                 {demoAccounts.map((account) => (
                   <button
@@ -522,12 +524,12 @@ const AuthForm = ({
 
           <div className="mt-6 text-center space-y-3">
             <p className={`text-gray-600 ${variant === 'sketch' ? 'font-medium' : ''}`}>
-              {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
+              {mode === 'login' ? t('auth.noAccount') : t('auth.alreadyHaveAccount')}{' '}
               <button
                 onClick={() => navigate(mode === 'login' ? '/signup' : '/login')}
                 className={style.link}
               >
-                {mode === 'login' ? 'Sign Up' : 'Sign In'}
+                {mode === 'login' ? t('auth.signUp') : t('auth.signIn')}
               </button>
             </p>
             {showBackButton && variant === 'default' && (
@@ -535,17 +537,17 @@ const AuthForm = ({
                 onClick={() => navigate('/')}
                 className={`${style.link} text-sm`}
               >
-                ← Back to Home
+                {t('auth.backToHomeArrow')}
               </button>
             )}
             {variant === 'sketch' && mode === 'signup' && (
               <p className="text-sm text-gray-500 font-medium">
-                Staff member?{' '}
+                {t('auth.staffMember')}{' '}
                 <button
                   onClick={() => navigate('/staff/login')}
                   className={style.link}
                 >
-                  Staff Login
+                  {t('auth.staffLogin')}
                 </button>
               </p>
             )}

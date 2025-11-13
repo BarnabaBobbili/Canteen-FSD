@@ -4,13 +4,13 @@ const UserInfo = ({ user }) => {
   return (
     <div
       className="bg-white rounded-xl p-5 sm:p-6 border border-gray-100"
-      style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
+      style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)' }}
     >
       <h3 className="text-base sm:text-lg font-bold mb-4 sm:mb-5" style={{ color: '#111827' }}>
         Your Information
       </h3>
       <div className="space-y-3">
-        <div className="flex justify-between items-center gap-2 p-3 rounded-lg" style={{ backgroundColor: '#EEF2FF' }}>
+        <div className="flex justify-between items-center gap-2 p-3 rounded-lg" style={{ backgroundColor: '#E0F2FE' }}>
           <span className="text-sm font-medium flex-shrink-0" style={{ color: '#6B7280' }}>
             Email
           </span>

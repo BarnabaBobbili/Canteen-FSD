@@ -3,7 +3,10 @@
  * Pure utility functions for supplier data processing
  */
 
+import i18n from '../../i18n/i18n';
 import { validateName } from '../Shared/validationHelpers';
+
+const { t } = i18n;
 
 /**
  * Validate email format
@@ -23,31 +26,31 @@ export const validateSupplierForm = (form) => {
   const errors = {};
 
   // Validate supplier name (letters only, min 3 characters)
-  const supplierNameError = validateName(form.supplierName, 'Supplier name');
+  const supplierNameError = validateName(form.supplierName, t('suppliers.supplierName'));
   if (supplierNameError) {
     errors.supplierName = supplierNameError;
   }
 
   // Validate contact person (letters only, min 3 characters)
-  const contactPersonError = validateName(form.contactPerson, 'Contact person');
+  const contactPersonError = validateName(form.contactPerson, t('suppliers.supplierContact'));
   if (contactPersonError) {
     errors.contactPerson = contactPersonError;
   }
 
   if (!form.email || !validateEmail(form.email)) {
-    errors.email = 'Valid email is required';
+    errors.email = t('validation.emailInvalid');
   }
 
   if (!form.phone || form.phone.trim() === '') {
-    errors.phone = 'Phone number is required';
+    errors.phone = t('validation.phoneRequired');
   }
 
   if (!form.address || form.address.trim() === '') {
-    errors.address = 'Address is required';
+    errors.address = t('validation.addressRequired');
   }
 
   if (!form.supplierType) {
-    errors.supplierType = 'Supplier type is required';
+    errors.supplierType = t('validation.supplierTypeRequired');
   }
 
   return errors;
@@ -104,5 +107,7 @@ export const calculateAverageRating = (suppliers) => {
  */
 export const formatPaymentTerms = (terms) => {
   if (!terms) return '';
-  return terms.replace('net-', 'Net ').replace('immediate', 'Immediate');
+  return terms
+    .replace('net-', t('suppliers.paymentTermsNet'))
+    .replace('immediate', t('suppliers.paymentTermsImmediate'));
 };

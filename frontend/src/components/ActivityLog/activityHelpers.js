@@ -1,7 +1,6 @@
-/**
- * Activity Log Helper Functions
- * Pure utility functions for activity log processing
- */
+import i18n from '../../i18n/i18n';
+
+const { t } = i18n;
 
 /**
  * Get severity badge color classes
@@ -48,7 +47,9 @@ export const getSeverityIcon = (severity, AlertCircle, AlertTriangle, Info) => {
  * @returns {string} Formatted type (e.g., "Menu Create")
  */
 export const formatActivityType = (type) => {
-  return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  return t(`activities.types.${type}`, {
+    defaultValue: type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+  });
 };
 
 /**
@@ -57,7 +58,7 @@ export const formatActivityType = (type) => {
  * @returns {string} Formatted date
  */
 export const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleString('en-US', {
+  return new Date(dateString).toLocaleString(i18n.language, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',

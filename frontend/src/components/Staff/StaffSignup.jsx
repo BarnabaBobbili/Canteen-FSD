@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import AuthForm from '../Shared/Auth/AuthForm';
 
 /**
@@ -7,12 +8,13 @@ import AuthForm from '../Shared/Auth/AuthForm';
  * Refactored from 346 lines → 15 lines
  */
 const StaffSignup = () => {
+  const { t } = useTranslation();
   return (
     <AuthForm
       mode="signup"
       variant="default"
-      title="Create Staff Account"
-      subtitle="Sign up as staff to manage the canteen"
+      title={t('auth.createStaffAccount')}
+      subtitle={t('auth.signUpAsStaff')}
       role="staff"
     />
   );

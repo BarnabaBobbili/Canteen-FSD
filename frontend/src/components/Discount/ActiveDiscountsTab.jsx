@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Tag, DollarSign, Percent, Package, Calendar } from 'lucide-react';
 
 const ActiveDiscountsTab = ({
@@ -9,12 +10,14 @@ const ActiveDiscountsTab = ({
   getDiscountBadgeColor,
   formatDate
 }) => {
+  const { t } = useTranslation();
+
   if (items.length === 0) {
     return (
       <div className="col-span-full text-center py-12 text-gray-500">
         <Tag size={48} className="mx-auto mb-4 opacity-50" />
-        <p className="text-lg">No active discounts</p>
-        <p className="text-sm">Apply automatic or manual discounts to get started</p>
+        <p className="text-lg">{t('discounts.noActiveDiscounts')}</p>
+        <p className="text-sm">{t('discounts.applyToStart')}</p>
       </div>
     );
   }
@@ -29,7 +32,7 @@ const ActiveDiscountsTab = ({
           <div className="flex justify-between items-start mb-3">
             <h3 className="font-bold text-lg text-gray-800">{item.itemName}</h3>
             <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getDiscountBadgeColor(item.discount.reason)}`}>
-              {item.discount.reason.replace('_', ' ').toUpperCase()}
+              {t(`discounts.reasons.${item.discount.reason}`)}
             </span>
           </div>
 
@@ -46,27 +49,27 @@ const ActiveDiscountsTab = ({
               <Percent size={16} className="text-indigo-600" />
               <span className="font-semibold text-indigo-600">
                 {item.discount.type === 'percentage'
-                  ? `${item.discount.value}% OFF`
-                  : `Rs. ${item.discount.value} OFF`}
+                  ? `${item.discount.value}${t('discounts.percentOff')}`
+                  : `Rs. ${item.discount.value}${t('discounts.amountOff')}`}
               </span>
             </div>
 
             {item.stockQuantity !== undefined && (
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Package size={16} />
-                <span>Stock: {item.stockQuantity} units</span>
+                <span>{t('discounts.stock')}: {item.stockQuantity} {t('discounts.units')}</span>
               </div>
             )}
 
             {item.expiryDate && (
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Calendar size={16} />
-                <span>Expires: {formatDate(item.expiryDate)}</span>
+                <span>{t('discounts.expires')}: {formatDate(item.expiryDate)}</span>
               </div>
             )}
 
             <div className="text-xs text-gray-500">
-              Applied: {formatDate(item.discount.appliedAt)}
+              {t('discounts.applied')}: {formatDate(item.discount.appliedAt)}
             </div>
           </div>
 
@@ -75,13 +78,13 @@ const ActiveDiscountsTab = ({
               onClick={() => onEdit(item)}
               className="flex-1 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition text-sm font-medium"
             >
-              Edit
+              {t('common.edit')}
             </button>
             <button
               onClick={() => onRemove(item._id)}
               className="flex-1 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition text-sm font-medium"
             >
-              Remove
+              {t('common.remove')}
             </button>
           </div>
         </div>

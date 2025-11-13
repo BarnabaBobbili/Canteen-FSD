@@ -3,7 +3,10 @@
  * Pure utility functions for staff data processing
  */
 
+import i18n from '../../i18n/i18n';
 import { validateName, validateEmail, validatePhone } from '../Shared/validationHelpers';
+
+const { t } = i18n;
 
 /**
  * Validate staff form
@@ -15,21 +18,21 @@ export const validateStaffForm = (form, mode = 'add') => {
   const errors = {};
 
   // Validate name (letters only, min 3 characters)
-  const nameError = validateName(form.name, 'Name');
+  const nameError = validateName(form.name, t('common.name'));
   if (nameError) {
     errors.name = nameError;
   }
 
   // Validate email
   if (!form.email || form.email.trim() === '') {
-    errors.email = 'Email is required';
+    errors.email = t('validation.emailRequired');
   } else if (!validateEmail(form.email)) {
-    errors.email = 'Please enter a valid email address';
+    errors.email = t('validation.emailInvalid');
   }
 
   // Validate password (only for add mode)
   if (mode === 'add' && (!form.password || form.password.trim() === '')) {
-    errors.password = 'Password is required';
+    errors.password = t('validation.passwordRequired');
   }
 
   // Validate phone
@@ -40,7 +43,7 @@ export const validateStaffForm = (form, mode = 'add') => {
 
   // Validate role
   if (!form.role) {
-    errors.role = 'Role is required';
+    errors.role = t('validation.roleRequired');
   }
 
   return errors;

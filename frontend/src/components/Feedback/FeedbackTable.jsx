@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, ThumbsUp, ThumbsDown, Meh, Eye } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { getSentimentColor, getStatusColor } from './feedbackHelpers';
 
 const renderStars = (rating) => {
@@ -28,6 +29,8 @@ const getSentimentIcon = (sentiment) => {
 };
 
 const FeedbackTable = ({ feedbacks, loading, onViewDetails }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -35,25 +38,25 @@ const FeedbackTable = ({ feedbacks, loading, onViewDetails }) => {
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Customer
+                {t('feedback.customer')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Rating
+                {t('feedback.rating')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Sentiment
+                {t('feedback.sentiment')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Comments
+                {t('feedback.comments')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Status
+                {t('common.status')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Date
+                {t('common.date')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Actions
+                {t('common.actions')}
               </th>
             </tr>
           </thead>
@@ -61,13 +64,13 @@ const FeedbackTable = ({ feedbacks, loading, onViewDetails }) => {
             {loading ? (
               <tr>
                 <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
-                  Loading feedbacks...
+                  {t('feedback.loadingFeedbacks')}
                 </td>
               </tr>
             ) : feedbacks.length === 0 ? (
               <tr>
                 <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
-                  No feedbacks found
+                  {t('feedback.noFeedbacksFound')}
                 </td>
               </tr>
             ) : (
@@ -105,7 +108,7 @@ const FeedbackTable = ({ feedbacks, loading, onViewDetails }) => {
                     <button
                       onClick={() => onViewDetails(feedback)}
                       className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                      title="View Details & Respond"
+                      title={t('feedback.viewDetailsAndRespond')}
                     >
                       <Eye size={16} />
                     </button>

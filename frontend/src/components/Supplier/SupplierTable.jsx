@@ -1,8 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Truck, Edit, Trash2, Star } from 'lucide-react';
 import { getSupplierTypeColor, formatPaymentTerms } from './supplierHelpers';
 
 const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => {
+  const { t } = useTranslation();
+
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
@@ -31,7 +34,7 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
     return (
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="text-center py-12">
-          <p className="text-gray-500">Loading suppliers...</p>
+          <p className="text-gray-500">{t('suppliers.loading')}</p>
         </div>
       </div>
     );
@@ -42,12 +45,12 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="text-center py-12">
           <Truck className="mx-auto text-gray-400 mb-4" size={48} />
-          <p className="text-gray-500">No suppliers found</p>
+          <p className="text-gray-500">{t('suppliers.noSuppliers')}</p>
           <button
             onClick={onAddClick}
             className="mt-4 text-sky-600 hover:text-sky-700 font-medium"
           >
-            Add your first supplier
+            {t('suppliers.addFirst')}
           </button>
         </div>
       </div>
@@ -60,25 +63,25 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
         <thead className="bg-gray-50 border-b border-gray-200">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Supplier
+              {t('suppliers.supplier')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Contact
+              {t('suppliers.supplierContact')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Type
+              {t('suppliers.supplierType')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Payment Terms
+              {t('suppliers.paymentTerms')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Rating
+              {t('suppliers.rating')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
+              {t('common.status')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
+              {t('common.actions')}
             </th>
           </tr>
         </thead>
@@ -99,7 +102,7 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
               </td>
               <td className="px-6 py-4">
                 <span className={`px-2 py-1 text-xs font-medium rounded-full ${getSupplierTypeColor(supplier.supplierType)}`}>
-                  {supplier.supplierType}
+                  {t(`suppliers.types.${supplier.supplierType}`)}
                 </span>
               </td>
               <td className="px-6 py-4 text-sm text-gray-800">
@@ -114,7 +117,7 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
                 }`}>
-                  {supplier.status}
+                  {t(`common.${supplier.status}`)}
                 </span>
               </td>
               <td className="px-6 py-4">
@@ -122,14 +125,14 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
                   <button
                     onClick={() => onEdit(supplier)}
                     className="text-blue-600 hover:text-blue-800"
-                    title="Edit"
+                    title={t('common.edit')}
                   >
                     <Edit size={18} />
                   </button>
                   <button
                     onClick={() => onDelete(supplier._id)}
                     className="text-red-600 hover:text-red-800"
-                    title="Delete"
+                    title={t('common.delete')}
                   >
                     <Trash2 size={18} />
                   </button>

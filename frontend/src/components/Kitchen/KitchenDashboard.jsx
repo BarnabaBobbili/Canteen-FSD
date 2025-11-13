@@ -77,15 +77,15 @@ const KitchenDashboard = () => {
     }
   };
 
-  // Tab configuration with DashStack colors
+  // Tab configuration with new theme colors
   const tabs = [
     {
       id: 'pending',
       label: 'Pending',
       icon: Clock,
       count: pendingOrders.length,
-      bgColor: '#4A6CF7',
-      textColor: '#4A6CF7'
+      bgColor: '#1570EF',
+      textColor: '#1570EF'
     },
     {
       id: 'preparing',

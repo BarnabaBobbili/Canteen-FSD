@@ -1,10 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ActivityPagination = ({ pagination, onPageChange }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="mt-6 flex items-center justify-between">
       <div className="text-sm text-gray-600">
-        Showing {((pagination.page - 1) * pagination.limit) + 1} to {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} activities
+        {t('pagination.showing')} {((pagination.page - 1) * pagination.limit) + 1} {t('pagination.to')} {Math.min(pagination.page * pagination.limit, pagination.total)} {t('pagination.of')} {pagination.total} {t('pagination.activities')}
       </div>
       <div className="flex gap-2">
         <button
@@ -12,7 +15,7 @@ const ActivityPagination = ({ pagination, onPageChange }) => {
           disabled={pagination.page === 1}
           className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Previous
+          {t('common.previous')}
         </button>
         <div className="flex items-center gap-2">
           {[...Array(pagination.pages)].map((_, i) => (
@@ -34,7 +37,7 @@ const ActivityPagination = ({ pagination, onPageChange }) => {
           disabled={pagination.page === pagination.pages}
           className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Next
+          {t('common.next')}
         </button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
@@ -26,6 +27,7 @@ import {
 } from './Dashboard/dashboardHelpers';
 
 const AdminDashboard = () => {
+  const { t } = useTranslation();
   const { user, token } = useAuth();
 
   // State for dynamic data
@@ -55,64 +57,64 @@ const AdminDashboard = () => {
   // Role-based module access (admin paths with /admin prefix)
   const modules = [
     {
-      name: 'Orders',
-      description: 'Manage customer orders and track status',
+      name: t('modules.orders.name'),
+      description: t('modules.orders.description'),
       icon: ShoppingCart,
       path: '/admin/orders',
       color: 'from-blue-500 to-blue-600',
       roles: ['admin']
     },
     {
-      name: 'Menu',
-      description: 'Manage menu items and categories',
+      name: t('modules.menu.name'),
+      description: t('modules.menu.description'),
       icon: UtensilsCrossed,
       path: '/admin/menu',
       color: 'from-sky-500 to-sky-600',
       roles: ['admin']
     },
     {
-      name: 'Inventory',
-      description: 'Track stock and manage inventory',
+      name: t('modules.inventory.name'),
+      description: t('modules.inventory.description'),
       icon: Package,
       path: '/admin/inventory',
       color: 'from-green-500 to-green-600',
       roles: ['admin']
     },
     {
-      name: 'Staff Management',
-      description: 'Manage staff accounts and roles',
+      name: t('modules.staff.name'),
+      description: t('modules.staff.description'),
       icon: Users,
       path: '/admin/staff',
       color: 'from-purple-500 to-purple-600',
       roles: ['admin']
     },
     {
-      name: 'Suppliers',
-      description: 'Manage supplier information',
+      name: t('modules.suppliers.name'),
+      description: t('modules.suppliers.description'),
       icon: Truck,
       path: '/admin/suppliers',
       color: 'from-cyan-500 to-cyan-600',
       roles: ['admin']
     },
     {
-      name: 'Discounts',
-      description: 'Create and manage discount codes',
+      name: t('modules.discounts.name'),
+      description: t('modules.discounts.description'),
       icon: Tag,
       path: '/admin/discounts',
       color: 'from-pink-500 to-pink-600',
       roles: ['admin']
     },
     {
-      name: 'Feedback',
-      description: 'View and respond to customer feedback',
+      name: t('modules.feedback.name'),
+      description: t('modules.feedback.description'),
       icon: MessageSquare,
       path: '/admin/feedback',
       color: 'from-indigo-500 to-indigo-600',
       roles: ['admin']
     },
     {
-      name: 'Payments',
-      description: 'Process payments and view transactions',
+      name: t('modules.payments.name'),
+      description: t('modules.payments.description'),
       icon: CreditCard,
       path: '/admin/payments',
       color: 'from-emerald-500 to-emerald-600',
@@ -189,7 +191,7 @@ const AdminDashboard = () => {
         setRecentActivity(activities.slice(0, 5));
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching dashboard data:', error);
+        console.error(`${t('dashboard.fetchError')}:`, error);
         setLoading(false);
       }
     };
@@ -199,7 +201,7 @@ const AdminDashboard = () => {
     // Refresh data every 30 seconds
     const interval = setInterval(fetchDashboardData, 30000);
     return () => clearInterval(interval);
-  }, [token]);
+  }, [token, t]);
 
   return (
     <DashboardLayout>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Tag, RefreshCw, CheckCircle, AlertCircle, X } from 'lucide-react';
 
 const DiscountHeader = ({
@@ -8,6 +9,8 @@ const DiscountHeader = ({
   errorMessage,
   onClearError
 }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       {/* Header */}
@@ -15,10 +18,10 @@ const DiscountHeader = ({
         <div>
           <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
             <Tag className="text-indigo-600" />
-            Discount Management
+            {t('discounts.title')}
           </h1>
           <p className="text-gray-600 mt-2">
-            Manage discounts, clearance sales, and promotional pricing
+            {t('discounts.description')}
           </p>
         </div>
         <button
@@ -27,7 +30,7 @@ const DiscountHeader = ({
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition disabled:opacity-50"
         >
           <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
-          Refresh
+          {t('common.refresh')}
         </button>
       </div>
 

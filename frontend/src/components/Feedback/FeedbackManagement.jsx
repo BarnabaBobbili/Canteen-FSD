@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../DashboardLayout';
 import FeedbackStats from './FeedbackStats';
@@ -10,6 +11,7 @@ import { fetchFeedbacks, fetchStats, submitFeedbackResponse } from './feedbackSe
 import { filterFeedbacks } from './feedbackHelpers';
 
 const FeedbackManagement = () => {
+  const { t } = useTranslation();
   const { token } = useAuth();
   const [feedbacks, setFeedbacks] = useState([]);
   const [stats, setStats] = useState(null);
@@ -89,8 +91,8 @@ const FeedbackManagement = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Feedback Management</h1>
-          <p className="text-gray-600 mt-1">View and respond to customer feedback</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('feedback.title')}</h1>
+          <p className="text-gray-600 mt-1">{t('feedback.subtitle')}</p>
         </div>
 
         {/* Stats Cards */}

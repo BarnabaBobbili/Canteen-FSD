@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, Send } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const renderStars = (rating) => {
   return (
@@ -23,13 +24,15 @@ const FeedbackDetailModal = ({
   onSubmit,
   onClose
 }) => {
+  const { t } = useTranslation();
+
   if (!feedback) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold">Feedback Details</h2>
+          <h2 className="text-xl font-bold">{t('feedback.feedbackDetails')}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
@@ -40,14 +43,14 @@ const FeedbackDetailModal = ({
         <div className="p-6">
           {/* Customer Info */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Customer Information</h3>
+            <h3 className="text-lg font-semibold mb-3">{t('feedback.customerInformation')}</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-semibold text-gray-600">Name</label>
+                <label className="text-sm font-semibold text-gray-600">{t('feedback.name')}</label>
                 <p className="text-gray-900">{feedback.customerName}</p>
               </div>
               <div>
-                <label className="text-sm font-semibold text-gray-600">Email</label>
+                <label className="text-sm font-semibold text-gray-600">{t('feedback.email')}</label>
                 <p className="text-gray-900">{feedback.customerEmail}</p>
               </div>
             </div>
@@ -55,10 +58,10 @@ const FeedbackDetailModal = ({
 
           {/* Ratings */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Ratings</h3>
+            <h3 className="text-lg font-semibold mb-3">{t('feedback.ratings')}</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-semibold text-gray-600">Overall Rating</label>
+                <label className="text-sm font-semibold text-gray-600">{t('feedback.overallRating')}</label>
                 <div className="flex items-center gap-2">
                   {renderStars(feedback.rating)}
                   <span className="text-sm text-gray-600">({feedback.rating}/5)</span>
@@ -66,7 +69,7 @@ const FeedbackDetailModal = ({
               </div>
               {feedback.foodQuality && (
                 <div>
-                  <label className="text-sm font-semibold text-gray-600">Food Quality</label>
+                  <label className="text-sm font-semibold text-gray-600">{t('feedback.foodQuality')}</label>
                   <div className="flex items-center gap-2">
                     {renderStars(feedback.foodQuality)}
                     <span className="text-sm text-gray-600">({feedback.foodQuality}/5)</span>
@@ -75,7 +78,7 @@ const FeedbackDetailModal = ({
               )}
               {feedback.serviceQuality && (
                 <div>
-                  <label className="text-sm font-semibold text-gray-600">Service Quality</label>
+                  <label className="text-sm font-semibold text-gray-600">{t('feedback.serviceQuality')}</label>
                   <div className="flex items-center gap-2">
                     {renderStars(feedback.serviceQuality)}
                     <span className="text-sm text-gray-600">({feedback.serviceQuality}/5)</span>
@@ -84,7 +87,7 @@ const FeedbackDetailModal = ({
               )}
               {feedback.cleanliness && (
                 <div>
-                  <label className="text-sm font-semibold text-gray-600">Cleanliness</label>
+                  <label className="text-sm font-semibold text-gray-600">{t('feedback.cleanliness')}</label>
                   <div className="flex items-center gap-2">
                     {renderStars(feedback.cleanliness)}
                     <span className="text-sm text-gray-600">({feedback.cleanliness}/5)</span>
@@ -93,7 +96,7 @@ const FeedbackDetailModal = ({
               )}
               {feedback.valueForMoney && (
                 <div>
-                  <label className="text-sm font-semibold text-gray-600">Value for Money</label>
+                  <label className="text-sm font-semibold text-gray-600">{t('feedback.valueForMoney')}</label>
                   <div className="flex items-center gap-2">
                     {renderStars(feedback.valueForMoney)}
                     <span className="text-sm text-gray-600">({feedback.valueForMoney}/5)</span>
@@ -106,7 +109,7 @@ const FeedbackDetailModal = ({
           {/* Comments */}
           {feedback.comments && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Comments</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('feedback.comments')}</h3>
               <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">{feedback.comments}</p>
             </div>
           )}
@@ -114,11 +117,11 @@ const FeedbackDetailModal = ({
           {/* Previous Response */}
           {feedback.response && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Previous Response</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('feedback.previousResponse')}</h3>
               <div className="bg-blue-50 p-4 rounded-lg">
                 <p className="text-gray-700">{feedback.response}</p>
                 <div className="text-sm text-gray-500 mt-2">
-                  Responded by: {feedback.respondedBy?.name || 'N/A'} on {new Date(feedback.respondedAt).toLocaleString()}
+                  {t('feedback.respondedBy')}: {feedback.respondedBy?.name || 'N/A'} {t('feedback.on')} {new Date(feedback.respondedAt).toLocaleString()}
                 </div>
               </div>
             </div>
@@ -127,12 +130,12 @@ const FeedbackDetailModal = ({
           {/* Response Form */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">
-              {feedback.response ? 'Update Response' : 'Add Response'}
+              {feedback.response ? t('feedback.updateResponse') : t('feedback.addResponse')}
             </h3>
             <textarea
               value={response}
               onChange={(e) => setResponse(e.target.value)}
-              placeholder="Enter your response to this feedback..."
+              placeholder={t('feedback.enterResponse')}
               rows="4"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
@@ -142,7 +145,7 @@ const FeedbackDetailModal = ({
               className="mt-3 flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Send size={16} />
-              {submitting ? 'Submitting...' : 'Submit Response'}
+              {submitting ? t('feedback.submitting') : t('feedback.submitResponse')}
             </button>
           </div>
         </div>

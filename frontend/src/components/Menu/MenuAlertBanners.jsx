@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { AlertTriangle, Clock } from 'lucide-react';
 
 /**
@@ -11,6 +12,7 @@ const MenuAlertBanners = ({
   expiredItems = [],
   expiringItems = []
 }) => {
+  const { t } = useTranslation();
   // Don't render if no alerts
   if (outOfStockItems.length === 0 &&
       lowStockItems.length === 0 &&
@@ -28,7 +30,7 @@ const MenuAlertBanners = ({
             <AlertTriangle className="text-red-500 mr-3" size={20} />
             <div>
               <p className="text-red-800 font-semibold">
-                Out of Stock ({outOfStockItems.length} items)
+                {t('menu.outOfStock')} ({outOfStockItems.length} {t('menu.items')})
               </p>
               <p className="text-red-700 text-sm">
                 {outOfStockItems.map(item => item.itemName).join(', ')}
@@ -45,7 +47,7 @@ const MenuAlertBanners = ({
             <AlertTriangle className="text-yellow-600 mr-3" size={20} />
             <div>
               <p className="text-yellow-800 font-semibold">
-                Low Stock Alert ({lowStockItems.length} items)
+                {t('menu.lowStockAlert')} ({lowStockItems.length} {t('menu.items')})
               </p>
               <p className="text-yellow-700 text-sm">
                 {lowStockItems.map(item => `${item.itemName} (${item.stockQuantity})`).join(', ')}
@@ -62,7 +64,7 @@ const MenuAlertBanners = ({
             <Clock className="text-red-500 mr-3" size={20} />
             <div>
               <p className="text-red-800 font-semibold">
-                Expired Items ({expiredItems.length})
+                {t('menu.expiredItems')} ({expiredItems.length})
               </p>
               <p className="text-red-700 text-sm">
                 {expiredItems.map(item => item.itemName).join(', ')}
@@ -79,7 +81,7 @@ const MenuAlertBanners = ({
             <Clock className="text-orange-600 mr-3" size={20} />
             <div>
               <p className="text-orange-800 font-semibold">
-                Expiring Soon ({expiringItems.length} items)
+                {t('menu.expiringSoon')} ({expiringItems.length} {t('menu.items')})
               </p>
               <p className="text-orange-700 text-sm">
                 {expiringItems.map(item => {

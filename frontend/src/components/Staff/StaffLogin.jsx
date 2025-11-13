@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import AuthForm from '../Shared/Auth/AuthForm';
 
 /**
@@ -7,12 +8,13 @@ import AuthForm from '../Shared/Auth/AuthForm';
  * Refactored from 275 lines → 14 lines
  */
 const StaffLogin = () => {
+  const { t } = useTranslation();
   return (
     <AuthForm
       mode="login"
       variant="default"
-      title="Welcome Back!"
-      subtitle="Sign in to access your dashboard"
+      title={t('auth.welcomeBack')}
+      subtitle={t('auth.signInToDashboard')}
       showDemoAccounts={true}
     />
   );

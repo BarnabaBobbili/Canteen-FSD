@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Plus, Minus } from 'lucide-react';
 
 const DiscountForm = ({
@@ -7,6 +8,7 @@ const DiscountForm = ({
   onSubmit,
   loading
 }) => {
+  const { t } = useTranslation();
   const [manualDiscount, setManualDiscount] = useState({
     discountType: selectedItem.discount?.type && selectedItem.discount.type !== 'none'
       ? selectedItem.discount.type
@@ -54,7 +56,7 @@ const DiscountForm = ({
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-800">Apply Discount</h2>
+            <h2 className="text-2xl font-bold text-gray-800">{t('discounts.applyDiscount')}</h2>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
@@ -64,30 +66,30 @@ const DiscountForm = ({
           </div>
 
           <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-600">Item</p>
+            <p className="text-sm text-gray-600">{t('discounts.item')}</p>
             <p className="font-bold text-gray-900">{selectedItem.itemName}</p>
-            <p className="text-sm text-gray-600 mt-1">Current Price: Rs. {selectedItem.price.toFixed(2)}</p>
+            <p className="text-sm text-gray-600 mt-1">{t('discounts.currentPrice')}: Rs. {selectedItem.price.toFixed(2)}</p>
           </div>
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Discount Type
+                  {t('discounts.discountType')}
                 </label>
                 <select
                   value={manualDiscount.discountType}
                   onChange={(e) => setManualDiscount({ ...manualDiscount, discountType: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="percentage">Percentage (%)</option>
-                  <option value="fixed">Fixed Amount (Rs.)</option>
+                  <option value="percentage">{t('discounts.percentage')}</option>
+                  <option value="fixed">{t('discounts.fixedAmount')}</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Discount Value
+                  {t('discounts.discountValue')}
                 </label>
                 <div className="flex items-center gap-2">
                   <button
@@ -122,41 +124,41 @@ const DiscountForm = ({
                 </div>
                 <p className="text-xs text-gray-500 mt-1 text-center">
                   {manualDiscount.discountType === 'percentage' ?
-                    `${manualDiscount.discountValue}% discount` :
-                    `Rs. ${manualDiscount.discountValue} off`}
+                    `${manualDiscount.discountValue}${t('discounts.percentDiscount')}` :
+                    `Rs. ${manualDiscount.discountValue}${t('discounts.amountOff')}`}
                 </p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Reason
+                  {t('discounts.reason')}
                 </label>
                 <select
                   value={manualDiscount.reason}
                   onChange={(e) => setManualDiscount({ ...manualDiscount, reason: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="manual">Manual Discount</option>
-                  <option value="clearance">Clearance Sale</option>
-                  <option value="low_stock">Low Stock</option>
-                  <option value="expiry">Near Expiry</option>
+                  <option value="manual">{t('discounts.reasons.manual')}</option>
+                  <option value="clearance">{t('discounts.reasons.clearance')}</option>
+                  <option value="low_stock">{t('discounts.reasons.low_stock')}</option>
+                  <option value="expiry">{t('discounts.reasons.expiry')}</option>
                 </select>
               </div>
 
               <div className="p-4 bg-indigo-50 rounded-lg border-2 border-indigo-200">
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-sm font-medium text-gray-700">Original Price:</p>
+                  <p className="text-sm font-medium text-gray-700">{t('discounts.originalPrice')}:</p>
                   <p className="text-lg text-gray-600 line-through">Rs. {selectedItem.price.toFixed(2)}</p>
                 </div>
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-sm font-medium text-gray-700">You Save:</p>
+                  <p className="text-sm font-medium text-gray-700">{t('discounts.youSave')}:</p>
                   <p className="text-lg font-bold text-green-600">
                     Rs. {discountPreview.savings.toFixed(2)}
                   </p>
                 </div>
                 <div className="pt-2 border-t-2 border-indigo-300">
                   <div className="flex justify-between items-center">
-                    <p className="text-base font-semibold text-gray-800">Final Price:</p>
+                    <p className="text-base font-semibold text-gray-800">{t('discounts.finalPrice')}:</p>
                     <p className="text-3xl font-bold text-indigo-600">
                       Rs. {discountPreview.finalPrice.toFixed(2)}
                     </p>
@@ -171,14 +173,14 @@ const DiscountForm = ({
                 onClick={onClose}
                 className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 disabled={loading}
                 className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
               >
-                {loading ? 'Applying...' : 'Apply Discount'}
+                {loading ? t('discounts.applying') : t('discounts.applyDiscount')}
               </button>
             </div>
           </form>

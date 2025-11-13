@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Package, Clock } from 'lucide-react';
 
 const DiscountActionButtons = ({
@@ -6,6 +7,8 @@ const DiscountActionButtons = ({
   onExpiringItemsClick,
   loading
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       <button
@@ -15,8 +18,8 @@ const DiscountActionButtons = ({
       >
         <Package size={24} />
         <div className="text-left">
-          <div className="font-semibold">Auto-Discount Low Stock</div>
-          <div className="text-sm opacity-90">Apply 15% off to low inventory items</div>
+          <div className="font-semibold">{t('discounts.autoDiscountLowStock')}</div>
+          <div className="text-sm opacity-90">{t('discounts.autoDiscountLowStockDesc')}</div>
         </div>
       </button>
 
@@ -27,8 +30,8 @@ const DiscountActionButtons = ({
       >
         <Clock size={24} />
         <div className="text-left">
-          <div className="font-semibold">Auto-Discount Expiring Items</div>
-          <div className="text-sm opacity-90">Apply up to 70% off for items near expiry</div>
+          <div className="font-semibold">{t('discounts.autoDiscountExpiring')}</div>
+          <div className="text-sm opacity-90">{t('discounts.autoDiscountExpiringDesc')}</div>
         </div>
       </button>
     </div>

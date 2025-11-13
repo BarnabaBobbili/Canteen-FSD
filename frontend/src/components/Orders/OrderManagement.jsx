@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../DashboardLayout';
 import OrderHeader from './OrderHeader';
@@ -20,6 +21,7 @@ import * as orderService from './orderService';
  * Orchestrates order management functionality
  */
 const OrderManagement = () => {
+  const { t } = useTranslation();
   const { token, user } = useAuth();
 
   // Data state
@@ -59,7 +61,7 @@ const OrderManagement = () => {
       const data = await orderService.fetchOrders();
       setOrders(data);
     } catch (error) {
-      setApiError('Failed to fetch orders');
+      setApiError(t('common.fetchError'));
       setTimeout(() => setApiError(''), 3000);
     }
   };
@@ -91,12 +93,12 @@ const OrderManagement = () => {
         await orderService.updateOrder(currentForm._id, currentForm, token, user?._id);
       }
 
-      setSuccessMessage(`Order ${modalMode === 'add' ? 'created' : 'updated'} successfully!`);
+      setSuccessMessage(t(modalMode === 'add' ? 'orders.orderCreated' : 'orders.orderUpdated'));
       setTimeout(() => setSuccessMessage(''), 3000);
       loadOrders();
       closeModal();
     } catch (error) {
-      setApiError('Operation failed');
+      setApiError(t('common.operationFailed'));
       setTimeout(() => setApiError(''), 3000);
     }
   };
@@ -113,11 +115,11 @@ const OrderManagement = () => {
 
     try {
       await orderService.deleteOrder(orderToDelete, token);
-      setSuccessMessage('Order deleted successfully!');
+      setSuccessMessage(t('orders.orderDeleted'));
       setTimeout(() => setSuccessMessage(''), 3000);
       loadOrders();
     } catch (error) {
-      setApiError('Delete failed');
+      setApiError(t('common.deleteFailed'));
       setTimeout(() => setApiError(''), 3000);
     } finally {
       setOrderToDelete(null);
@@ -225,18 +227,18 @@ const OrderManagement = () => {
           setOrderToDelete(null);
         }}
         onConfirm={confirmDelete}
-        title="Delete Order"
-        message="Are you sure you want to delete this order? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t('orders.deleteOrder')}
+        message={t('orders.confirmDelete')}
+        confirmText={t('common.delete')}
+        cancelText={t('common.cancel')}
         confirmButtonClass="bg-red-600 hover:bg-red-700"
         icon="danger"
       />
     </>
   );
 
-  // Conditionally wrap in DashboardLayout only for admin
-  return user?.role === 'admin' ? <DashboardLayout>{content}</DashboardLayout> : content;
+  // Conditionally wrap in DashboardLayout for admin and manager
+  return user?.role === 'admin' || user?.role === 'manager' ? <DashboardLayout>{content}</DashboardLayout> : content;
 };
 
 export default OrderManagement;

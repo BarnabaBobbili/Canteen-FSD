@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Save } from 'lucide-react';
 import OrderForm from './OrderForm';
 
@@ -15,6 +16,8 @@ const OrderFormModal = ({
   onSubmit,
   onClose
 }) => {
+  const { t } = useTranslation();
+
   if (!isOpen) return null;
 
   return (
@@ -23,7 +26,7 @@ const OrderFormModal = ({
         {/* Modal Header */}
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
           <h2 className="text-xl font-bold">
-            {mode === 'add' ? 'Add New' : 'Edit'} Order
+            {mode === 'add' ? t('orders.addOrder') : t('orders.editOrder')}
           </h2>
           <button
             onClick={onClose}
@@ -48,14 +51,14 @@ const OrderFormModal = ({
               type="submit"
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
             >
-              <Save size={18} /> {mode === 'add' ? 'Add' : 'Update'}
+              <Save size={18} /> {mode === 'add' ? t('common.add') : t('common.save')}
             </button>
             <button
               type="button"
               onClick={onClose}
               className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              {t('common.cancel')}
             </button>
           </div>
         </form>

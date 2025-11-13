@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
+  const { t } = useTranslation();
   const [imageSource, setImageSource] = useState('url'); // 'url' or 'file'
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -45,7 +47,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
       {/* Image Upload Section */}
       <div className="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Item Image
+          {t('menu.itemImage')}
         </label>
 
         {/* Image Source Selector */}
@@ -58,7 +60,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
               onChange={(e) => setImageSource(e.target.value)}
               className="w-4 h-4 text-sky-600 border-gray-300 focus:ring-sky-500"
             />
-            <span className="text-sm text-gray-700">Image URL</span>
+            <span className="text-sm text-gray-700">{t('menu.imageURL')}</span>
           </label>
           <label className="flex items-center gap-2">
             <input
@@ -68,7 +70,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
               onChange={(e) => setImageSource(e.target.value)}
               className="w-4 h-4 text-sky-600 border-gray-300 focus:ring-sky-500"
             />
-            <span className="text-sm text-gray-700">Upload from Device</span>
+            <span className="text-sm text-gray-700">{t('menu.uploadFromDevice')}</span>
           </label>
         </div>
 
@@ -96,7 +98,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
         {/* Image Preview */}
         {imagePreview && (
           <div className="mt-3">
-            <p className="text-xs text-gray-500 mb-2">Preview:</p>
+            <p className="text-xs text-gray-500 mb-2">{t('menu.preview')}:</p>
             <div className="relative w-32 h-32 border border-gray-300 rounded-lg overflow-hidden bg-gray-100">
               <img
                 src={imagePreview}
@@ -123,7 +125,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Item Name <span className="text-red-500">*</span>
+          {t('menu.itemName')} <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -132,7 +134,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
             errors.itemName ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
           }`}
-          placeholder="Enter item name"
+          placeholder={t('menu.enterItemName')}
           required
         />
         {errors.itemName && (
@@ -145,7 +147,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Category <span className="text-red-500">*</span>
+            {t('menu.itemCategory')} <span className="text-red-500">*</span>
           </label>
           <select
             value={currentForm.category || 'snacks'}
@@ -155,11 +157,11 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
             }`}
             required
           >
-            <option value="snacks">Snacks</option>
-            <option value="beverages">Beverages</option>
-            <option value="meals">Meals</option>
-            <option value="desserts">Desserts</option>
-            <option value="breakfast">Breakfast</option>
+            <option value="snacks">{t('menu.snacks')}</option>
+            <option value="beverages">{t('menu.beverages')}</option>
+            <option value="meals">{t('menu.meals')}</option>
+            <option value="desserts">{t('menu.desserts')}</option>
+            <option value="breakfast">{t('menu.breakfast')}</option>
           </select>
           {errors.category && (
             <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
@@ -170,7 +172,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Item Type <span className="text-red-500">*</span>
+            {t('menu.itemType')} <span className="text-red-500">*</span>
           </label>
           <select
             value={currentForm.itemType || 'homemade'}
@@ -180,8 +182,8 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
             }`}
             required
           >
-            <option value="homemade">Homemade</option>
-            <option value="packaged">Packaged (Outside)</option>
+            <option value="homemade">{t('menu.homemade')}</option>
+            <option value="packaged">{t('menu.packaged')}</option>
           </select>
           {errors.itemType && (
             <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
@@ -193,7 +195,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Price <span className="text-red-500">*</span>
+          {t('menu.itemPrice')} <span className="text-red-500">*</span>
         </label>
         <input
           type="number"
@@ -216,27 +218,27 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Description
+          {t('menu.itemDescription')}
         </label>
         <textarea
           value={currentForm.description || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, description: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
           rows="3"
-          placeholder="Item description"
+          placeholder={t('menu.enterDescription')}
         />
       </div>
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Allergens
+          {t('menu.allergens')}
         </label>
         <input
           type="text"
           value={currentForm.allergens || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, allergens: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-          placeholder="e.g., Nuts, Dairy, Gluten"
+          placeholder={t('menu.allergenExample')}
         />
       </div>
 
@@ -244,14 +246,14 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
       <div className="mb-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-gray-700">
-            {currentForm.itemType === 'packaged' ? 'Stock & Expiry (Required for packaged items)' : 'Stock & Expiry (Optional for homemade)'}
+            {currentForm.itemType === 'packaged' ? t('menu.stockExpiryRequired') : t('menu.stockExpiryOptional')}
           </h3>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Stock Quantity {currentForm.itemType === 'packaged' && <span className="text-red-500">*</span>}
+              {t('menu.stockQuantity')} {currentForm.itemType === 'packaged' && <span className="text-red-500">*</span>}
             </label>
             <input
               type="number"
@@ -260,7 +262,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
                 errors.stockQuantity ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
               }`}
-              placeholder={currentForm.itemType === 'homemade' ? 'Optional' : 'Required'}
+              placeholder={currentForm.itemType === 'homemade' ? t('common.optional') : t('validation.required')}
               min="0"
             />
             {errors.stockQuantity && (
@@ -272,7 +274,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Low Stock Alert At
+              {t('menu.lowStockAlert')}
             </label>
             <input
               type="number"
@@ -287,7 +289,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
 
         <div className="mt-3">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Expiry Date {currentForm.itemType === 'packaged' && <span className="text-red-500">*</span>}
+            {t('menu.expiryDate')} {currentForm.itemType === 'packaged' && <span className="text-red-500">*</span>}
           </label>
           <input
             type="date"
@@ -303,7 +305,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
             </p>
           )}
           <p className="text-xs text-gray-500 mt-1">
-            {currentForm.itemType === 'homemade' ? 'Optional - Add if applicable' : 'Required for packaged items'}
+            {currentForm.itemType === 'homemade' ? t('menu.expiryOptional') : t('menu.expiryRequired')}
           </p>
         </div>
       </div>
@@ -317,7 +319,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
             onChange={(e) => setCurrentForm({ ...currentForm, available: e.target.checked })}
             className="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500"
           />
-          <span className="text-sm font-medium text-gray-700">Available</span>
+          <span className="text-sm font-medium text-gray-700">{t('menu.available')}</span>
         </label>
       </div>
     </>

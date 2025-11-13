@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../DashboardLayout';
 import API_BASE_URL from '../../config/api';
@@ -24,6 +25,7 @@ import { Plus, X, Save, Filter, ChevronUp, ChevronDown } from 'lucide-react';
  * Responsibilities: State management, API calls, layout composition
  */
 const MenuManagement = () => {
+  const { t } = useTranslation();
   const { token, user } = useAuth();
 
   // State management
@@ -64,7 +66,7 @@ const MenuManagement = () => {
       console.log('Menu items from backend:', data);
       setMenuItems(data);
     } catch (error) {
-      setApiError('Failed to fetch menu items');
+      setApiError(t('menu.fetchError') || 'Failed to fetch menu items');
     }
   };
 
@@ -78,12 +80,12 @@ const MenuManagement = () => {
     const validationErrors = validateMenuForm(currentForm);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setApiError('Please fix the validation errors before submitting');
+      setApiError(t('menu.fixValidationErrors') || 'Please fix the validation errors before submitting');
       return;
     }
 
     if (!token) {
-      setApiError('You must be logged in to perform this action. Please refresh and try again.');
+      setApiError(t('common.mustBeLoggedIn') || 'You must be logged in to perform this action. Please refresh and try again.');
       return;
     }
 
@@ -115,16 +117,16 @@ const MenuManagement = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage(`Menu item ${modalMode === 'add' ? 'added' : 'updated'} successfully!`);
+        setSuccessMessage(modalMode === 'add' ? t('menu.itemCreated') : t('menu.itemUpdated'));
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchMenu();
         closeModal();
       } else {
         const errorData = await response.json();
-        setApiError(`Failed to save: ${errorData.message || 'Unknown error'}`);
+        setApiError(`${t('menu.saveFailed')}: ${errorData.message || t('common.unknownError')}`);
       }
     } catch (error) {
-      setApiError(`Operation failed: ${error.message}`);
+      setApiError(`${t('menu.operationFailed')}: ${error.message}`);
     }
   };
 
@@ -150,11 +152,11 @@ const MenuManagement = () => {
         const data = await response.json();
         return data.imagePath;
       } else {
-        setApiError('Failed to upload image');
+        setApiError(t('menu.imageUploadFailed'));
         return null;
       }
     } catch (error) {
-      setApiError('Image upload failed');
+      setApiError(t('menu.imageUploadFailed'));
       return null;
     }
   };
@@ -179,12 +181,12 @@ const MenuManagement = () => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
-        setSuccessMessage('Menu item deleted successfully!');
+        setSuccessMessage(t('menu.itemDeleted'));
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchMenu();
       }
     } catch (error) {
-      setApiError('Delete failed');
+      setApiError(t('menu.deleteFailed'));
     } finally {
       setItemToDelete(null);
     }
@@ -298,21 +300,21 @@ const MenuManagement = () => {
             <SearchBar
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
-              placeholder="Search menu items..."
+              placeholder={t('menu.searchItems')}
             />
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
             >
               <Filter size={16} />
-              Filters
+              {t('common.filters')}
               {showFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
             <button
               onClick={() => openModal('add')}
               className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
             >
-              <Plus size={20} /> Add Menu Item
+              <Plus size={20} /> {t('menu.addItem')}
             </button>
           </div>
 
@@ -343,7 +345,7 @@ const MenuManagement = () => {
                 onClick={() => setItemsToShow(prev => prev + 10)}
                 className="px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
               >
-                View More ({filteredMenu.length - itemsToShow} remaining)
+                {t('common.viewMore')} ({filteredMenu.length - itemsToShow} {t('common.remaining')})
               </button>
             )}
             {itemsToShow > 10 && (
@@ -351,7 +353,7 @@ const MenuManagement = () => {
                 onClick={() => setItemsToShow(10)}
                 className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
               >
-                Show Less
+                {t('common.showLess')}
               </button>
             )}
           </div>
@@ -367,7 +369,7 @@ const MenuManagement = () => {
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
               <h2 className="text-xl font-bold">
-                {modalMode === 'add' ? 'Add' : 'Edit'} Menu Item
+                {modalMode === 'add' ? t('menu.addItem') : t('menu.editItem')}
               </h2>
               <button onClick={closeModal}>
                 <X size={24} />
@@ -385,14 +387,14 @@ const MenuManagement = () => {
                   type="submit"
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
                 >
-                  <Save size={18} /> {modalMode === 'add' ? 'Add' : 'Update'}
+                  <Save size={18} /> {modalMode === 'add' ? t('common.add') : t('common.update')}
                 </button>
                 <button
                   type="button"
                   onClick={closeModal}
                   className="px-6 py-2 border rounded-lg hover:bg-gray-50"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
               </div>
             </form>
@@ -408,18 +410,18 @@ const MenuManagement = () => {
           setItemToDelete(null);
         }}
         onConfirm={confirmDelete}
-        title="Delete Menu Item"
-        message="Are you sure you want to delete this menu item? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t('menu.confirmDelete')}
+        message={t('menu.confirmDeleteMessage')}
+        confirmText={t('common.delete')}
+        cancelText={t('common.cancel')}
         confirmButtonClass="bg-red-600 hover:bg-red-700"
         icon="danger"
       />
     </>
   );
 
-  // Conditionally wrap in DashboardLayout for admin
-  return user?.role === 'admin' ? <DashboardLayout>{content}</DashboardLayout> : content;
+  // Conditionally wrap in DashboardLayout for admin and manager
+  return user?.role === 'admin' || user?.role === 'manager' ? <DashboardLayout>{content}</DashboardLayout> : content;
 };
 
 export default MenuManagement;

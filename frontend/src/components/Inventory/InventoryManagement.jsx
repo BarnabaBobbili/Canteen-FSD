@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../DashboardLayout';
 import API_BASE_URL from '../../config/api';
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 const InventoryManagement = () => {
+  const { t } = useTranslation();
   const { token, user } = useAuth();
   const [inventory, setInventory] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
@@ -48,7 +50,7 @@ const InventoryManagement = () => {
       setInventory(inventoryData);
       setSuppliers(Array.isArray(suppliersData) ? suppliersData : []);
     } catch (error) {
-      setApiError('Failed to fetch inventory data');
+      setApiError(t('inventory.errors.fetchFailed'));
     }
   };
 
@@ -58,7 +60,7 @@ const InventoryManagement = () => {
     setApiError('');
 
     if (!token) {
-      setApiError('You must be logged in to perform this action.');
+      setApiError(t('common.errors.loginRequired'));
       return;
     }
 
@@ -67,22 +69,22 @@ const InventoryManagement = () => {
 
     // Validate item name (letters and spaces only, min 3 characters)
     if (!currentForm.itemName || currentForm.itemName.trim() === '') {
-      validationErrors.itemName = 'Item name is required';
+      validationErrors.itemName = t('inventory.errors.itemNameRequired');
     } else {
       const trimmedName = currentForm.itemName.trim();
       if (trimmedName.length < 3) {
-        validationErrors.itemName = 'Item name must be at least 3 characters';
+        validationErrors.itemName = t('inventory.errors.itemNameMinLength');
       } else if (!/^[a-zA-Z\s]+$/.test(trimmedName)) {
-        validationErrors.itemName = 'Item name can only contain letters and spaces';
+        validationErrors.itemName = t('inventory.errors.itemNameLettersOnly');
       }
     }
 
     if (!currentForm.quantity || currentForm.quantity <= 0) {
-      validationErrors.quantity = 'Quantity must be greater than 0';
+      validationErrors.quantity = t('inventory.errors.quantityInvalid');
     }
 
     if (!currentForm.supplier || currentForm.supplier.trim() === '') {
-      validationErrors.supplier = 'Supplier is required';
+      validationErrors.supplier = t('inventory.errors.supplierRequired');
     }
 
     if (Object.keys(validationErrors).length > 0) {
@@ -110,13 +112,13 @@ const InventoryManagement = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage(`Inventory item ${modalMode === 'add' ? 'added' : 'updated'} successfully!`);
+        setSuccessMessage(modalMode === 'add' ? t('inventory.itemCreated') : t('inventory.itemUpdated'));
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchData();
         closeModal();
       }
     } catch (error) {
-      setApiError('Operation failed');
+      setApiError(t('inventory.errors.operationFailed'));
     }
   };
 
@@ -129,7 +131,7 @@ const InventoryManagement = () => {
     if (!itemToDelete) return;
 
     if (!token) {
-      setApiError('You must be logged in to perform this action.');
+      setApiError(t('common.errors.loginRequired'));
       return;
     }
 
@@ -140,12 +142,12 @@ const InventoryManagement = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage('Inventory item deleted successfully!');
+        setSuccessMessage(t('inventory.itemDeleted'));
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchData();
       }
     } catch (error) {
-      setApiError('Delete failed');
+      setApiError(t('inventory.errors.deleteFailed'));
     } finally {
       setItemToDelete(null);
     }
@@ -215,21 +217,21 @@ const InventoryManagement = () => {
             <SearchBar
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
-              placeholder="Search inventory items..."
+              placeholder={t('inventory.searchItems')}
             />
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
             >
               <Filter size={16} />
-              Filters
+              {t('common.filters')}
               {showFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </button>
             <button
               onClick={() => openModal('add')}
               className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
             >
-              <Plus size={20} /> Add Item
+              <Plus size={20} /> {t('inventory.addItem')}
             </button>
           </div>
 
@@ -250,12 +252,12 @@ const InventoryManagement = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Item Name</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Quantity</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Unit</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Supplier</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Expiry Date</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">{t('inventory.itemName')}</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">{t('inventory.itemQuantity')}</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">{t('inventory.itemUnit')}</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">{t('inventory.supplier')}</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">{t('inventory.expiryDate')}</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold">{t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -266,7 +268,7 @@ const InventoryManagement = () => {
                       {item.itemName}
                       {item.quantity < 20 && (
                         <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full font-medium">
-                          Low Stock
+                          {t('inventory.lowStock')}
                         </span>
                       )}
                     </div>
@@ -303,7 +305,7 @@ const InventoryManagement = () => {
           </table>
           {filteredInventory.length === 0 && (
             <div className="text-center py-8 text-gray-500">
-              No inventory items found.
+              {t('inventory.noItems')}
             </div>
           )}
         </div>
@@ -316,7 +318,7 @@ const InventoryManagement = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-              <h2 className="text-xl font-bold">{modalMode === 'add' ? 'Add' : 'Edit'} Inventory Item</h2>
+              <h2 className="text-xl font-bold">{modalMode === 'add' ? t('inventory.addItem') : t('inventory.editItem')}</h2>
               <button onClick={closeModal}><X size={24} /></button>
             </div>
             <form onSubmit={handleSubmit} className="p-6">
@@ -327,9 +329,9 @@ const InventoryManagement = () => {
               />
               <div className="flex gap-3 mt-6">
                 <button type="submit" className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600">
-                  <Save size={18} /> {modalMode === 'add' ? 'Add' : 'Update'}
+                  <Save size={18} /> {modalMode === 'add' ? t('common.add') : t('common.update')}
                 </button>
-                <button type="button" onClick={closeModal} className="px-6 py-2 border rounded-lg hover:bg-gray-50">Cancel</button>
+                <button type="button" onClick={closeModal} className="px-6 py-2 border rounded-lg hover:bg-gray-50">{t('common.cancel')}</button>
               </div>
             </form>
           </div>
@@ -344,18 +346,18 @@ const InventoryManagement = () => {
           setItemToDelete(null);
         }}
         onConfirm={confirmDelete}
-        title="Delete Inventory Item"
-        message="Are you sure you want to delete this inventory item? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t('inventory.deleteItem')}
+        message={t('inventory.deleteConfirmation')}
+        confirmText={t('common.delete')}
+        cancelText={t('common.cancel')}
         confirmButtonClass="bg-red-600 hover:bg-red-700"
         icon="danger"
       />
     </>
   );
 
-  // Conditionally wrap in DashboardLayout only for admin
-  return user?.role === 'admin' ? <DashboardLayout>{content}</DashboardLayout> : content;
+  // Conditionally wrap in DashboardLayout for admin and manager
+  return user?.role === 'admin' || user?.role === 'manager' ? <DashboardLayout>{content}</DashboardLayout> : content;
 };
 
 export default InventoryManagement;

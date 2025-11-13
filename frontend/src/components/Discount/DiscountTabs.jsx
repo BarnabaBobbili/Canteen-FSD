@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Tag, TrendingUp, ShoppingCart } from 'lucide-react';
 
 const DiscountTabs = ({
@@ -8,6 +9,8 @@ const DiscountTabs = ({
   allItemsCount,
   popularCount
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex gap-2 mb-6 border-b border-gray-200">
       <button
@@ -20,7 +23,7 @@ const DiscountTabs = ({
       >
         <span className="flex items-center gap-2">
           <Tag size={18} />
-          Active Discounts ({discountedCount})
+          {t('discounts.activeDiscounts')} ({discountedCount})
         </span>
       </button>
       <button
@@ -33,7 +36,7 @@ const DiscountTabs = ({
       >
         <span className="flex items-center gap-2">
           <ShoppingCart size={18} />
-          All Menu Items ({allItemsCount})
+          {t('discounts.allMenuItems')} ({allItemsCount})
         </span>
       </button>
       <button
@@ -46,7 +49,7 @@ const DiscountTabs = ({
       >
         <span className="flex items-center gap-2">
           <TrendingUp size={18} />
-          Most Ordered ({popularCount})
+          {t('discounts.mostOrdered')} ({popularCount})
         </span>
       </button>
     </div>

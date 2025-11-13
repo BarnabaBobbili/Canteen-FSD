@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSettings } from '../../context/SettingsContext';
 import { getMethodIcon } from './paymentHelpers';
 
 /**
@@ -6,11 +8,13 @@ import { getMethodIcon } from './paymentHelpers';
  * Displays breakdown of payments by method
  */
 const PaymentMethodBreakdown = ({ stats }) => {
+  const { t } = useTranslation();
+  const { formatCurrency } = useSettings();
   if (!stats?.byMethod || stats.byMethod.length === 0) return null;
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
-      <h2 className="text-lg font-bold mb-4">Payment Method Breakdown</h2>
+      <h2 className="text-lg font-bold mb-4">{t('payments.paymentMethodBreakdown')}</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {stats.byMethod.map((method, idx) => (
           <div
@@ -22,10 +26,10 @@ const PaymentMethodBreakdown = ({ stats }) => {
               {method._id}
             </div>
             <div className="text-lg font-bold text-gray-900">
-              ₹{method.total.toFixed(2)}
+              {formatCurrency(method.total)}
             </div>
             <div className="text-xs text-gray-500">
-              {method.count} transactions
+              {method.count} {t('payments.transactions')}
             </div>
           </div>
         ))}

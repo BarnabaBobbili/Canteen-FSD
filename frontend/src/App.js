@@ -4,7 +4,9 @@ import './App.css';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { SettingsProvider } from './context/SettingsContext';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import './i18n/i18n'; // Initialize i18n
 // User-facing pages (refactored modular versions)
 import LandingPage from './components/UserPages/LandingPage';
 import OrderPage from './components/UserPages/OrderPage';
@@ -26,7 +28,6 @@ import AdminDashboard from './components/AdminDashboard';
 import CashierDashboard from './components/Cashier/CashierDashboard';
 import KitchenDashboard from './components/Kitchen/KitchenDashboard';
 import ManagerDashboard from './components/Manager/ManagerDashboard';
-import ManagerLayout from './components/Manager/ManagerLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import MenuManagement from './components/Menu/MenuManagement';
 import OrderManagement from './components/Orders/OrderManagement';
@@ -38,6 +39,8 @@ import DiscountManagement from './components/DiscountManagement';
 import PaymentManagement from './components/Payments/PaymentManagement';
 import FeedbackManagement from './components/Feedback/FeedbackManagement';
 import FeedbackForm from './components/UserPages/FeedbackPage/FeedbackForm';
+import Notifications from './components/Notifications';
+import Settings from './components/Settings';
 
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || 'your-google-client-id';
 
@@ -46,10 +49,11 @@ function App() {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <ThemeProvider>
         <AuthProvider>
-          <CartProvider>
-            <Router>
-            <div className="App">
-              <Routes>
+          <SettingsProvider>
+            <CartProvider>
+              <Router>
+              <div className="App">
+                <Routes>
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/order" element={<OrderPage />} />
@@ -177,6 +181,24 @@ function App() {
               }
             />
 
+            <Route
+              path="/admin/notifications"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <Notifications />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+
             {/* ========== CASHIER ROUTES ========== */}
             <Route
               path="/cashier"
@@ -198,6 +220,8 @@ function App() {
             />
 
             {/* ========== MANAGER ROUTES (with /manager prefix) ========== */}
+            {/* Manager has operational management access only */}
+            {/* NO ACCESS to: Staff, Activities, Notifications, Settings (Admin only) */}
             <Route
               path="/manager"
               element={
@@ -211,9 +235,7 @@ function App() {
               path="/manager/orders"
               element={
                 <ProtectedRoute roles={['manager']}>
-                  <ManagerLayout>
-                    <OrderManagement />
-                  </ManagerLayout>
+                  <OrderManagement />
                 </ProtectedRoute>
               }
             />
@@ -222,9 +244,7 @@ function App() {
               path="/manager/menu"
               element={
                 <ProtectedRoute roles={['manager']}>
-                  <ManagerLayout>
-                    <MenuManagement />
-                  </ManagerLayout>
+                  <MenuManagement />
                 </ProtectedRoute>
               }
             />
@@ -233,9 +253,16 @@ function App() {
               path="/manager/inventory"
               element={
                 <ProtectedRoute roles={['manager']}>
-                  <ManagerLayout>
-                    <InventoryManagement />
-                  </ManagerLayout>
+                  <InventoryManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/manager/suppliers"
+              element={
+                <ProtectedRoute roles={['manager']}>
+                  <SupplierManagement />
                 </ProtectedRoute>
               }
             />
@@ -244,9 +271,16 @@ function App() {
               path="/manager/discounts"
               element={
                 <ProtectedRoute roles={['manager']}>
-                  <ManagerLayout>
-                    <DiscountManagement />
-                  </ManagerLayout>
+                  <DiscountManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/manager/feedback"
+              element={
+                <ProtectedRoute roles={['manager']}>
+                  <FeedbackManagement />
                 </ProtectedRoute>
               }
             />
@@ -255,20 +289,7 @@ function App() {
               path="/manager/payments"
               element={
                 <ProtectedRoute roles={['manager']}>
-                  <ManagerLayout>
-                    <PaymentManagement />
-                  </ManagerLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/manager/feedbacks"
-              element={
-                <ProtectedRoute roles={['manager']}>
-                  <ManagerLayout>
-                    <FeedbackManagement />
-                  </ManagerLayout>
+                  <PaymentManagement />
                 </ProtectedRoute>
               }
             />
@@ -284,8 +305,9 @@ function App() {
             />
                 </Routes>
               </div>
-            </Router>
-          </CartProvider>
+              </Router>
+            </CartProvider>
+          </SettingsProvider>
         </AuthProvider>
       </ThemeProvider>
     </GoogleOAuthProvider>

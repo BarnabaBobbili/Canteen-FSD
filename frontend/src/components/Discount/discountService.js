@@ -2,7 +2,10 @@
  * API service for discount-related operations
  */
 import API_BASE_URL from '../../config/api';
+import i18n from '../../i18n/i18n';
 import { calculateExpiryDiscount, sortByDiscountStatus } from './discountHelpers';
+
+const { t } = i18n;
 
 /**
  * Fetch all items with active discounts
@@ -10,7 +13,7 @@ import { calculateExpiryDiscount, sortByDiscountStatus } from './discountHelpers
  */
 export const fetchDiscountedItems = async () => {
   const response = await fetch(`${API_BASE_URL}/menu/discounts/active`);
-  if (!response.ok) throw new Error('Failed to fetch discounted items');
+  if (!response.ok) throw new Error(t('discounts.fetchError'));
   return await response.json();
 };
 
@@ -20,7 +23,7 @@ export const fetchDiscountedItems = async () => {
  */
 export const fetchAllMenuItems = async () => {
   const response = await fetch(`${API_BASE_URL}/menu`);
-  if (!response.ok) throw new Error('Failed to fetch menu items');
+  if (!response.ok) throw new Error(t('discounts.fetchMenuError'));
   return await response.json();
 };
 
@@ -32,7 +35,7 @@ export const fetchAllMenuItems = async () => {
  */
 export const fetchMostOrderedItems = async (limit = 10, days = 30) => {
   const response = await fetch(`${API_BASE_URL}/menu/analytics/most-ordered?limit=${limit}&days=${days}`);
-  if (!response.ok) throw new Error('Failed to fetch most ordered items');
+  if (!response.ok) throw new Error(t('discounts.fetchPopularError'));
   return await response.json();
 };
 
@@ -53,7 +56,7 @@ export const applyDiscount = async (itemId, discountData, token) => {
     body: JSON.stringify(discountData)
   });
 
-  if (!response.ok) throw new Error('Failed to apply discount');
+  if (!response.ok) throw new Error(t('discounts.applyError'));
   return await response.json();
 };
 
@@ -71,7 +74,7 @@ export const removeDiscount = async (itemId, token) => {
     }
   });
 
-  if (!response.ok) throw new Error('Failed to remove discount');
+  if (!response.ok) throw new Error(t('discounts.removeError'));
 };
 
 /**
@@ -143,7 +146,7 @@ export const applyLowStockDiscounts = async (selectedIds, lowStockItems, token) 
     try {
       await removeDiscount(itemId, token);
     } catch (error) {
-      console.error('Failed to remove discount:', error);
+      console.error(`${t('discounts.removeError')}:`, error);
     }
   }
 
@@ -189,7 +192,7 @@ export const applyExpiryDiscounts = async (selectedIds, expiringItems, token) =>
     try {
       await removeDiscount(itemId, token);
     } catch (error) {
-      console.error('Failed to remove discount:', error);
+      console.error(`${t('discounts.removeError')}:`, error);
     }
   }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ShoppingCart, UtensilsCrossed, Package, Users,
   ArrowUpRight, ArrowDownRight
@@ -9,6 +10,7 @@ import {
  * Displays key metrics with percentage changes
  */
 const DashboardStats = ({ stats, loading, previousStats = {} }) => {
+  const { t } = useTranslation();
   // Calculate percentage changes
   const calculateChange = (current, previous) => {
     if (!previous || previous === 0) return { value: 0, isPositive: true };
@@ -26,40 +28,40 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
 
   const statCards = [
     {
-      title: 'Total Orders',
+      title: t('dashboard.totalOrders'),
       value: loading ? '...' : stats.activeOrders?.toLocaleString() || '0',
       change: orderChange,
       icon: ShoppingCart,
-      bgColor: '#EEF2FF',
-      iconColor: '#4A6CF7',
-      changeLabel: 'from past week',
+      bgColor: '#E0F2FE',
+      iconColor: '#1570EF',
+      changeLabel: t('dashboard.fromPastWeek'),
     },
     {
-      title: 'Total Menu Items',
+      title: t('dashboard.totalMenuItems'),
       value: loading ? '...' : stats.menuItems?.toLocaleString() || '0',
       change: menuChange,
       icon: UtensilsCrossed,
       bgColor: '#FFF7ED',
       iconColor: '#F59E0B',
-      changeLabel: 'from last month',
+      changeLabel: t('dashboard.fromLastMonth'),
     },
     {
-      title: 'Stock Level',
+      title: t('dashboard.stockLevel'),
       value: loading ? '...' : `${stats.stockLevel}%` || '0%',
       change: stockChange,
       icon: Package,
       bgColor: '#ECFDF5',
       iconColor: '#10B981',
-      changeLabel: 'from yesterday',
+      changeLabel: t('dashboard.fromYesterday'),
     },
     {
-      title: 'Inventory Items',
+      title: t('dashboard.inventoryItems'),
       value: loading ? '...' : stats.inventoryItems?.toLocaleString() || '0',
       change: inventoryChange,
       icon: Users,
       bgColor: '#F5F3FF',
       iconColor: '#8B5CF6',
-      changeLabel: 'from last update',
+      changeLabel: t('dashboard.fromLastUpdate'),
     },
   ];
 
@@ -73,8 +75,8 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
         return (
           <div
             key={index}
-            className="bg-white rounded-xl p-5 sm:p-6 border border-gray-100 hover:shadow-lg transition-all duration-200"
-            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
+            className="bg-white rounded-xl p-5 sm:p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 cursor-pointer"
+            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)' }}
           >
             {/* Header with Icon */}
             <div className="flex items-center justify-between mb-4">

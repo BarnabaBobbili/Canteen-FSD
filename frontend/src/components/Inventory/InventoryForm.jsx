@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Plus, Minus } from 'lucide-react';
 import API_BASE_URL from '../../config/api';
 
 const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
+  const { t } = useTranslation();
   const [suppliers, setSuppliers] = useState([]);
   const [loadingSuppliers, setLoadingSuppliers] = useState(true);
 
@@ -36,7 +38,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
     <>
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Item Name *
+          {t('inventory.itemName')} *
         </label>
         <input
           type="text"
@@ -45,14 +47,14 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
             errors.itemName ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-sky-500'
           }`}
-          placeholder="Enter item name (letters only)"
+          placeholder={t('inventory.itemNamePlaceholder')}
         />
         {errors.itemName && <p className="text-red-500 text-xs mt-1">{errors.itemName}</p>}
       </div>
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Quantity *
+          {t('inventory.itemQuantity')} *
         </label>
         <div className="flex items-center gap-3">
           <button
@@ -86,26 +88,26 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Unit *
+          {t('inventory.itemUnit')} *
         </label>
         <select
           value={currentForm.unit || 'kg'}
           onChange={(e) => setCurrentForm({ ...currentForm, unit: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
         >
-          <option value="kg">Kilogram (kg)</option>
-          <option value="g">Gram (g)</option>
-          <option value="l">Liter (l)</option>
-          <option value="ml">Milliliter (ml)</option>
-          <option value="pcs">Pieces (pcs)</option>
-          <option value="packets">Packets</option>
-          <option value="boxes">Boxes</option>
+          <option value="kg">{t('inventory.units.kg')}</option>
+          <option value="g">{t('inventory.units.g')}</option>
+          <option value="l">{t('inventory.units.l')}</option>
+          <option value="ml">{t('inventory.units.ml')}</option>
+          <option value="pcs">{t('inventory.units.pcs')}</option>
+          <option value="packets">{t('inventory.units.packets')}</option>
+          <option value="boxes">{t('inventory.units.boxes')}</option>
         </select>
       </div>
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Supplier *
+          {t('inventory.supplier')} *
         </label>
         <select
           value={currentForm.supplier || ''}
@@ -116,7 +118,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
           disabled={loadingSuppliers}
         >
           <option value="">
-            {loadingSuppliers ? 'Loading suppliers...' : 'Select Supplier'}
+            {loadingSuppliers ? t('inventory.loadingSuppliers') : t('inventory.selectSupplier')}
           </option>
           {suppliers.map((supplier) => (
             <option key={supplier._id} value={supplier.supplierName}>
@@ -124,20 +126,20 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
             </option>
           ))}
           {!loadingSuppliers && suppliers.length === 0 && (
-            <option value="" disabled>No active suppliers available</option>
+            <option value="" disabled>{t('inventory.noActiveSuppliers')}</option>
           )}
         </select>
         {errors.supplier && <p className="text-red-500 text-xs mt-1">{errors.supplier}</p>}
         {!loadingSuppliers && suppliers.length === 0 && (
           <p className="text-amber-600 text-xs mt-1">
-            No suppliers found. Please add suppliers in the Supplier Management page.
+            {t('inventory.noSuppliersFound')}
           </p>
         )}
       </div>
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Expiry Date
+          {t('inventory.expiryDate')}
         </label>
         <input
           type="date"
@@ -149,14 +151,14 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Batch Number
+          {t('inventory.batchNumber')}
         </label>
         <input
           type="text"
           value={currentForm.batchNumber || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, batchNumber: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-          placeholder="e.g., BATCH2024001"
+          placeholder={t('inventory.batchNumberPlaceholder')}
         />
       </div>
     </>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
 import DiscountForm from './Discount/DiscountForm';
@@ -32,6 +33,7 @@ import {
 } from './Discount/discountService';
 
 const DiscountManagement = () => {
+  const { t } = useTranslation();
   const { token, user } = useAuth();
 
   // Data states
@@ -89,7 +91,7 @@ const DiscountManagement = () => {
       const data = await fetchDiscountedItemsAPI();
       setDiscountedItems(data);
     } catch (error) {
-      setApiError('Failed to fetch discounted items');
+      setApiError(t('discounts.fetchError'));
     }
   };
 
@@ -98,7 +100,7 @@ const DiscountManagement = () => {
       const data = await fetchAllMenuItemsAPI();
       setAllMenuItems(data);
     } catch (error) {
-      setApiError('Failed to fetch menu items');
+      setApiError(t('discounts.fetchMenuError'));
     }
   };
 
@@ -107,7 +109,7 @@ const DiscountManagement = () => {
       const data = await fetchMostOrderedItemsAPI();
       setMostOrderedItems(data);
     } catch (error) {
-      console.error('Failed to fetch most ordered items:', error);
+      console.error(`${t('discounts.fetchPopularError')}:`, error);
     }
   };
 
@@ -119,7 +121,7 @@ const DiscountManagement = () => {
       fetchMostOrderedItems()
     ]);
     setLoading(false);
-    setSuccessMessage('Data refreshed successfully!');
+    setSuccessMessage(t('discounts.refreshSuccess'));
     setTimeout(() => setSuccessMessage(''), 2000);
   };
 
@@ -134,7 +136,7 @@ const DiscountManagement = () => {
 
       setShowLowStockModal(true);
     } catch (error) {
-      setApiError('Failed to fetch low stock items');
+      setApiError(t('discounts.fetchLowStockError'));
     }
   };
 
@@ -149,13 +151,13 @@ const DiscountManagement = () => {
 
       setShowExpiryModal(true);
     } catch (error) {
-      setApiError('Failed to fetch expiring items');
+      setApiError(t('discounts.fetchExpiryError'));
     }
   };
 
   const handleAutoDiscountLowStock = async () => {
     if (selectedLowStockIds.length === 0) {
-      setApiError('Please select at least one item');
+      setApiError(t('discounts.selectItemError'));
       setTimeout(() => setApiError(''), 3000);
       return;
     }
@@ -168,14 +170,14 @@ const DiscountManagement = () => {
         token
       );
 
-      setSuccessMessage(`Applied discounts to ${successCount} item(s)${failCount > 0 ? `, ${failCount} failed` : ''}`);
+      setSuccessMessage(t('discounts.applySuccess', { successCount, failCount }));
       setTimeout(() => setSuccessMessage(''), 3000);
       fetchDiscountedItems();
       fetchAllMenuItems();
       setShowLowStockModal(false);
       setSelectedLowStockIds([]);
     } catch (error) {
-      setApiError('Operation failed: ' + error.message);
+      setApiError(`${t('common.operationFailed')}: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -183,7 +185,7 @@ const DiscountManagement = () => {
 
   const handleAutoDiscountExpiry = async () => {
     if (selectedExpiryIds.length === 0) {
-      setApiError('Please select at least one item');
+      setApiError(t('discounts.selectItemError'));
       setTimeout(() => setApiError(''), 3000);
       return;
     }
@@ -196,14 +198,14 @@ const DiscountManagement = () => {
         token
       );
 
-      setSuccessMessage(`Applied discounts to ${successCount} item(s)${failCount > 0 ? `, ${failCount} failed` : ''}`);
+      setSuccessMessage(t('discounts.applySuccess', { successCount, failCount }));
       setTimeout(() => setSuccessMessage(''), 3000);
       fetchDiscountedItems();
       fetchAllMenuItems();
       setShowExpiryModal(false);
       setSelectedExpiryIds([]);
     } catch (error) {
-      setApiError('Operation failed: ' + error.message);
+      setApiError(`${t('common.operationFailed')}: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -250,14 +252,14 @@ const DiscountManagement = () => {
     setLoading(true);
     try {
       await applyDiscount(selectedItem._id, discountData, token);
-      setSuccessMessage('Discount applied successfully!');
+      setSuccessMessage(t('discounts.applySingleSuccess'));
       setTimeout(() => setSuccessMessage(''), 3000);
       fetchDiscountedItems();
       fetchAllMenuItems();
       fetchMostOrderedItems();
       setShowManualModal(false);
     } catch (error) {
-      setApiError('Operation failed: ' + error.message);
+      setApiError(`${t('common.operationFailed')}: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -274,12 +276,12 @@ const DiscountManagement = () => {
     setLoading(true);
     try {
       await removeDiscount(itemToRemove, token);
-      setSuccessMessage('Discount removed successfully!');
+      setSuccessMessage(t('discounts.removeSuccess'));
       setTimeout(() => setSuccessMessage(''), 3000);
       fetchDiscountedItems();
       fetchAllMenuItems();
     } catch (error) {
-      setApiError('Operation failed: ' + error.message);
+      setApiError(`${t('common.operationFailed')}: ${error.message}`);
     } finally {
       setLoading(false);
       setItemToRemove(null);
@@ -412,18 +414,18 @@ const DiscountManagement = () => {
             setItemToRemove(null);
           }}
           onConfirm={confirmRemoveDiscount}
-          title="Remove Discount"
-          message="Are you sure you want to remove the discount from this item? This action cannot be undone."
-          confirmText="Remove"
-          cancelText="Cancel"
+          title={t('discounts.removeDiscount')}
+          message={t('discounts.confirmRemove')}
+          confirmText={t('common.remove')}
+          cancelText={t('common.cancel')}
           confirmButtonClass="bg-red-600 hover:bg-red-700"
           icon="danger"
         />
     </div>
   );
 
-  // Conditionally wrap in DashboardLayout only for admin
-  return user?.role === 'admin' ? <DashboardLayout>{content}</DashboardLayout> : content;
+  // Conditionally wrap in DashboardLayout for admin and manager
+  return user?.role === 'admin' || user?.role === 'manager' ? <DashboardLayout>{content}</DashboardLayout> : content;
 };
 
 export default DiscountManagement;

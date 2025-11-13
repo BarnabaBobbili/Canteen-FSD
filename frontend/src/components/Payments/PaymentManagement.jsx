@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../DashboardLayout';
 import PaymentStats from './PaymentStats';
@@ -14,6 +15,7 @@ import * as paymentService from './paymentService';
  * Orchestrates payment management functionality
  */
 const PaymentManagement = () => {
+  const { t } = useTranslation();
   const { token } = useAuth();
 
   // State
@@ -83,10 +85,10 @@ const PaymentManagement = () => {
         {/* Page Header */}
         <div className="mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            Payment Management
+            {t('payments.title')}
           </h1>
           <p className="text-gray-600 mt-1">
-            Track and manage all payment transactions
+            {t('payments.trackPayments')}
           </p>
         </div>
 

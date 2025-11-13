@@ -1,5 +1,7 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Edit2, Trash2 } from 'lucide-react';
+import { useSettings } from '../../context/SettingsContext';
 import { getStatusColor } from './orderHelpers';
 
 /**
@@ -7,10 +9,13 @@ import { getStatusColor } from './orderHelpers';
  * Displays orders in a table format with actions
  */
 const OrderTable = ({ orders, onEdit, onDelete }) => {
+  const { t } = useTranslation();
+  const { formatCurrency } = useSettings();
+
   if (orders.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
-        <p className="text-gray-500">No orders found</p>
+        <p className="text-gray-500">{t('orders.noOrders')}</p>
       </div>
     );
   }
@@ -22,28 +27,28 @@ const OrderTable = ({ orders, onEdit, onDelete }) => {
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Order Number
+                {t('orders.orderNumber')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Customer Name
+                {t('orders.customerName')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Email
+                {t('orders.email')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Phone
+                {t('orders.phone')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Order Type
+                {t('orders.orderType')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Status
+                {t('orders.status')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Total
+                {t('orders.total')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Actions
+                {t('common.actions')}
               </th>
             </tr>
           </thead>
@@ -84,7 +89,7 @@ const OrderTable = ({ orders, onEdit, onDelete }) => {
 
                 {/* Total Amount */}
                 <td className="px-6 py-4 text-sm font-semibold text-gray-900">
-                  ₹{order.totalAmount}
+                  {formatCurrency(order.totalAmount)}
                 </td>
 
                 {/* Actions */}

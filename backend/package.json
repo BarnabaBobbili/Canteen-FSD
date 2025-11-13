@@ -9,6 +9,7 @@
     "seed": "node seed.js"
   },
   "dependencies": {
+    "@google-cloud/translate": "^9.3.0",
     "@sendgrid/mail": "^8.1.6",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",

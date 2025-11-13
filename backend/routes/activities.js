@@ -3,8 +3,8 @@ const router = express.Router();
 const ActivityLog = require('../models/ActivityLog');
 const { authenticateToken, authorizeRoles } = require('../middleware/auth');
 
-// Get all activities with filtering and pagination
-router.get('/', authenticateToken, async (req, res) => {
+// Get all activities with filtering and pagination (admin only - system audit logs)
+router.get('/', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
     const {
       page = 1,
@@ -92,8 +92,8 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-// Get single activity by ID with full details
-router.get('/:id', authenticateToken, async (req, res) => {
+// Get single activity by ID with full details (admin only - system audit logs)
+router.get('/:id', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
     const activity = await ActivityLog.findById(req.params.id)
       .populate('performedBy', 'name email role department phone employeeId');

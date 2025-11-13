@@ -1,12 +1,16 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   BarChart, Bar, PieChart, Pie, XAxis, YAxis,
   CartesianGrid, Tooltip, Cell, ResponsiveContainer
 } from 'recharts';
+import { useSettings } from '../../context/SettingsContext';
 
 const COLORS = ['#f97316', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 
 const MenuAnalytics = ({ menuItems }) => {
+  const { t } = useTranslation();
+  const { formatCurrency } = useSettings();
   const categoryData = useMemo(() => {
     const categories = {};
     menuItems.forEach(item => {
@@ -37,15 +41,15 @@ const MenuAnalytics = ({ menuItems }) => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-gradient-to-r from-sky-500 to-sky-600 p-6 rounded-xl shadow-lg text-white">
-          <h3 className="text-lg font-semibold mb-2">Total Items</h3>
+          <h3 className="text-lg font-semibold mb-2">{t('menu.totalItems')}</h3>
           <p className="text-4xl font-bold">{menuItems.length}</p>
         </div>
         <div className="bg-gradient-to-r from-cyan-500 to-cyan-600 p-6 rounded-xl shadow-lg text-white">
-          <h3 className="text-lg font-semibold mb-2">Average Price</h3>
-          <p className="text-4xl font-bold">₹{averagePrice}</p>
+          <h3 className="text-lg font-semibold mb-2">{t('menu.averagePrice')}</h3>
+          <p className="text-4xl font-bold">{formatCurrency(averagePrice)}</p>
         </div>
         <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-6 rounded-xl shadow-lg text-white">
-          <h3 className="text-lg font-semibold mb-2">Categories</h3>
+          <h3 className="text-lg font-semibold mb-2">{t('menu.categories')}</h3>
           <p className="text-4xl font-bold">{categoryData.length}</p>
         </div>
       </div>
@@ -53,7 +57,7 @@ const MenuAnalytics = ({ menuItems }) => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-xl shadow-lg">
-          <h3 className="text-lg font-bold mb-4">Category Distribution</h3>
+          <h3 className="text-lg font-bold mb-4">{t('menu.categoryDistribution')}</h3>
           {categoryData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
@@ -75,12 +79,12 @@ const MenuAnalytics = ({ menuItems }) => {
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="text-center py-8 text-gray-500">No data</div>
+            <div className="text-center py-8 text-gray-500">{t('common.noData')}</div>
           )}
         </div>
 
         <div className="bg-white p-6 rounded-xl shadow-lg">
-          <h3 className="text-lg font-bold mb-4">Price Distribution</h3>
+          <h3 className="text-lg font-bold mb-4">{t('menu.priceDistribution')}</h3>
           {priceData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={priceData}>
@@ -92,7 +96,7 @@ const MenuAnalytics = ({ menuItems }) => {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="text-center py-8 text-gray-500">No data</div>
+            <div className="text-center py-8 text-gray-500">{t('common.noData')}</div>
           )}
         </div>
       </div>

@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { MessageSquare, Star, ThumbsUp, ThumbsDown, Meh } from 'lucide-react';
 
 const FeedbackStats = ({ stats }) => {
+  const { t } = useTranslation();
   if (!stats) return null;
 
   return (
@@ -11,7 +13,7 @@ const FeedbackStats = ({ stats }) => {
           <MessageSquare className="w-8 h-8 opacity-80" />
         </div>
         <div className="text-2xl font-bold">{stats.totalFeedbacks || 0}</div>
-        <div className="text-sm opacity-90">Total Feedbacks</div>
+        <div className="text-sm opacity-90">{t('feedback.totalFeedbacks')}</div>
       </div>
 
       <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-5 text-white shadow-lg">
@@ -19,7 +21,7 @@ const FeedbackStats = ({ stats }) => {
           <Star className="w-8 h-8 opacity-80" />
         </div>
         <div className="text-2xl font-bold">{stats.avgRating?.toFixed(1) || 'N/A'}</div>
-        <div className="text-sm opacity-90">Average Rating</div>
+        <div className="text-sm opacity-90">{t('feedback.averageRating')}</div>
       </div>
 
       <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-5 text-white shadow-lg">
@@ -30,7 +32,7 @@ const FeedbackStats = ({ stats }) => {
         <div className="text-2xl font-bold">
           {stats.totalFeedbacks > 0 ? Math.round((stats.positive / stats.totalFeedbacks) * 100) : 0}%
         </div>
-        <div className="text-sm opacity-90">Positive</div>
+        <div className="text-sm opacity-90">{t('feedback.positive')}</div>
       </div>
 
       <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-5 text-white shadow-lg">
@@ -41,7 +43,7 @@ const FeedbackStats = ({ stats }) => {
         <div className="text-2xl font-bold">
           {stats.totalFeedbacks > 0 ? Math.round((stats.neutral / stats.totalFeedbacks) * 100) : 0}%
         </div>
-        <div className="text-sm opacity-90">Neutral</div>
+        <div className="text-sm opacity-90">{t('feedback.neutral')}</div>
       </div>
 
       <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-5 text-white shadow-lg">
@@ -52,7 +54,7 @@ const FeedbackStats = ({ stats }) => {
         <div className="text-2xl font-bold">
           {stats.totalFeedbacks > 0 ? Math.round((stats.negative / stats.totalFeedbacks) * 100) : 0}%
         </div>
-        <div className="text-sm opacity-90">Negative</div>
+        <div className="text-sm opacity-90">{t('feedback.negative')}</div>
       </div>
     </div>
   );

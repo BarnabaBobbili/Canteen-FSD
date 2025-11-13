@@ -1,11 +1,15 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { DollarSign, CreditCard, TrendingUp, TrendingDown } from 'lucide-react';
+import { useSettings } from '../../context/SettingsContext';
 
 /**
  * Payment Statistics Cards Component
  * Displays key payment metrics in card format
  */
 const PaymentStats = ({ stats }) => {
+  const { t } = useTranslation();
+  const { formatCurrency } = useSettings();
   if (!stats) return null;
 
   return (
@@ -17,9 +21,9 @@ const PaymentStats = ({ stats }) => {
           <TrendingUp className="w-5 h-5" />
         </div>
         <div className="text-2xl font-bold">
-          ₹{stats.overall?.totalRevenue?.toFixed(2) || '0'}
+          {formatCurrency(stats.overall?.totalRevenue || 0)}
         </div>
-        <div className="text-sm opacity-90">Total Revenue</div>
+        <div className="text-sm opacity-90">{t('payments.totalRevenue')}</div>
       </div>
 
       {/* Total Transactions */}
@@ -33,7 +37,7 @@ const PaymentStats = ({ stats }) => {
         <div className="text-2xl font-bold">
           {stats.overall?.totalPayments || 0}
         </div>
-        <div className="text-sm opacity-90">Total Transactions</div>
+        <div className="text-sm opacity-90">{t('payments.totalTransactions')}</div>
       </div>
 
       {/* Refunds */}
@@ -45,9 +49,9 @@ const PaymentStats = ({ stats }) => {
           </span>
         </div>
         <div className="text-2xl font-bold">
-          ₹{stats.overall?.totalRefunds?.toFixed(2) || '0'}
+          {formatCurrency(stats.overall?.totalRefunds || 0)}
         </div>
-        <div className="text-sm opacity-90">Refunds</div>
+        <div className="text-sm opacity-90">{t('payments.refunds')}</div>
       </div>
 
       {/* Discounts */}
@@ -55,13 +59,13 @@ const PaymentStats = ({ stats }) => {
         <div className="flex items-center justify-between mb-2">
           <DollarSign className="w-8 h-8 opacity-80" />
           <span className="text-lg font-semibold">
-            ₹{stats.overall?.totalTax?.toFixed(2) || '0'}
+            {formatCurrency(stats.overall?.totalTax || 0)}
           </span>
         </div>
         <div className="text-2xl font-bold">
-          ₹{stats.overall?.totalDiscounts?.toFixed(2) || '0'}
+          {formatCurrency(stats.overall?.totalDiscounts || 0)}
         </div>
-        <div className="text-sm opacity-90">Discounts</div>
+        <div className="text-sm opacity-90">{t('payments.discounts')}</div>
       </div>
     </div>
   );

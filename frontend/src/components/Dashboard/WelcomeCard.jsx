@@ -1,19 +1,22 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { BarChart3 } from 'lucide-react';
 
 const WelcomeCard = ({ user, accessibleModules }) => {
+  const { t } = useTranslation();
+
   const getRoleMessage = (role) => {
     switch (role) {
       case 'admin':
-        return 'You have full access to all system features.';
+        return t('dashboard.adminRoleMessage');
       case 'manager':
-        return 'Manage operations and oversee canteen activities.';
+        return t('dashboard.managerRoleMessage');
       case 'cashier':
-        return 'Process orders and handle payments efficiently.';
+        return t('dashboard.cashierRoleMessage');
       case 'staff':
-        return 'Manage orders, menu items, and inventory.';
+        return t('dashboard.staffRoleMessage');
       default:
-        return 'Welcome to Smart Canteen!';
+        return t('dashboard.customerRoleMessage');
     }
   };
 
@@ -21,14 +24,14 @@ const WelcomeCard = ({ user, accessibleModules }) => {
     <div
       className="rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 mb-6 md:mb-8 text-white relative overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, #4A6CF7 0%, #818CF8 100%)',
-        boxShadow: '0 10px 15px -3px rgba(74, 108, 247, 0.2), 0 4px 6px -4px rgba(74, 108, 247, 0.1)'
+        background: 'linear-gradient(135deg, #1570EF 0%, #3B82F6 100%)',
+        boxShadow: '0 10px 15px -3px rgba(21, 112, 239, 0.3), 0 4px 6px -4px rgba(21, 112, 239, 0.15)'
       }}
     >
       <div className="flex items-start justify-between gap-3 relative z-10">
         <div className="flex-1 min-w-0">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3">
-            Welcome to Smart Canteen!
+            {t('dashboard.welcomeToCanteen')}
           </h2>
           <p className="mb-4 sm:mb-6 text-sm sm:text-base opacity-95">
             {getRoleMessage(user?.role)}
@@ -38,14 +41,14 @@ const WelcomeCard = ({ user, accessibleModules }) => {
               <div className="font-bold text-lg sm:text-xl">
                 {accessibleModules.length}
               </div>
-              <div className="opacity-90 text-xs sm:text-sm">Available Modules</div>
+              <div className="opacity-90 text-xs sm:text-sm">{t('dashboard.availableModules')}</div>
             </div>
             {user?.department && user.department !== 'none' && (
               <div className="bg-white/20 px-4 sm:px-5 py-2 sm:py-3 rounded-xl backdrop-blur-sm border border-white/10">
                 <div className="font-bold text-lg sm:text-xl capitalize">
                   {user.department}
                 </div>
-                <div className="opacity-90 text-xs sm:text-sm">Department</div>
+                <div className="opacity-90 text-xs sm:text-sm">{t('dashboard.department')}</div>
               </div>
             )}
           </div>

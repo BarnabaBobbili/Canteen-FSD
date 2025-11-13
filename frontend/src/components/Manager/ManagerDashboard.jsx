@@ -1,266 +1,242 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import {
-  ShoppingBag,
-  UtensilsCrossed,
-  Package,
-  Percent,
-  DollarSign,
-  Clock,
-  TrendingUp,
-  AlertCircle,
-  ArrowRight
-} from 'lucide-react';
-import ManagerLayout from './ManagerLayout';
+import DashboardLayout from '../DashboardLayout';
 import API_BASE_URL from '../../config/api';
+import {
+  ShoppingCart, UtensilsCrossed, Package, Users, Truck, Tag,
+  MessageSquare, CreditCard
+} from 'lucide-react';
+
+// Import Dashboard components
+import WelcomeCard from '../Dashboard/WelcomeCard';
+import QuickAccessModules from '../Dashboard/QuickAccessModules';
+import DashboardStats from '../Dashboard/DashboardStats';
+import RecentActivities from '../Dashboard/RecentActivities';
+import UserInfo from '../Dashboard/UserInfo';
+import OrderAnalyticsSection from '../Dashboard/OrderAnalyticsSection';
+import ActivityModal from '../Dashboard/ActivityModal';
+
+// Import custom hooks and helpers
+import { useDashboardAnalytics } from '../Dashboard/useDashboardAnalytics';
+import { useDashboardActivities } from '../Dashboard/useDashboardActivities';
+import {
+  getTimeDifference,
+  formatActivities,
+  generateFallbackActivities
+} from '../Dashboard/dashboardHelpers';
 
 const ManagerDashboard = () => {
-  const { token } = useAuth();
-  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { user, token } = useAuth();
+
+  // State for dynamic data
   const [stats, setStats] = useState({
-    totalOrders: 0,
-    todayRevenue: 0,
+    activeOrders: 0,
     menuItems: 0,
-    lowStockItems: 0,
-    activeDiscounts: 0,
-    pendingOrders: 0
+    inventoryItems: 0,
+    stockLevel: 0,
+    lowStockCount: 0
   });
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadStats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // State for orders and activities
+  const [allOrders, setAllOrders] = useState([]);
+  const [allActivities, setAllActivities] = useState([]);
 
-  const loadStats = async () => {
-    try {
-      // Fetch orders
-      const ordersRes = await fetch(`${API_BASE_URL}/orders`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const orders = await ordersRes.json();
+  // State for analytics filters
+  const [dateFilter, setDateFilter] = useState('week');
 
-      // Today's orders
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const todayOrders = orders.filter(o => {
-        const orderDate = new Date(o.createdAt);
-        orderDate.setHours(0, 0, 0, 0);
-        return orderDate.getTime() === today.getTime();
-      });
+  // State for activity modal
+  const [showActivityModal, setShowActivityModal] = useState(false);
+  const [activityDateFilter, setActivityDateFilter] = useState('today');
+  const [activityTypeFilter, setActivityTypeFilter] = useState('all');
+  const [customDateRange, setCustomDateRange] = useState({ start: '', end: '' });
 
-      const todayRevenue = todayOrders.reduce((sum, o) => sum + o.totalAmount, 0);
-      const pendingOrders = orders.filter(o => o.status === 'pending').length;
-
-      // Fetch menu items
-      const menuRes = await fetch(`${API_BASE_URL}/menu`);
-      const menuItems = await menuRes.json();
-
-      // Fetch inventory
-      const inventoryRes = await fetch(`${API_BASE_URL}/inventory`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const inventory = await inventoryRes.json();
-      const lowStockItems = inventory.filter(i => i.quantity < 20).length;
-
-      // Fetch discounts
-      const discountsRes = await fetch(`${API_BASE_URL}/discounts`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const discounts = await discountsRes.json();
-      const activeDiscounts = discounts.filter(d => d.isActive).length;
-
-      setStats({
-        totalOrders: todayOrders.length,
-        todayRevenue,
-        menuItems: menuItems.length,
-        lowStockItems,
-        activeDiscounts,
-        pendingOrders
-      });
-    } catch (error) {
-      console.error('Failed to load stats:', error);
-    }
-  };
-
-  const managementCards = [
+  // Role-based module access for Manager (operational management only)
+  // Manager has: Orders, Menu, Inventory, Suppliers, Discounts, Feedback, Payments
+  // Manager does NOT have: Staff Management, Activity Logs, System Settings, Notifications
+  const modules = [
     {
-      title: 'Orders Management',
-      icon: ShoppingBag,
-      gradient: 'from-blue-500 to-cyan-600',
-      path: '/orders',
-      description: 'View and manage all orders in real-time',
-      stat: stats.pendingOrders,
-      statLabel: 'Pending Orders',
-      bgGradient: 'from-blue-50 to-cyan-50',
-      iconBg: 'from-blue-500 to-cyan-600',
-      borderColor: 'border-blue-200'
+      name: t('modules.orders.name'),
+      description: t('modules.orders.description'),
+      icon: ShoppingCart,
+      path: '/manager/orders',
+      color: 'from-blue-500 to-blue-600',
+      roles: ['manager']
     },
     {
-      title: 'Menu Management',
+      name: t('modules.menu.name'),
+      description: t('modules.menu.description'),
       icon: UtensilsCrossed,
-      gradient: 'from-emerald-500 to-teal-600',
-      path: '/menu',
-      description: 'Manage menu items and categories',
-      stat: stats.menuItems,
-      statLabel: 'Total Items',
-      bgGradient: 'from-emerald-50 to-teal-50',
-      iconBg: 'from-emerald-500 to-teal-600',
-      borderColor: 'border-emerald-200'
+      path: '/manager/menu',
+      color: 'from-sky-500 to-sky-600',
+      roles: ['manager']
     },
     {
-      title: 'Inventory',
+      name: t('modules.inventory.name'),
+      description: t('modules.inventory.description'),
       icon: Package,
-      gradient: 'from-orange-500 to-amber-600',
-      path: '/inventory',
-      description: 'Track stock levels and supplies',
-      stat: stats.lowStockItems,
-      statLabel: 'Low Stock Items',
-      bgGradient: 'from-orange-50 to-amber-50',
-      iconBg: 'from-orange-500 to-amber-600',
-      borderColor: 'border-orange-200',
-      alert: stats.lowStockItems > 0
+      path: '/manager/inventory',
+      color: 'from-green-500 to-green-600',
+      roles: ['manager']
     },
     {
-      title: 'Discounts',
-      icon: Percent,
-      gradient: 'from-pink-500 to-rose-600',
-      path: '/discounts',
-      description: 'Create and manage discount offers',
-      stat: stats.activeDiscounts,
-      statLabel: 'Active Discounts',
-      bgGradient: 'from-pink-50 to-rose-50',
-      iconBg: 'from-pink-500 to-rose-600',
-      borderColor: 'border-pink-200'
+      name: t('modules.suppliers.name'),
+      description: t('modules.suppliers.description'),
+      icon: Truck,
+      path: '/manager/suppliers',
+      color: 'from-cyan-500 to-cyan-600',
+      roles: ['manager']
+    },
+    {
+      name: t('modules.discounts.name'),
+      description: t('modules.discounts.description'),
+      icon: Tag,
+      path: '/manager/discounts',
+      color: 'from-pink-500 to-pink-600',
+      roles: ['manager']
+    },
+    {
+      name: t('modules.feedback.name'),
+      description: t('modules.feedback.description'),
+      icon: MessageSquare,
+      path: '/manager/feedback',
+      color: 'from-indigo-500 to-indigo-600',
+      roles: ['manager']
+    },
+    {
+      name: t('modules.payments.name'),
+      description: t('modules.payments.description'),
+      icon: CreditCard,
+      path: '/manager/payments',
+      color: 'from-emerald-500 to-emerald-600',
+      roles: ['manager']
     }
   ];
 
+  // Filter modules based on user role
+  const accessibleModules = modules.filter(module =>
+    module.roles.includes(user?.role)
+  );
+
+  // Use custom hooks for analytics and activity filtering
+  const { completedOrders, analytics } = useDashboardAnalytics(allOrders, dateFilter);
+  const filteredActivities = useDashboardActivities(
+    allActivities,
+    activityDateFilter,
+    activityTypeFilter,
+    customDateRange
+  );
+
+  // Fetch dashboard statistics
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch all data in parallel
+        const [ordersRes, menuRes, inventoryRes, activitiesRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/orders`),
+          fetch(`${API_BASE_URL}/menu`),
+          fetch(`${API_BASE_URL}/inventory`),
+          fetch(`${API_BASE_URL}/activities?limit=50`, {
+            headers: {
+              'Authorization': `Bearer ${token || ''}`
+            }
+          })
+        ]);
+
+        const orders = await ordersRes.json();
+        const menuItemsData = await menuRes.json();
+        const inventoryData = await inventoryRes.json();
+        const activitiesData = activitiesRes.ok ? await activitiesRes.json() : { activities: [] };
+
+        // Store all orders for analytics
+        setAllOrders(orders);
+
+        // Calculate active orders (pending, preparing, ready)
+        const activeOrders = orders.filter(order =>
+          ['pending', 'preparing', 'ready'].includes(order.status?.toLowerCase())
+        ).length;
+
+        // Calculate stock level percentage
+        const totalItems = inventoryData.length;
+        const lowStockItems = inventoryData.filter(item => item.quantity < 20).length;
+        const stockLevel = totalItems > 0
+          ? Math.round(((totalItems - lowStockItems) / totalItems) * 100)
+          : 100;
+
+        setStats({
+          activeOrders,
+          menuItems: menuItemsData.length,
+          inventoryItems: totalItems,
+          stockLevel,
+          lowStockCount: lowStockItems
+        });
+
+        // Process activities using helper functions
+        const activities = activitiesData.activities && activitiesData.activities.length > 0
+          ? formatActivities(activitiesData.activities, getTimeDifference)
+          : generateFallbackActivities(orders, menuItemsData, getTimeDifference);
+
+        setAllActivities(activities);
+        setRecentActivity(activities.slice(0, 5));
+        setLoading(false);
+      } catch (error) {
+        console.error(`${t('dashboard.fetchError')}:`, error);
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+
+    // Refresh data every 30 seconds
+    const interval = setInterval(fetchDashboardData, 30000);
+    return () => clearInterval(interval);
+  }, [token, t]);
+
   return (
-    <ManagerLayout>
-      <div className="space-y-6">
-        {/* DashStack Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Today's Orders */}
-          <div
-            className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all"
-            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg" style={{ backgroundColor: '#EEF2FF' }}>
-                <ShoppingBag className="w-6 h-6" style={{ color: '#4A6CF7' }} />
-              </div>
-            </div>
-            <p className="text-sm font-medium mb-1" style={{ color: '#6B7280' }}>Today's Orders</p>
-            <h3 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>{stats.totalOrders}</h3>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 text-green-600">
-                <TrendingUp className="w-4 h-4" />
-                <span className="text-sm font-semibold">12.5%</span>
-              </div>
-              <span className="text-xs" style={{ color: '#9CA3AF' }}>from yesterday</span>
-            </div>
-          </div>
+    <DashboardLayout>
+      <div className="max-w-7xl mx-auto">
+        {/* Welcome Card */}
+        <WelcomeCard user={user} accessibleModules={accessibleModules} />
 
-          {/* Today's Revenue */}
-          <div
-            className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all"
-            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg" style={{ backgroundColor: '#ECFDF5' }}>
-                <DollarSign className="w-6 h-6" style={{ color: '#10B981' }} />
-              </div>
-            </div>
-            <p className="text-sm font-medium mb-1" style={{ color: '#6B7280' }}>Today's Revenue</p>
-            <h3 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>₹{stats.todayRevenue.toFixed(0)}</h3>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 text-green-600">
-                <TrendingUp className="w-4 h-4" />
-                <span className="text-sm font-semibold">8.2%</span>
-              </div>
-              <span className="text-xs" style={{ color: '#9CA3AF' }}>from yesterday</span>
-            </div>
-          </div>
+        {/* Quick Access Modules */}
+        <QuickAccessModules accessibleModules={accessibleModules} />
 
-          {/* Pending Orders */}
-          <div
-            className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all"
-            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg" style={{ backgroundColor: '#FFF7ED' }}>
-                <Clock className="w-6 h-6" style={{ color: '#F59E0B' }} />
-              </div>
-              {stats.pendingOrders > 0 && (
-                <span className="px-2 py-1 rounded text-xs font-semibold" style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}>
-                  Action Needed
-                </span>
-              )}
-            </div>
-            <p className="text-sm font-medium mb-1" style={{ color: '#6B7280' }}>Pending Orders</p>
-            <h3 className="text-3xl font-bold mb-3" style={{ color: '#111827' }}>{stats.pendingOrders}</h3>
-            <div className="flex items-center gap-2">
-              <span className="text-xs" style={{ color: '#9CA3AF' }}>Requires attention</span>
-            </div>
-          </div>
+        {/* Stats Grid */}
+        <DashboardStats stats={stats} loading={loading} />
+
+        {/* Recent Activity & User Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <RecentActivities recentActivity={recentActivity} loading={loading} />
+          <UserInfo user={user} />
         </div>
 
-        {/* Management Cards Section */}
-        <div>
-          <div className="flex items-center gap-3 mb-4">
-            <h2 className="text-xl font-bold" style={{ color: '#111827' }}>Quick Access</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {managementCards.map((card) => {
-              const colorMap = {
-                'Orders Management': { bg: '#EEF2FF', icon: '#4A6CF7' },
-                'Menu Management': { bg: '#ECFDF5', icon: '#10B981' },
-                'Inventory': { bg: '#FFF7ED', icon: '#F59E0B' },
-                'Discounts': { bg: '#FCE7F3', icon: '#EC4899' }
-              };
-              // Add safe fallback for undefined colors
-              const colors = colorMap[card.title] || { bg: '#F3F4F6', icon: '#6B7280' };
+        {/* Order Analytics Section */}
+        <OrderAnalyticsSection
+          dateFilter={dateFilter}
+          setDateFilter={setDateFilter}
+          analytics={analytics}
+          completedOrders={completedOrders}
+        />
 
-              return (
-                <div
-                  key={card.path}
-                  onClick={() => navigate(card.path)}
-                  className="bg-white rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all cursor-pointer group"
-                  style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.08)' }}
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="p-3 rounded-lg" style={{ backgroundColor: colors.bg }}>
-                      <card.icon size={24} style={{ color: colors.icon }} />
-                    </div>
-                    {card.alert && (
-                      <span className="px-2 py-1 rounded text-xs font-semibold flex items-center gap-1" style={{ backgroundColor: '#FEE2E2', color: '#DC2626' }}>
-                        <AlertCircle size={14} />
-                        Alert
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-lg font-bold mb-2" style={{ color: '#111827' }}>{card.title}</h3>
-                  <p className="text-sm mb-4" style={{ color: '#6B7280' }}>{card.description}</p>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-2xl font-bold mb-1" style={{ color: '#111827' }}>{card.stat}</p>
-                      <p className="text-xs font-medium" style={{ color: '#9CA3AF' }}>{card.statLabel}</p>
-                    </div>
-                    <button
-                      className="text-white px-4 py-2 rounded-lg flex items-center gap-2 group-hover:gap-3 transition-all shadow-sm"
-                      style={{ backgroundColor: '#4A6CF7' }}
-                    >
-                      <span className="font-semibold text-sm">View</span>
-                      <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {/* Activity Modal */}
+        <ActivityModal
+          showModal={showActivityModal}
+          onClose={() => setShowActivityModal(false)}
+          activityDateFilter={activityDateFilter}
+          setActivityDateFilter={setActivityDateFilter}
+          activityTypeFilter={activityTypeFilter}
+          setActivityTypeFilter={setActivityTypeFilter}
+          customDateRange={customDateRange}
+          setCustomDateRange={setCustomDateRange}
+          filteredActivities={filteredActivities}
+        />
       </div>
-    </ManagerLayout>
+    </DashboardLayout>
   );
 };
 

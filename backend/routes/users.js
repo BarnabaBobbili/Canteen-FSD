@@ -51,8 +51,8 @@ router.put('/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// Get all users (admin only)
-router.get('/', authenticateToken, authorizeRoles('admin', 'manager'), async (req, res) => {
+// Get all users (admin only - staff management is admin privilege)
+router.get('/', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
     const users = await User.find().select('-password').sort({ createdAt: -1 });
     res.json(users);
@@ -129,8 +129,8 @@ router.delete('/:id', authenticateToken, authorizeRoles('admin'), async (req, re
   }
 });
 
-// Get users by role
-router.get('/role/:role', authenticateToken, authorizeRoles('admin', 'manager'), async (req, res) => {
+// Get users by role (admin only - staff management is admin privilege)
+router.get('/role/:role', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
     const users = await User.find({ role: req.params.role }).select('-password');
     res.json(users);

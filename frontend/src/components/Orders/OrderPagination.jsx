@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Order Pagination Component
@@ -12,16 +13,17 @@ const OrderPagination = ({
   showCompletedReady,
   setShowCompletedReady
 }) => {
+  const { t } = useTranslation();
   const hasMoreOrders = totalCount > displayLimit;
 
   return (
     <div className="mt-4 space-y-3">
       {/* Order Count */}
       <div className="text-center text-sm text-gray-600">
-        Showing <span className="font-semibold text-gray-900">{displayedCount}</span> of{' '}
-        <span className="font-semibold text-gray-900">{totalCount}</span> orders
+        {t('orders.showing')} <span className="font-semibold text-gray-900">{displayedCount}</span> {t('orders.of')}{' '}
+        <span className="font-semibold text-gray-900">{totalCount}</span> {t('common.orders')}
         {!showCompletedReady && (
-          <span className="text-gray-500"> (excluding completed & ready)</span>
+          <span className="text-gray-500"> (excluding {t('orders.statusCompleted')} & {t('orders.statusReady')})</span>
         )}
       </div>
 
@@ -33,7 +35,7 @@ const OrderPagination = ({
             onClick={() => setDisplayLimit(displayLimit + 10)}
             className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
           >
-            View More ({totalCount - displayLimit} more)
+            {t('orders.viewMore')} ({totalCount - displayLimit} {t('common.showMore')})
           </button>
         )}
 
@@ -46,7 +48,7 @@ const OrderPagination = ({
               : 'bg-white text-indigo-600 border-indigo-600 hover:bg-indigo-50'
           }`}
         >
-          {showCompletedReady ? 'Hide' : 'Show'} Completed & Ready
+          {showCompletedReady ? 'Hide' : 'Show'} {t('orders.statusCompleted')} & {t('orders.statusReady')}
         </button>
 
         {/* Show Less Button */}
@@ -55,7 +57,7 @@ const OrderPagination = ({
             onClick={() => setDisplayLimit(10)}
             className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
           >
-            Show Less
+            {t('common.showLess')}
           </button>
         )}
       </div>

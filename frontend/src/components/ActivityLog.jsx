@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
@@ -11,6 +12,7 @@ import ActivityDetailModal from './ActivityLog/ActivityDetailModal';
 import ActivityPagination from './ActivityLog/ActivityPagination';
 
 const ActivityLog = () => {
+  const { t } = useTranslation();
   const { token } = useAuth();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ const ActivityLog = () => {
       setActivities(data.activities);
       setPagination(prev => ({ ...prev, ...data.pagination }));
     } catch (error) {
-      console.error('Failed to fetch activities:', error);
+      console.error(`${t('activities.fetchError')}:`, error);
     } finally {
       setLoading(false);
     }
@@ -98,7 +100,7 @@ const ActivityLog = () => {
       setSelectedActivity(data);
       setShowDetailModal(true);
     } catch (error) {
-      console.error('Failed to fetch activity details:', error);
+      console.error(`${t('activities.fetchDetailsError')}:`, error);
     }
   };
 
@@ -113,59 +115,57 @@ const ActivityLog = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <Activity className="w-8 h-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-800">Activity Log</h1>
-          </div>
-          <p className="text-gray-600">Track all system activities and changes</p>
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-2">
+          <Activity className="w-8 h-8" style={{ color: '#1570EF' }} />
+          <h1 className="text-3xl font-bold text-gray-800">{t('activities.title')}</h1>
         </div>
-
-        {/* Search and Filter Section */}
-        <ActivityFilters
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          onSearch={handleSearch}
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          showFilters={showFilters}
-          onToggleFilters={() => setShowFilters(!showFilters)}
-          onClearFilters={clearFilters}
-        />
-
-        {/* Activities List */}
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          </div>
-        ) : activities.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-            <Activity className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg">No activities found</p>
-          </div>
-        ) : (
-          <>
-            <ActivityTable
-              activities={activities}
-              onViewDetails={openDetailModal}
-            />
-
-            <ActivityPagination
-              pagination={pagination}
-              onPageChange={handlePageChange}
-            />
-          </>
-        )}
-
-        {/* Detail Modal */}
-        <ActivityDetailModal
-          show={showDetailModal}
-          activity={selectedActivity}
-          onClose={closeDetailModal}
-        />
+        <p className="text-gray-600">{t('activities.description')}</p>
       </div>
+
+      {/* Search and Filter Section */}
+      <ActivityFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        onSearch={handleSearch}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        showFilters={showFilters}
+        onToggleFilters={() => setShowFilters(!showFilters)}
+        onClearFilters={clearFilters}
+      />
+
+      {/* Activities List */}
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#1570EF' }}></div>
+        </div>
+      ) : activities.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+          <Activity className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-500 text-lg">{t('activities.noActivities')}</p>
+        </div>
+      ) : (
+        <>
+          <ActivityTable
+            activities={activities}
+            onViewDetails={openDetailModal}
+          />
+
+          <ActivityPagination
+            pagination={pagination}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
+
+      {/* Detail Modal */}
+      <ActivityDetailModal
+        show={showDetailModal}
+        activity={selectedActivity}
+        onClose={closeDetailModal}
+      />
     </DashboardLayout>
   );
 };

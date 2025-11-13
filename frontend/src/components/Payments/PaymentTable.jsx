@@ -1,5 +1,7 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Eye } from 'lucide-react';
+import { useSettings } from '../../context/SettingsContext';
 import { getStatusColor, getMethodIcon, formatDate } from './paymentHelpers';
 
 /**
@@ -7,6 +9,8 @@ import { getStatusColor, getMethodIcon, formatDate } from './paymentHelpers';
  * Displays payments in a table format with actions
  */
 const PaymentTable = ({ payments, loading, onViewDetails }) => {
+  const { t } = useTranslation();
+  const { formatCurrency } = useSettings();
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -14,25 +18,25 @@ const PaymentTable = ({ payments, loading, onViewDetails }) => {
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Transaction ID
+                {t('payments.transactionId')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Customer
+                {t('common.customer')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Method
+                {t('payments.method')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Amount
+                {t('common.amount')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Status
+                {t('common.status')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Date
+                {t('common.date')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Actions
+                {t('common.actions')}
               </th>
             </tr>
           </thead>
@@ -40,13 +44,13 @@ const PaymentTable = ({ payments, loading, onViewDetails }) => {
             {loading ? (
               <tr>
                 <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
-                  Loading payments...
+                  {t('common.loading')}
                 </td>
               </tr>
             ) : payments.length === 0 ? (
               <tr>
                 <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
-                  No payments found
+                  {t('payments.noPayments')}
                 </td>
               </tr>
             ) : (
@@ -77,7 +81,7 @@ const PaymentTable = ({ payments, loading, onViewDetails }) => {
 
                   {/* Amount */}
                   <td className="px-6 py-4 text-sm font-semibold text-gray-900">
-                    ₹{payment.finalAmount != null ? payment.finalAmount.toFixed(2) : '0.00'}
+                    {formatCurrency(payment.finalAmount != null ? payment.finalAmount : 0)}
                   </td>
 
                   {/* Status Badge */}
@@ -97,7 +101,7 @@ const PaymentTable = ({ payments, loading, onViewDetails }) => {
                     <button
                       onClick={() => onViewDetails(payment)}
                       className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
-                      title="View Details"
+                      title={t('common.viewDetails')}
                     >
                       <Eye size={16} />
                     </button>

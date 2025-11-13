@@ -58,6 +58,9 @@ const paymentsRoutes = require('./routes/payments');
 const paymentRoutes = require('./routes/payment');
 const activitiesRoutes = require('./routes/activities');
 const dishRatingsRoutes = require('./routes/dishRatings');
+const settingsRoutes = require('./routes/settings');
+const notificationsRoutes = require('./routes/notifications');
+const translateRoutes = require('./routes/translate');
 
 // Use Routes
 app.use('/api/auth', authRoutes);
@@ -72,6 +75,9 @@ app.use('/api/payments', paymentsRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/activities', activitiesRoutes);
 app.use('/api/dish-ratings', dishRatingsRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/translate', translateRoutes);
 
 // Root Route
 app.get('/', (req, res) => {

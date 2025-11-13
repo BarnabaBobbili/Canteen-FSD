@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useSettings } from '../context/SettingsContext';
 import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
 import {
@@ -27,6 +28,7 @@ import {
 
 const Dashboard = () => {
   const { user, token } = useAuth();
+  const { formatCurrency } = useSettings();
 
   // State for dynamic data
   const [stats, setStats] = useState({
@@ -183,7 +185,7 @@ const Dashboard = () => {
         // Process activities using helper functions
         const activities = activitiesData.activities && activitiesData.activities.length > 0
           ? formatActivities(activitiesData.activities, getTimeDifference)
-          : generateFallbackActivities(orders, menuItemsData, getTimeDifference);
+          : generateFallbackActivities(orders, menuItemsData, getTimeDifference, formatCurrency);
 
         setAllActivities(activities);
         setRecentActivity(activities.slice(0, 5));

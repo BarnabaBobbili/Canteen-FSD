@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
@@ -22,6 +23,7 @@ import {
 } from './Staff/staffHelpers';
 
 const StaffManagement = () => {
+  const { t } = useTranslation();
   const { token } = useAuth();
   const [staff, setStaff] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -55,10 +57,10 @@ const StaffManagement = () => {
         const data = await response.json();
         setStaff(data);
       } else {
-        setApiError('Failed to fetch staff data');
+        setApiError(t('staff.fetchError'));
       }
     } catch (error) {
-      setApiError('Error fetching staff: ' + error.message);
+      setApiError(`${t('staff.fetchError')}: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -93,16 +95,16 @@ const StaffManagement = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage(`Staff ${modalMode === 'add' ? 'added' : 'updated'} successfully!`);
+        setSuccessMessage(t(modalMode === 'add' ? 'staff.staffCreated' : 'staff.staffUpdated'));
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchStaff();
         closeModal();
       } else {
         const error = await response.json();
-        setApiError(error.message || 'Operation failed');
+        setApiError(error.message || t('common.operationFailed'));
       }
     } catch (error) {
-      setApiError('Error: ' + error.message);
+      setApiError(`${t('common.error')}: ${error.message}`);
     }
   };
 
@@ -123,14 +125,14 @@ const StaffManagement = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage('Staff deleted successfully!');
+        setSuccessMessage(t('staff.staffDeleted'));
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchStaff();
       } else {
-        setApiError('Failed to delete staff');
+        setApiError(t('staff.deleteError'));
       }
     } catch (error) {
-      setApiError('Error deleting staff: ' + error.message);
+      setApiError(`${t('staff.deleteError')}: ${error.message}`);
     } finally {
       setStaffToDelete(null);
     }
@@ -146,14 +148,14 @@ const StaffManagement = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage('Status updated successfully!');
+        setSuccessMessage(t('staff.statusUpdateSuccess'));
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchStaff();
       } else {
-        setApiError('Failed to update status');
+        setApiError(t('staff.statusUpdateError'));
       }
     } catch (error) {
-      setApiError('Error updating status: ' + error.message);
+      setApiError(`${t('staff.statusUpdateError')}: ${error.message}`);
     }
   };
 
@@ -258,10 +260,10 @@ const StaffManagement = () => {
           setStaffToDelete(null);
         }}
         onConfirm={confirmDelete}
-        title="Delete Staff Member"
-        message="Are you sure you want to delete this staff member? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t('staff.deleteStaff')}
+        message={t('staff.confirmDelete')}
+        confirmText={t('common.delete')}
+        cancelText={t('common.cancel')}
         confirmButtonClass="bg-red-600 hover:bg-red-700"
         icon="danger"
       />

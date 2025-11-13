@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSettings } from '../../context/SettingsContext';
 import { getStatusColor, formatDate } from './paymentHelpers';
 
 /**
@@ -6,6 +8,8 @@ import { getStatusColor, formatDate } from './paymentHelpers';
  * Displays detailed information about a payment
  */
 const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
+  const { t } = useTranslation();
+  const { formatCurrency } = useSettings();
   // Handle Escape key press
   useEffect(() => {
     const handleEscape = (e) => {
@@ -27,7 +31,7 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
       <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold">Payment Details</h2>
+          <h2 className="text-xl font-bold">{t('payments.paymentDetails')}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
@@ -42,7 +46,7 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
             {/* Transaction ID */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Transaction ID
+                {t('payments.transactionId')}
               </label>
               <p className="text-gray-900">
                 {payment.transactionId || payment.razorpayPaymentId || 'N/A'}
@@ -52,7 +56,7 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
             {/* Payment Method */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Payment Method
+                {t('payments.paymentMethod')}
               </label>
               <p className="text-gray-900 capitalize">
                 {payment.paymentMethod}
@@ -62,7 +66,7 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
             {/* Customer Name */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Customer Name
+                {t('common.customerName')}
               </label>
               <p className="text-gray-900">{payment.customerName}</p>
             </div>
@@ -70,7 +74,7 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
             {/* Email */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Email
+                {t('common.email')}
               </label>
               <p className="text-gray-900">{payment.customerEmail || 'N/A'}</p>
             </div>
@@ -78,47 +82,47 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
             {/* Amount */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Amount
+                {t('common.amount')}
               </label>
               <p className="text-gray-900">
-                ₹{payment.amount != null ? payment.amount.toFixed(2) : 'N/A'}
+                {payment.amount != null ? formatCurrency(payment.amount) : 'N/A'}
               </p>
             </div>
 
             {/* Tax */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Tax
+                {t('payments.tax')}
               </label>
               <p className="text-gray-900">
-                ₹{payment.tax != null ? payment.tax.toFixed(2) : 'N/A'}
+                {payment.tax != null ? formatCurrency(payment.tax) : 'N/A'}
               </p>
             </div>
 
             {/* Discount */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Discount
+                {t('payments.discount')}
               </label>
               <p className="text-gray-900">
-                ₹{payment.discountApplied != null ? payment.discountApplied.toFixed(2) : 'N/A'}
+                {payment.discountApplied != null ? formatCurrency(payment.discountApplied) : 'N/A'}
               </p>
             </div>
 
             {/* Final Amount */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Final Amount
+                {t('payments.finalAmount')}
               </label>
               <p className="text-gray-900 font-bold">
-                ₹{payment.finalAmount != null ? payment.finalAmount.toFixed(2) : 'N/A'}
+                {payment.finalAmount != null ? formatCurrency(payment.finalAmount) : 'N/A'}
               </p>
             </div>
 
             {/* Status */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Status
+                {t('common.status')}
               </label>
               <div className="mt-1">
                 <span className={`inline-flex px-2 py-1 rounded-md text-xs font-semibold ${getStatusColor(payment.paymentStatus)}`}>
@@ -130,7 +134,7 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
             {/* Date */}
             <div>
               <label className="text-sm font-semibold text-gray-600">
-                Date
+                {t('common.date')}
               </label>
               <p className="text-gray-900">
                 {formatDate(payment.createdAt, true)}
@@ -141,7 +145,7 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
             {payment.razorpayOrderId && (
               <div className="col-span-2">
                 <label className="text-sm font-semibold text-gray-600">
-                  Razorpay Order ID
+                  {t('payments.razorpayOrderId')}
                 </label>
                 <p className="text-gray-900 font-mono text-sm">
                   {payment.razorpayOrderId}
@@ -153,7 +157,7 @@ const PaymentDetailModal = ({ payment, isOpen, onClose }) => {
             {payment.notes && (
               <div className="col-span-2">
                 <label className="text-sm font-semibold text-gray-600">
-                  Notes
+                  {t('common.notes')}
                 </label>
                 <p className="text-gray-900">{payment.notes}</p>
               </div>

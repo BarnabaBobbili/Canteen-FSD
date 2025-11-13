@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Minus, Trash2, ShoppingCart, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useSettings } from '../../context/SettingsContext';
 import API_BASE_URL from '../../config/api';
 
 const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
+  const { t } = useTranslation();
+  const { formatCurrency } = useSettings();
   const [menuItems, setMenuItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItems, setSelectedItems] = useState(currentForm.items || []);
@@ -102,7 +106,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
     <>
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Customer Name *
+          {t('orders.customerName')} *
         </label>
         <input
           type="text"
@@ -111,14 +115,14 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
           className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
             errors.customerName ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-sky-500'
           }`}
-          placeholder="Enter customer name"
+          placeholder={t('orders.customerName')}
         />
         {errors.customerName && <p className="text-red-500 text-xs mt-1">{errors.customerName}</p>}
       </div>
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Email <span className="text-gray-400 font-normal">(optional)</span>
+          {t('common.email')} <span className="text-gray-400 font-normal">({t('common.noData')})</span>
         </label>
         <input
           type="email"
@@ -134,7 +138,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Phone Number *
+          {t('orders.customerPhone')} *
         </label>
         <input
           type="text"
@@ -154,14 +158,14 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Order Type *
+          {t('orders.orderType')} *
         </label>
         <select
           value={currentForm.orderType || 'dine-in'}
           onChange={(e) => setCurrentForm({ ...currentForm, orderType: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
         >
-          <option value="dine-in">Dine-In</option>
+          <option value="dine-in">{t('orders.dineIn')}</option>
           <option value="takeaway">Takeaway</option>
         </select>
       </div>
@@ -170,7 +174,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
       <div className="mb-4 border-t pt-4">
         <div className="flex items-center justify-between mb-2">
           <label className="block text-sm font-medium text-gray-700">
-            Order Items *
+            {t('orders.items')} *
           </label>
           <button
             type="button"
@@ -178,7 +182,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
             className="flex items-center gap-1 px-3 py-1 bg-sky-500 text-white text-sm rounded-lg hover:bg-sky-600"
           >
             <Plus size={16} />
-            Add Item
+            {t('orders.addItem')}
           </button>
         </div>
 
@@ -191,7 +195,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search menu items..."
+                placeholder={t('menu.searchItems')}
                 className="w-full pl-9 pr-9 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
                 autoFocus
               />
@@ -224,25 +228,25 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
                         <p className="text-xs text-gray-500">{item.category}</p>
                         {hasDiscount && (
                           <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs font-semibold">
-                            {item.discount.type === 'percentage' ? `${item.discount.value}% OFF` : `₹${item.discount.value} OFF`}
+                            {item.discount.type === 'percentage' ? `${item.discount.value}% OFF` : `${formatCurrency(item.discount.value)} OFF`}
                           </span>
                         )}
                       </div>
                       <div className="text-right ml-2">
                         {hasDiscount ? (
                           <>
-                            <div className="text-xs text-gray-400 line-through">₹{item.price.toFixed(2)}</div>
-                            <div className="text-green-600 font-bold">₹{discountedPrice.toFixed(2)}</div>
+                            <div className="text-xs text-gray-400 line-through">{formatCurrency(item.price)}</div>
+                            <div className="text-green-600 font-bold">{formatCurrency(discountedPrice)}</div>
                           </>
                         ) : (
-                          <span className="text-sky-600 font-semibold">₹{item.price.toFixed(2)}</span>
+                          <span className="text-sky-600 font-semibold">{formatCurrency(item.price)}</span>
                         )}
                       </div>
                     </button>
                   );
                 })
               ) : (
-                <p className="text-gray-500 text-sm text-center py-2">No items found</p>
+                <p className="text-gray-500 text-sm text-center py-2">{t('menu.noItems')}</p>
               )}
             </div>
           </div>
@@ -261,14 +265,14 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
                     <p className="font-medium text-sm text-gray-900 truncate">{item.itemName}</p>
                     {hasDiscount ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-400 line-through">₹{item.originalPrice}</span>
-                        <span className="text-xs text-green-600 font-semibold">₹{item.price} each</span>
+                        <span className="text-xs text-gray-400 line-through">{formatCurrency(item.originalPrice)}</span>
+                        <span className="text-xs text-green-600 font-semibold">{formatCurrency(item.price)} each</span>
                         <span className="text-xs bg-green-100 text-green-800 px-1 rounded">
-                          {item.discount.type === 'percentage' ? `${item.discount.value}% OFF` : `₹${item.discount.value} OFF`}
+                          {item.discount.type === 'percentage' ? `${item.discount.value}% OFF` : `${formatCurrency(item.discount.value)} OFF`}
                         </span>
                       </div>
                     ) : (
-                      <p className="text-xs text-gray-500">₹{item.price} each</p>
+                      <p className="text-xs text-gray-500">{formatCurrency(item.price)} each</p>
                     )}
                   </div>
                   <div className="flex items-center gap-1">
@@ -290,7 +294,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
                     </button>
                   </div>
                   <span className={`text-sm font-semibold w-20 text-right ${hasDiscount ? 'text-green-600' : 'text-gray-900'}`}>
-                    ₹{(item.price * item.quantity).toFixed(2)}
+                    {formatCurrency(item.price * item.quantity)}
                   </span>
                   <button
                     type="button"
@@ -308,7 +312,7 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
             errors.items ? 'border-red-500 bg-red-50 text-red-600' : 'border-gray-300 text-gray-400'
           }`}>
             <ShoppingCart size={32} className="mx-auto mb-2 opacity-50" />
-            <p className="text-sm">No items added. Click "Add Item" to select menu items.</p>
+            <p className="text-sm">{t('orders.noOrders')} {t('orders.addItem')}</p>
             {errors.items && <p className="text-red-500 text-xs mt-2 font-semibold">{errors.items}</p>}
           </div>
         )}
@@ -322,22 +326,22 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Subtotal:</span>
                 <span className="font-semibold">
-                  ₹{selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                  {formatCurrency(selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0))}
                 </span>
               </div>
               <div className="flex justify-between text-sm text-orange-600">
-                <span>Takeaway Charges (₹5 × {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}):</span>
+                <span>Takeaway Charges ({formatCurrency(5)} × {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}):</span>
                 <span className="font-semibold">
-                  ₹{(selectedItems.reduce((sum, item) => sum + item.quantity, 0) * 5).toFixed(2)}
+                  {formatCurrency(selectedItems.reduce((sum, item) => sum + item.quantity, 0) * 5)}
                 </span>
               </div>
               <div className="border-t border-gray-300 my-1"></div>
             </>
           )}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-bold text-gray-900">Total Amount:</span>
+            <span className="text-lg font-bold text-gray-900">{t('orders.totalAmount')}:</span>
             <span className="text-2xl font-bold text-sky-600">
-              ₹{(currentForm.totalAmount || 0).toFixed(2)}
+              {formatCurrency(currentForm.totalAmount || 0)}
             </span>
           </div>
         </div>
@@ -345,18 +349,18 @@ const OrderForm = ({ currentForm, setCurrentForm, errors, modalMode }) => {
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Status
+          {t('common.status')}
         </label>
         <select
           value={currentForm.status || 'pending'}
           onChange={(e) => setCurrentForm({ ...currentForm, status: e.target.value })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
         >
-          <option value="pending">Pending</option>
-          <option value="preparing">Preparing</option>
-          <option value="ready">Ready</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="pending">{t('orders.statusPending')}</option>
+          <option value="preparing">{t('orders.statusPreparing')}</option>
+          <option value="ready">{t('orders.statusReady')}</option>
+          <option value="completed">{t('orders.statusCompleted')}</option>
+          <option value="cancelled">{t('orders.statusCancelled')}</option>
         </select>
       </div>
     </>
