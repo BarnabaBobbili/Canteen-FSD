@@ -5,8 +5,7 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "build",
-        "framework": null
+        "distDir": "build"
       }
     },
     {
@@ -26,7 +25,8 @@
   ],
   "build": {
     "env": {
-      "CI": "false"
+      "CI": "false",
+      "NPM_FLAGS": "--legacy-peer-deps"
     }
   }
 }
