@@ -23,7 +23,7 @@ const OrderFilterBar = ({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="all">All Statuses</option>
             <option value="pending">Pending</option>
@@ -43,7 +43,7 @@ const OrderFilterBar = ({
           <select
             value={orderTypeFilter}
             onChange={(e) => setOrderTypeFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="all">All Types</option>
             <option value="dine-in">Dine-In</option>
@@ -60,7 +60,7 @@ const OrderFilterBar = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="date-desc">Date: Newest First</option>
             <option value="date-asc">Date: Oldest First</option>

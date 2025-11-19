@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Trash2, Plus, Minus, ChefHat } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Trash2, Plus, Minus, UtensilsCrossed } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -180,7 +180,7 @@ const CartPage = () => {
                         item.image ? 'hidden' : ''
                       }`}
                     >
-                      <ChefHat className="w-12 h-12 text-gray-900 opacity-30" />
+                      <UtensilsCrossed className="w-12 h-12 text-gray-900 opacity-30" />
                     </div>
                   </div>
 

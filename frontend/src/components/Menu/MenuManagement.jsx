@@ -1,265 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import DashboardLayout from '../DashboardLayout';
-import API_BASE_URL from '../../config/api';
 import MenuForm from './MenuForm';
-import SearchBar from '../Shared/SearchBar';
 import MenuFilterBar from '../Shared/MenuFilterBar';
 import MenuAnalytics from './MenuAnalytics';
 import ConfirmationModal from '../Shared/ConfirmationModal';
 import MenuAlertBanners from './MenuAlertBanners';
 import MenuTable from './MenuTable';
+import MenuHeader from './MenuHeader';
+import { useMenuManagement } from './useMenuManagement';
 import {
-  validateMenuForm,
   filterBySearch,
   filterByCategory,
   filterByAvailability,
-  sortMenuItems
+  sortMenuItems,
+  getAlertItems
 } from './menuHelpers';
-import { Plus, X, Save, Filter, ChevronUp, ChevronDown } from 'lucide-react';
+import { X, Save } from 'lucide-react';
 
 /**
  * MenuManagement - Main orchestrator for menu management
- * Refactored from 660 lines following CLAUDE.md patterns
- * Responsibilities: State management, API calls, layout composition
+ * Refactored from 427 lines → ~180 lines
+ * Uses custom hook for state/logic, service for API, extracted components
  */
 const MenuManagement = () => {
   const { t } = useTranslation();
-  const { token, user } = useAuth();
+  const { user } = useAuth();
 
-  // State management
-  const [menuItems, setMenuItems] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState('add');
-  const [currentForm, setCurrentForm] = useState({});
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [availabilityFilter, setAvailabilityFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('name-asc');
-  const [errors, setErrors] = useState({});
-  const [apiError, setApiError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [itemsToShow, setItemsToShow] = useState(10);
-  const [showFilters, setShowFilters] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(null);
+  const {
+    // State
+    menuItems,
+    showModal,
+    modalMode,
+    currentForm,
+    setCurrentForm,
+    searchTerm,
+    setSearchTerm,
+    categoryFilter,
+    setCategoryFilter,
+    availabilityFilter,
+    setAvailabilityFilter,
+    sortBy,
+    setSortBy,
+    errors,
+    apiError,
+    successMessage,
+    itemsToShow,
+    setItemsToShow,
+    showFilters,
+    setShowFilters,
+    showDeleteConfirm,
+    setShowDeleteConfirm,
+    setItemToDelete,
+    // Methods
+    handleSubmit,
+    handleImageUpload,
+    handleDelete,
+    confirmDelete,
+    openModal,
+    closeModal
+  } = useMenuManagement();
 
-  // Fetch menu on mount
-  useEffect(() => {
-    fetchMenu();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Calculate alert items
+  const { lowStockItems, outOfStockItems, expiringItems, expiredItems } = getAlertItems(menuItems);
 
-  // Reset items to show when filters change
-  useEffect(() => {
-    setItemsToShow(10);
-  }, [searchTerm, categoryFilter, availabilityFilter, sortBy]);
-
-  /**
-   * Fetch all menu items from API
-   */
-  const fetchMenu = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/menu`);
-      const data = await response.json();
-      console.log('Menu items from backend:', data);
-      setMenuItems(data);
-    } catch (error) {
-      setApiError(t('menu.fetchError') || 'Failed to fetch menu items');
-    }
-  };
-
-  /**
-   * Handle form submission for add/edit
-   */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate form using helper
-    const validationErrors = validateMenuForm(currentForm);
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setApiError(t('menu.fixValidationErrors') || 'Please fix the validation errors before submitting');
-      return;
-    }
-
-    if (!token) {
-      setApiError(t('common.mustBeLoggedIn') || 'You must be logged in to perform this action. Please refresh and try again.');
-      return;
-    }
-
-    try {
-      const url = modalMode === 'add'
-        ? `${API_BASE_URL}/menu`
-        : `${API_BASE_URL}/menu/${currentForm._id}`;
-
-      const dataToSend = {
-        ...currentForm,
-        ...(modalMode === 'add' ? { createdBy: user?._id } : { updatedBy: user?._id })
-      };
-
-      // Clean up base64 data
-      if (dataToSend.image && dataToSend.image.startsWith('data:')) {
-        console.warn('Removing base64 data from submission. Setting image to null.');
-        dataToSend.image = null;
-      }
-
-      console.log('Submitting menu item with image:', dataToSend.image);
-
-      const response = await fetch(url, {
-        method: modalMode === 'add' ? 'POST' : 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(dataToSend)
-      });
-
-      if (response.ok) {
-        setSuccessMessage(modalMode === 'add' ? t('menu.itemCreated') : t('menu.itemUpdated'));
-        setTimeout(() => setSuccessMessage(''), 3000);
-        fetchMenu();
-        closeModal();
-      } else {
-        const errorData = await response.json();
-        setApiError(`${t('menu.saveFailed')}: ${errorData.message || t('common.unknownError')}`);
-      }
-    } catch (error) {
-      setApiError(`${t('menu.operationFailed')}: ${error.message}`);
-    }
-  };
-
-  /**
-   * Handle image upload via API
-   */
-  const handleImageUpload = async (file) => {
-    if (!file) return null;
-
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/menu/upload-image`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        return data.imagePath;
-      } else {
-        setApiError(t('menu.imageUploadFailed'));
-        return null;
-      }
-    } catch (error) {
-      setApiError(t('menu.imageUploadFailed'));
-      return null;
-    }
-  };
-
-  /**
-   * Initiate delete confirmation
-   */
-  const handleDelete = (id) => {
-    setItemToDelete(id);
-    setShowDeleteConfirm(true);
-  };
-
-  /**
-   * Execute delete after confirmation
-   */
-  const confirmDelete = async () => {
-    if (!itemToDelete) return;
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/menu/${itemToDelete}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        setSuccessMessage(t('menu.itemDeleted'));
-        setTimeout(() => setSuccessMessage(''), 3000);
-        fetchMenu();
-      }
-    } catch (error) {
-      setApiError(t('menu.deleteFailed'));
-    } finally {
-      setItemToDelete(null);
-    }
-  };
-
-  /**
-   * Open modal for add or edit
-   */
-  const openModal = (mode, item = {}) => {
-    setModalMode(mode);
-    setErrors({});
-    setApiError('');
-
-    setCurrentForm(mode === 'add' ? {
-      itemName: '',
-      category: 'snacks',
-      itemType: 'homemade',
-      price: '',
-      description: '',
-      allergens: '',
-      available: true,
-      stockQuantity: 0,
-      lowStockThreshold: 10,
-      expiryDate: null,
-      image: null
-    } : {
-      ...item,
-      itemType: item.itemType || 'homemade',
-      stockQuantity: item.stockQuantity || 0,
-      lowStockThreshold: item.lowStockThreshold || 10,
-      image: (item.image && item.image.startsWith('data:')) ? null : (item.image || null)
-    });
-    setShowModal(true);
-  };
-
-  /**
-   * Close modal and reset form
-   */
-  const closeModal = () => {
-    setShowModal(false);
-    setCurrentForm({});
-    setErrors({});
-    setApiError('');
-  };
-
-  // Calculate alert arrays for packaged items
-  const lowStockItems = menuItems.filter(item =>
-    (item.itemType || 'homemade') === 'packaged' &&
-    item.stockQuantity <= (item.lowStockThreshold || 10) &&
-    item.stockQuantity > 0
-  );
-
-  const outOfStockItems = menuItems.filter(item =>
-    (item.itemType || 'homemade') === 'packaged' &&
-    item.stockQuantity === 0
-  );
-
-  const expiringItems = menuItems.filter(item => {
-    if ((item.itemType || 'homemade') !== 'packaged' || !item.expiryDate) return false;
-    const expiryDate = new Date(item.expiryDate);
-    const today = new Date();
-    const daysUntilExpiry = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
-    return daysUntilExpiry <= 7 && daysUntilExpiry > 0;
-  });
-
-  const expiredItems = menuItems.filter(item => {
-    if ((item.itemType || 'homemade') !== 'packaged' || !item.expiryDate) return false;
-    const expiryDate = new Date(item.expiryDate);
-    const today = new Date();
-    return expiryDate <= today;
-  });
-
-  // Apply filters and sorting using helpers
+  // Apply filters and sorting
   const filteredMenu = sortMenuItems(
     filterByAvailability(
       filterByCategory(
@@ -294,30 +100,17 @@ const MenuManagement = () => {
           expiringItems={expiringItems}
         />
 
-        {/* Search and Filter Controls */}
-        <div className="bg-white rounded-xl shadow-lg mb-6 p-6">
-          <div className="flex gap-4 mb-4">
-            <SearchBar
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              placeholder={t('menu.searchItems')}
-            />
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
-            >
-              <Filter size={16} />
-              {t('common.filters')}
-              {showFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-            </button>
-            <button
-              onClick={() => openModal('add')}
-              className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
-            >
-              <Plus size={20} /> {t('menu.addItem')}
-            </button>
-          </div>
+        {/* Header with Search and Actions */}
+        <MenuHeader
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          showFilters={showFilters}
+          onToggleFilters={() => setShowFilters(!showFilters)}
+          onAddClick={() => openModal('add')}
+        />
 
+        {/* Filter Bar */}
+        <div className="macos-card macos-animate mb-6 p-6">
           <MenuFilterBar
             categoryFilter={categoryFilter}
             setCategoryFilter={setCategoryFilter}
@@ -343,7 +136,7 @@ const MenuManagement = () => {
             {filteredMenu.length > itemsToShow && (
               <button
                 onClick={() => setItemsToShow(prev => prev + 10)}
-                className="px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+                className="px-6 py-2 macos-btn text-white transition-colors"
               >
                 {t('common.viewMore')} ({filteredMenu.length - itemsToShow} {t('common.remaining')})
               </button>
@@ -366,7 +159,7 @@ const MenuManagement = () => {
       {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="macos-modal macos-animate max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
               <h2 className="text-xl font-bold">
                 {modalMode === 'add' ? t('menu.addItem') : t('menu.editItem')}
@@ -385,7 +178,7 @@ const MenuManagement = () => {
               <div className="flex gap-3 mt-6">
                 <button
                   type="submit"
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 macos-btn text-white"
                 >
                   <Save size={18} /> {modalMode === 'add' ? t('common.add') : t('common.update')}
                 </button>

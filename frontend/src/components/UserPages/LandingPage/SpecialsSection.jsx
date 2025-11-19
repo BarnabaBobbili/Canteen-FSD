@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, TrendingUp, ChefHat, Plus, ArrowRight } from 'lucide-react';
+import { Sparkles, TrendingUp, UtensilsCrossed, Plus, ArrowRight } from 'lucide-react';
 import API_BASE_URL from '../../../config/api';
 import { useTheme } from '../../../context/ThemeContext';
 
@@ -193,7 +193,7 @@ const SpecialsSection = () => {
                     item.image ? 'hidden' : ''
                   }`}
                 >
-                  <ChefHat className="w-16 h-16 text-[#FF7A00]" />
+                  <UtensilsCrossed className="w-16 h-16 text-[#FF7A00]" />
                 </div>
 
                 {/* Veg/Non-Veg Indicator */}

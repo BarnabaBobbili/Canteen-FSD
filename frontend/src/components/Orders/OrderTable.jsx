@@ -14,17 +14,17 @@ const OrderTable = ({ orders, onEdit, onDelete }) => {
 
   if (orders.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center">
+      <div className="macos-card p-8 text-center macos-animate">
         <p className="text-gray-500">{t('orders.noOrders')}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="macos-table macos-animate">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="macos-table-header">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 {t('orders.orderNumber')}
@@ -54,7 +54,7 @@ const OrderTable = ({ orders, onEdit, onDelete }) => {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {orders.map((order) => (
-              <tr key={order._id} className="hover:bg-gray-50 transition-colors">
+              <tr key={order._id} className="macos-table-row">
                 {/* Order Number */}
                 <td className="px-6 py-4 text-sm font-bold text-indigo-600">
                   {order.orderNumber}
@@ -97,14 +97,14 @@ const OrderTable = ({ orders, onEdit, onDelete }) => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => onEdit(order)}
-                      className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                      className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all duration-300 hover:scale-110"
                       title="Edit"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
                       onClick={() => onDelete(order._id)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-300 hover:scale-110"
                       title="Delete"
                     >
                       <Trash2 size={16} />

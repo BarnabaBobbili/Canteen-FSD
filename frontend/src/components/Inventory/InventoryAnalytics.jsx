@@ -26,7 +26,7 @@ const InventoryAnalytics = ({ inventory, suppliers }) => {
           <h3 className="text-lg font-semibold mb-2">{t('inventory.totalItems')}</h3>
           <p className="text-4xl font-bold">{inventory.length}</p>
         </div>
-        <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 rounded-xl shadow-lg text-white">
+        <div className="macos-stat-card macos-gradient-red text-white">
           <h3 className="text-lg font-semibold mb-2">{t('inventory.lowStockAlert')}</h3>
           <p className="text-4xl font-bold">{lowStockCount}</p>
         </div>
@@ -37,7 +37,7 @@ const InventoryAnalytics = ({ inventory, suppliers }) => {
       </div>
 
       {/* Chart */}
-      <div className="bg-white p-6 rounded-xl shadow-lg">
+      <div className="macos-card p-6 macos-animate-lg">
         <h3 className="text-lg font-bold mb-4">{t('inventory.inventoryAnalytics')}</h3>
         {supplierData.length > 0 ? (
           <ResponsiveContainer width="100%" height={300}>

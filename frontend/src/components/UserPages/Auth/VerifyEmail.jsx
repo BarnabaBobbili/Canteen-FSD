@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { CheckCircle, XCircle, Loader, ChefHat } from 'lucide-react';
+import { CheckCircle, XCircle, Loader, UtensilsCrossed } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import API_BASE_URL from '../../../config/api';
 
@@ -59,7 +59,7 @@ const VerifyEmail = () => {
       <div className="bg-white border-4 border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.4)] p-8 lg:p-12 max-w-md w-full text-center transform rotate-1">
         <div className="flex justify-center mb-6">
           <div className="bg-gray-900 border-3 border-gray-900 p-4 transform -rotate-3">
-            <ChefHat className="w-12 h-12 text-white" />
+            <UtensilsCrossed className="w-12 h-12 text-white" />
           </div>
         </div>
 
@@ -94,7 +94,7 @@ const VerifyEmail = () => {
                 Go to Login
               </button>
               <button
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/demo')}
                 className="w-full bg-white border-4 border-gray-900 text-gray-900 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.6)] transition-all transform hover:scale-105 hover:rotate-1 font-black"
               >
                 Go to Home

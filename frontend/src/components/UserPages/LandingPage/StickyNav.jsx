@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChefHat, Menu, X, User, Moon, Sun } from 'lucide-react';
+import { UtensilsCrossed, Menu, X, User, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 
@@ -60,9 +60,9 @@ const StickyNav = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3 cursor-pointer transform hover:-rotate-1 transition-transform" onClick={() => navigate('/')}>
+          <div className="flex items-center gap-3 cursor-pointer transform hover:-rotate-1 transition-transform" onClick={() => navigate('/demo')}>
             <div className="relative bg-gray-900 border-4 border-gray-900 p-2.5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transform -rotate-3">
-              <ChefHat className="w-7 h-7 text-white" strokeWidth={2.5} />
+              <UtensilsCrossed className="w-7 h-7 text-white" strokeWidth={2.5} />
               {/* Comic accent burst */}
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 border-2 border-gray-900 rounded-full"></div>
             </div>
@@ -70,7 +70,7 @@ const StickyNav = () => {
               <h1 className="text-xl sm:text-2xl font-black text-gray-900" style={{
                 textShadow: '2px 2px 0px rgba(255,255,255,0.8)',
                 WebkitTextStroke: '0.5px black'
-              }}>Canteen Delight</h1>
+              }}>CanteenDelight</h1>
               <p className="text-xs text-gray-700 hidden sm:block font-black uppercase tracking-wide">Fresh Food, Fast Service</p>
             </div>
           </div>

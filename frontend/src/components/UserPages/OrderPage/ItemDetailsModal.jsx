@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Minus, ChefHat } from 'lucide-react';
+import { X, Plus, Minus, UtensilsCrossed } from 'lucide-react';
 
 /**
  * Item details modal for quick view
@@ -62,7 +62,7 @@ const ItemDetailsModal = ({ item, isOpen, onClose, onAddToCart }) => {
                 item.image ? 'hidden' : ''
               }`}
             >
-              <ChefHat className="w-24 h-24 text-gray-900 opacity-30" />
+              <UtensilsCrossed className="w-24 h-24 text-gray-900 opacity-30" />
             </div>
 
             {/* Veg/Non-Veg Badge */}

@@ -4,7 +4,6 @@ import { X } from 'lucide-react';
 import DashboardLayout from './DashboardLayout';
 import SupplierForm from './SupplierForm';
 import ConfirmationModal from './Shared/ConfirmationModal';
-import API_BASE_URL from '../config/api';
 
 // Import Supplier components
 import SupplierHeader from './Supplier/SupplierHeader';
@@ -13,6 +12,14 @@ import SupplierTable from './Supplier/SupplierTable';
 
 // Import helper functions
 import { validateSupplierForm, filterSuppliers } from './Supplier/supplierHelpers';
+
+// Import service functions
+import {
+  fetchSuppliers as fetchSuppliersAPI,
+  createSupplier,
+  updateSupplier,
+  deleteSupplier as deleteSupplierAPI
+} from './Supplier/supplierService';
 
 const SupplierManagement = () => {
   const { t } = useTranslation();
@@ -36,18 +43,8 @@ const SupplierManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/suppliers`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSuppliers(data);
-      } else {
-        console.error(t('suppliers.fetchError'));
-      }
+      const data = await fetchSuppliersAPI(token);
+      setSuppliers(data);
     } catch (error) {
       console.error(`${t('suppliers.fetchError')}:`, error);
     } finally {
@@ -66,32 +63,18 @@ const SupplierManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const url = modalMode === 'add'
-        ? `${API_BASE_URL}/suppliers`
-        : `${API_BASE_URL}/suppliers/${currentForm._id}`;
 
-      const method = modalMode === 'add' ? 'POST' : 'PUT';
-
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(currentForm)
-      });
-
-      if (response.ok) {
-        fetchSuppliers();
-        closeModal();
+      if (modalMode === 'add') {
+        await createSupplier(currentForm, token);
       } else {
-        const errorData = await response.json();
-        console.error(`${t('suppliers.saveError')}:`, errorData);
-        alert(errorData.message || t('suppliers.saveError'));
+        await updateSupplier(currentForm._id, currentForm, token);
       }
+
+      fetchSuppliers();
+      closeModal();
     } catch (error) {
       console.error(`${t('suppliers.submitError')}:`, error);
-      alert(t('suppliers.submitError'));
+      alert(error.message || t('suppliers.submitError'));
     }
   };
 
@@ -105,22 +88,11 @@ const SupplierManagement = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/suppliers/${supplierToDelete}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        fetchSuppliers();
-      } else {
-        console.error(t('suppliers.deleteError'));
-        alert(t('suppliers.deleteError'));
-      }
+      await deleteSupplierAPI(supplierToDelete, token);
+      fetchSuppliers();
     } catch (error) {
       console.error(`${t('suppliers.deleteError')}:`, error);
-      alert(t('suppliers.deleteError'));
+      alert(error.message || t('suppliers.deleteError'));
     } finally {
       setSupplierToDelete(null);
     }
@@ -182,7 +154,7 @@ const SupplierManagement = () => {
         {/* Modal */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
+            <div className="macos-card macos-animate-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto m-4">
               <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-800">
                   {modalMode === 'add' ? t('suppliers.addSupplier') : t('suppliers.editSupplier')}

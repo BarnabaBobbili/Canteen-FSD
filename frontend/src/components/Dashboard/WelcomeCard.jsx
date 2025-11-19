@@ -22,9 +22,8 @@ const WelcomeCard = ({ user, accessibleModules }) => {
 
   return (
     <div
-      className="rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 mb-6 md:mb-8 text-white relative overflow-hidden"
+      className="macos-gradient-blue rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 mb-6 md:mb-8 text-white relative overflow-hidden macos-animate"
       style={{
-        background: 'linear-gradient(135deg, #1570EF 0%, #3B82F6 100%)',
         boxShadow: '0 10px 15px -3px rgba(21, 112, 239, 0.3), 0 4px 6px -4px rgba(21, 112, 239, 0.15)'
       }}
     >

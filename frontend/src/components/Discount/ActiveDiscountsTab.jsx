@@ -27,7 +27,7 @@ const ActiveDiscountsTab = ({
       {items.map((item) => (
         <div
           key={item._id}
-          className="bg-white rounded-lg shadow-md p-5 hover:shadow-lg transition border border-gray-200"
+          className="macos-card macos-animate-md p-5 hover:shadow-lg transition border border-gray-200"
         >
           <div className="flex justify-between items-start mb-3">
             <h3 className="font-bold text-lg text-gray-800">{item.itemName}</h3>

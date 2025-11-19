@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Package, Clock, CheckCircle, XCircle, ChefHat, MessageSquare } from 'lucide-react';
+import { Package, Clock, CheckCircle, XCircle, UtensilsCrossed, MessageSquare } from 'lucide-react';
 
 /**
  * Order History component for user profile
@@ -19,7 +19,7 @@ const OrderHistory = ({ orders, loading }) => {
         return <XCircle className="w-5 h-5 text-red-600" />;
       case 'preparing':
       case 'ready':
-        return <ChefHat className="w-5 h-5 text-[#FF7A00]" />;
+        return <UtensilsCrossed className="w-5 h-5 text-[#FF7A00]" />;
       default:
         return <Clock className="w-5 h-5 text-[#2E3A47]" />;
     }

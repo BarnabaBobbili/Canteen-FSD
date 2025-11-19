@@ -30,7 +30,7 @@ const FeedbackDetailModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="macos-modal macos-animate max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
           <h2 className="text-xl font-bold">{t('feedback.feedbackDetails')}</h2>
           <button
@@ -142,7 +142,7 @@ const FeedbackDetailModal = ({
             <button
               onClick={onSubmit}
               disabled={submitting || !response.trim()}
-              className="mt-3 flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-3 flex items-center gap-2 px-6 py-2 macos-btn text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Send size={16} />
               {submitting ? t('feedback.submitting') : t('feedback.submitResponse')}

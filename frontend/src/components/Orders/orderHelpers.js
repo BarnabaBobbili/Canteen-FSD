@@ -142,3 +142,20 @@ export const getInitialFormState = () => ({
   status: 'pending',
   totalAmount: 0
 });
+
+/**
+ * Calculate discounted price based on discount type
+ * @param {number} price - Original price
+ * @param {Object} discount - Discount object {type, value}
+ * @returns {number} Final price after discount
+ */
+export const calculateDiscountedPrice = (price, discount) => {
+  if (!discount || discount.type === 'none' || !discount.value) return price;
+
+  if (discount.type === 'percentage') {
+    return price - (price * discount.value / 100);
+  } else if (discount.type === 'fixed') {
+    return Math.max(0, price - discount.value);
+  }
+  return price;
+};

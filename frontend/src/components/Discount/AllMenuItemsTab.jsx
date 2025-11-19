@@ -22,7 +22,7 @@ const AllMenuItemsTab = ({
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
-        <thead className="bg-gray-50 border-b border-gray-200">
+        <thead className="macos-table-header">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('menu.itemName')}</th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('menu.category')}</th>

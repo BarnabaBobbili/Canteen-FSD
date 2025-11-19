@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ShoppingCart, UtensilsCrossed, Package, TrendingUp,
-  Clock, Users, ChefHat, BarChart3, ArrowRight, CheckCircle
+  Clock, Users, UtensilsCrossed, BarChart3, ArrowRight, CheckCircle
 } from 'lucide-react';
 
 const HomePage = () => {
@@ -58,7 +58,7 @@ const HomePage = () => {
         <nav className="relative max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 flex justify-between items-center">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="bg-gradient-to-br from-sky-400 to-blue-500 p-1.5 sm:p-2 rounded-lg sm:rounded-xl">
-              <ChefHat className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+              <UtensilsCrossed className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
             <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 truncate">Smart Canteen</h1>
           </div>
@@ -172,7 +172,7 @@ const HomePage = () => {
                 <Users className="w-6 h-6 sm:w-8 sm:h-8 text-sky-500" />
               </div>
               <div className="hidden sm:block absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-white p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-xl animate-pulse">
-                <ChefHat className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
+                <UtensilsCrossed className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
               </div>
             </div>
           </div>
@@ -283,7 +283,7 @@ const HomePage = () => {
       <footer className="bg-gray-900 text-gray-400 py-8">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <ChefHat className="w-6 h-6 text-sky-500" />
+            <UtensilsCrossed className="w-6 h-6 text-sky-500" />
             <span className="text-white font-semibold">Smart Canteen Management</span>
           </div>
           <p className="text-sm">

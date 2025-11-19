@@ -32,7 +32,7 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="macos-card macos-animate overflow-hidden">
         <div className="text-center py-12">
           <p className="text-gray-500">{t('suppliers.loading')}</p>
         </div>
@@ -42,7 +42,7 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
 
   if (suppliers.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="macos-card macos-animate overflow-hidden">
         <div className="text-center py-12">
           <Truck className="mx-auto text-gray-400 mb-4" size={48} />
           <p className="text-gray-500">{t('suppliers.noSuppliers')}</p>
@@ -58,7 +58,7 @@ const SupplierTable = ({ suppliers, loading, onEdit, onDelete, onAddClick }) => 
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div className="macos-card macos-animate overflow-hidden">
       <table className="w-full">
         <thead className="bg-gray-50 border-b border-gray-200">
           <tr>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { ChefHat, LogOut, RefreshCw, Clock, Flame, CheckCircle2, ChevronDown } from 'lucide-react';
+import { UtensilsCrossed, LogOut, RefreshCw, Clock, Flame, CheckCircle2, ChevronDown } from 'lucide-react';
 import KitchenOrderCard from './KitchenOrderCard';
 import * as kitchenService from './kitchenService';
 
@@ -117,7 +117,7 @@ const KitchenDashboard = () => {
         <div className="px-4 sm:px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="bg-white/20 backdrop-blur-sm p-3 rounded-xl shadow-lg">
-              <ChefHat className="w-7 h-7" />
+              <UtensilsCrossed className="w-7 h-7" />
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Kitchen Display</h1>

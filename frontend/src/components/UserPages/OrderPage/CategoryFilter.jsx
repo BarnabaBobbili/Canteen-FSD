@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ChefHat, TrendingUp, Star, Clock, Heart } from 'lucide-react';
+import { Sparkles, UtensilsCrossed, TrendingUp, Star, Clock, Heart } from 'lucide-react';
 
 /**
  * Category filter component for menu items
@@ -10,7 +10,7 @@ import { Sparkles, ChefHat, TrendingUp, Star, Clock, Heart } from 'lucide-react'
 const CategoryFilter = ({ selectedCategory, onCategoryChange }) => {
   const categories = [
     { id: 'all', name: 'All Items', icon: Sparkles },
-    { id: 'breakfast', name: 'Breakfast', icon: ChefHat },
+    { id: 'breakfast', name: 'Breakfast', icon: UtensilsCrossed },
     { id: 'meals', name: 'Meals', icon: TrendingUp },
     { id: 'snacks', name: 'Snacks', icon: Star },
     { id: 'beverages', name: 'Beverages', icon: Clock },

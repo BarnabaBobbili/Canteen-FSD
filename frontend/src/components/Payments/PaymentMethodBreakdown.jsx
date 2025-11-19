@@ -13,7 +13,7 @@ const PaymentMethodBreakdown = ({ stats }) => {
   if (!stats?.byMethod || stats.byMethod.length === 0) return null;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+    <div className="macos-card macos-animate p-6 mb-6">
       <h2 className="text-lg font-bold mb-4">{t('payments.paymentMethodBreakdown')}</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {stats.byMethod.map((method, idx) => (

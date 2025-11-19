@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-import { LogIn, User, Lock, AlertCircle, Eye, EyeOff, ChefHat, ArrowLeft } from 'lucide-react';
+import { LogIn, User, Lock, AlertCircle, Eye, EyeOff, UtensilsCrossed, ArrowLeft } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { getDefaultRedirect } from '../../Shared/Auth/authHelpers';
 
@@ -85,10 +85,10 @@ const UserLogin = () => {
             <div className="bg-white border-3 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] p-8 transform rotate-1">
               <div className="flex items-center gap-3 mb-6">
                 <div className="bg-gray-900 border-3 border-gray-900 p-3 transform -rotate-3">
-                  <ChefHat className="w-10 h-10 text-white" />
+                  <UtensilsCrossed className="w-10 h-10 text-white" />
                 </div>
                 <div className="text-gray-900">
-                  <h1 className="text-3xl font-black">Canteen Delight</h1>
+                  <h1 className="text-3xl font-black">CanteenDelight</h1>
                   <p className="text-gray-600 font-medium">Order delicious food!</p>
                 </div>
               </div>
@@ -120,7 +120,7 @@ const UserLogin = () => {
         {/* Right Side - Login Form */}
         <div className="bg-white border-4 border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.4)] p-8 lg:p-12 transform rotate-1">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/demo')}
             className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-bold border-2 border-transparent hover:border-gray-900 p-2 transform hover:-rotate-3"
           >
             <ArrowLeft className="w-5 h-5" />

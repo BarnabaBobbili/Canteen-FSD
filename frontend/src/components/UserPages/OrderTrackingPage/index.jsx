@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { ArrowLeft, Package, ChefHat, CheckCircle, Clock, Store, Truck, XCircle } from 'lucide-react';
+import { ArrowLeft, Package, UtensilsCrossed, CheckCircle, Clock, Store, Truck, XCircle } from 'lucide-react';
 import API_BASE_URL from '../../../config/api';
 
 /**
@@ -100,7 +100,7 @@ const OrderTrackingPage = () => {
       id: 'preparing',
       label: 'Preparing',
       description: 'Your order is being prepared',
-      icon: ChefHat,
+      icon: UtensilsCrossed,
       color: 'text-[#FF7A00]',
       bgColor: 'bg-[#F9F9F9]',
     },
@@ -150,7 +150,7 @@ const OrderTrackingPage = () => {
           <h2 className="text-2xl font-black text-gray-900 mb-2">Order Not Found</h2>
           <p className="text-gray-600 font-medium mb-6">{error}</p>
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/demo')}
             className="px-6 py-3 bg-gray-900 text-white font-black border-4 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.4)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.6)] transition-all"
           >
             Go to Home

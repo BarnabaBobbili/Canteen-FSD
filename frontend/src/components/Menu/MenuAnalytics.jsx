@@ -56,7 +56,7 @@ const MenuAnalytics = ({ menuItems }) => {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-lg">
+        <div className="macos-card p-6 macos-animate-lg">
           <h3 className="text-lg font-bold mb-4">{t('menu.categoryDistribution')}</h3>
           {categoryData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
@@ -83,7 +83,7 @@ const MenuAnalytics = ({ menuItems }) => {
           )}
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-lg">
+        <div className="macos-card p-6 macos-animate-lg">
           <h3 className="text-lg font-bold mb-4">{t('menu.priceDistribution')}</h3>
           {priceData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>

@@ -25,7 +25,7 @@ const MenuFilterBar = ({
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="all">{t('menu.allCategories')}</option>
             <option value="snacks">{t('menu.snacks')}</option>
@@ -45,7 +45,7 @@ const MenuFilterBar = ({
           <select
             value={availabilityFilter}
             onChange={(e) => setAvailabilityFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="all">{t('menu.allItems')}</option>
             <option value="available">{t('menu.available')}</option>
@@ -62,7 +62,7 @@ const MenuFilterBar = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="name-asc">{t('menu.nameAscending')}</option>
             <option value="name-desc">{t('menu.nameDescending')}</option>
