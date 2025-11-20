@@ -67,7 +67,7 @@ testing/
 !README.md
 FRONTEND_SUMMARY.txt
 MD Documentation/
-Media/
+
 SVG/
 Landing Page pics/
 Menu Images/
@@ -191,5 +191,5 @@ dist
 .turbo
 
 API_KEY_CHECKLIST.txt
-
+MediaOld/
 Inventory Management Dashboard (Community).svg
