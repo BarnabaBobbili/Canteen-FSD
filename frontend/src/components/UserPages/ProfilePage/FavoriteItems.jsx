@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Plus, UtensilsCrossed } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import API_BASE_URL from '../../../config/api';
+import { getImageUrl } from '../../Menu/menuHelpers';
 
 /**
  * Favorite Items component for user profile
@@ -84,9 +85,9 @@ const FavoriteItems = ({ favoriteIds, onRemoveFavorite }) => {
         >
           {/* Item Image */}
           <div className="relative h-40 overflow-hidden">
-            {item.image ? (
+            {getImageUrl(item.image, API_BASE_URL) ? (
               <img
-                src={item.image}
+                src={getImageUrl(item.image, API_BASE_URL)}
                 alt={item.itemName}
                 className="w-full h-full object-cover"
                 onError={(e) => {
@@ -97,7 +98,7 @@ const FavoriteItems = ({ favoriteIds, onRemoveFavorite }) => {
             ) : null}
             <div
               className={`absolute inset-0 bg-gray-900 flex items-center justify-center ${
-                item.image ? 'hidden' : ''
+                getImageUrl(item.image, API_BASE_URL) ? 'hidden' : ''
               }`}
             >
               <UtensilsCrossed className="w-12 h-12 text-white opacity-50" />

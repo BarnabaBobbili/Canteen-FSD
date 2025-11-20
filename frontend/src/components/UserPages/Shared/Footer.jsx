@@ -67,8 +67,8 @@ const Footer = () => {
             <a href="/demo" style={linkStyle} onMouseEnter={(e) => e.target.style.color = theme === 'dark' ? '#e2e8f0' : '#1a202c'} onMouseLeave={(e) => e.target.style.color = theme === 'dark' ? '#a0aec0' : '#4a5568'}>
               Demo
             </a>
-            <a href="/signup" style={linkStyle} onMouseEnter={(e) => e.target.style.color = theme === 'dark' ? '#e2e8f0' : '#1a202c'} onMouseLeave={(e) => e.target.style.color = theme === 'dark' ? '#a0aec0' : '#4a5568'}>
-              Get Started
+            <a href="/docs/quick-start" style={linkStyle} onMouseEnter={(e) => e.target.style.color = theme === 'dark' ? '#e2e8f0' : '#1a202c'} onMouseLeave={(e) => e.target.style.color = theme === 'dark' ? '#a0aec0' : '#4a5568'}>
+              Quick Start Guide
             </a>
           </div>
 

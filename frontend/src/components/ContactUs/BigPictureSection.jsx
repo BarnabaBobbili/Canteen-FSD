@@ -14,7 +14,7 @@ const BigPictureSection = () => {
       description: (
         <span>Visualize sales, revenue, and order trends with interactive charts. Track daily performance at a glance.</span>
       ),
-      imageUrl: '/media/public-2112-415ac6f3e4ee51436936cb707962628b.png',
+      imageUrl: '/media/realtime-analytics.png',
       imageWidth: 684,
       imageHeight: 500
     },
@@ -28,7 +28,7 @@ const BigPictureSection = () => {
       description: (
         <span>Monitor all orders in real-time. See pending, preparing, ready, and completed orders with live updates.</span>
       ),
-      imageUrl: '/media/backup-1640-4f013f867d9e1988ae5253dbeef9fe82.png',
+      imageUrl: '/media/order-status-tracking.png',
       imageWidth: 684,
       imageHeight: 500
     },
@@ -42,7 +42,7 @@ const BigPictureSection = () => {
       description: (
         <span>Track payments by method (cash, card, UPI, online). View transaction history and revenue breakdowns.</span>
       ),
-      imageUrl: '/media/view-modes-1296-920d1ee40167a15276283d32c533afca.png',
+      imageUrl: '/media/payment-insights.png',
       imageWidth: 684,
       imageHeight: 500
     }

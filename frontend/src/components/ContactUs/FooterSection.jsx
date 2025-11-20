@@ -9,7 +9,7 @@ const FooterSection = () => {
           <li><a href="/docs/analytics">Features</a></li>
           <li><a href="/docs/pricing">Pricing</a></li>
           <li><a href="/docs/dashboard">Demo</a></li>
-          <li><a href="/signup">Get Started</a></li>
+          <li><a href="/docs/quick-start">Quick Start Guide</a></li>
         </menu>
         <menu>
           <li><a href="/docs/about">About Us</a></li>

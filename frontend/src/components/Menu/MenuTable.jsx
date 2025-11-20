@@ -3,7 +3,7 @@ import { Edit2, Trash2, AlertTriangle, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '../../context/SettingsContext';
 import API_BASE_URL from '../../config/api';
-import { calculateDiscountedPrice } from './menuHelpers';
+import { calculateDiscountedPrice, getImageUrl } from './menuHelpers';
 
 /**
  * MenuTable - Displays menu items in a table format
@@ -67,12 +67,9 @@ const MenuTable = ({
                 {/* Image Cell */}
                 <td className="px-6 py-4">
                   <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                    {item.image ? (
+                    {getImageUrl(item.image, API_BASE_URL) ? (
                       <img
-                        src={(() => {
-                          const isExternalUrl = item.image.startsWith('http://') || item.image.startsWith('https://');
-                          return isExternalUrl ? item.image : `${API_BASE_URL.replace('/api', '')}${item.image}`;
-                        })()}
+                        src={getImageUrl(item.image, API_BASE_URL)}
                         alt={item.itemName}
                         className="w-full h-full object-cover"
                         onError={(e) => {

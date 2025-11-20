@@ -17,12 +17,11 @@ const PlatformsSection = () => {
           </blockquote>
         </div>
         <img
-          src="/_next/static/images/devices-1077-e9a19500f234042e1e09a9fbc730ff3c.png"
-          srcSet="/_next/static/images/devices-1077-e9a19500f234042e1e09a9fbc730ff3c.png 1077w, /_next/static/images/devices-2154-e823c124b9b3c47a72530fe51f472ed4.png 2154w"
+          src="/media/canteen-devices.png"
           width="1077"
           height="456"
           className="devicesImage2WsX"
-          alt="CanteenDelight on multiple devices"
+          alt="CanteenDelight on multiple devices - Desktop, Tablet, and Mobile"
         />
       </div>
     </div>

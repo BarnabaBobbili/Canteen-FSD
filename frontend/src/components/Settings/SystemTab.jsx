@@ -73,32 +73,11 @@ const SystemTab = ({ settings, onChange, onSave, saving }) => {
           value={settings.language}
           onChange={(e) => onChange({ ...settings, language: e.target.value })}
         >
-          <option value="as">Assamese (অসমীয়া)</option>
-          <option value="bn">Bengali (বাংলা)</option>
-          <option value="zh">Chinese (中文)</option>
           <option value="en">English</option>
-          <option value="fr">French (Français)</option>
-          <option value="de">German (Deutsch)</option>
-          <option value="gu">Gujarati (ગુજરાતી)</option>
           <option value="hi">Hindi (हिन्दी)</option>
-          <option value="ja">Japanese (日本語)</option>
-          <option value="kn">Kannada (ಕನ್ನಡ)</option>
-          <option value="ko">Korean (한국어)</option>
           <option value="ml">Malayalam (മലയാളം)</option>
-          <option value="mr">Marathi (मराठी)</option>
-          <option value="ne">Nepali (नेपाली)</option>
-          <option value="or">Odia (ଓଡ଼ିଆ)</option>
-          <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
-          <option value="pt">Portuguese (Português)</option>
-          <option value="ru">Russian (Русский)</option>
-          <option value="es">Spanish (Español)</option>
           <option value="ta">Tamil (தமிழ்)</option>
           <option value="te">Telugu (తెలుగు)</option>
-          <option value="th">Thai (ไทย)</option>
-          <option value="tr">Turkish (Türkçe)</option>
-          <option value="uk">Ukrainian (Українська)</option>
-          <option value="ur">Urdu (اردو)</option>
-          <option value="vi">Vietnamese (Tiếng Việt)</option>
         </SelectInput>
 
         <SaveButton onClick={() => onSave('System')} saving={saving} />

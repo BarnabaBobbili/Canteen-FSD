@@ -14,7 +14,7 @@ const TeamSecuritySection = () => {
       description: (
         <span>Control access with Admin, Manager, Cashier, and Staff roles. Each role has specific permissions tailored to their responsibilities.</span>
       ),
-      imageUrl: '/media/collaborate-2112-01433564e17b41ff3deba7145258ebf9.png',
+      imageUrl: '/media/role-based-access.png',
       imageWidth: 750,
       imageHeight: 484
     },
@@ -28,7 +28,7 @@ const TeamSecuritySection = () => {
       description: (
         <span>Track all user actions, changes, and transactions. Complete audit trail with timestamps, user info, and action details.</span>
       ),
-      imageUrl: '/media/public-2112-415ac6f3e4ee51436936cb707962628b.png',
+      imageUrl: '/media/activity-logging.png',
       imageWidth: 750,
       imageHeight: 484
     }
