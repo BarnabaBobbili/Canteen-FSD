@@ -5,32 +5,32 @@ const BackupSection = () => {
 
   const tabs = [
     {
-      title: 'Data Backup & Security',
+      title: 'Data Security',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-          <path d="M13 5h-2V3H3v8h2v2H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v3zM8 7h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1zm1 2v8h8V9H9z"></path>
+          <path d="M10 2L3 6v4c0 5 2.5 8.5 7 10 4.5-1.5 7-5 7-10V6l-7-4zm5 8c0 3.5-1.5 6-5 7.5C6.5 16 5 13.5 5 10V7l5-3 5 3v3zm-3-2h-4v6h4v-6z" opacity=".9"></path>
         </svg>
       ),
       description: (
-        <span>Automatic daily backups of all transactions, orders, and inventory data. Your data is secure and recoverable.</span>
+        <span>JWT authentication, encrypted data transmission, and secure password hashing. Your canteen data is protected with industry-standard security.</span>
       ),
       hasPro: false,
-      imageUrl: '/media/copy-2112-f830465c5c3c1220e83cb240e8c96165.png',
+      imageUrl: '/media/data-security.png',
       imageWidth: 750,
       imageHeight: 484
     },
     {
-      title: 'Export & Reports',
+      title: 'Reports',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M12 2a8 8 0 1 1-6.105 13.17l1.468-1.363A6 6 0 1 0 6.083 9H9l-4 4-4-4h3.062A8.001 8.001 0 0 1 12 2zm0 4a1 1 0 0 1 1 1v2.785l1.662 1.193a.849.849 0 0 1 .106 1.29l-.107.107a1 1 0 0 1-1.29.105l-2.033-1.458a.849.849 0 0 1-.339-.852L11 7a1 1 0 0 1 1-1z" opacity=".9"></path>
+          <path fillRule="evenodd" d="M3 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3zm2 0h10v14H5V3zm2 2a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H7zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H7zm0 4a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2H7z" opacity=".9"></path>
         </svg>
       ),
       description: (
         <span>Generate detailed sales reports, inventory summaries, and financial statements. Export to PDF or Excel.</span>
       ),
       hasPro: false,
-      imageUrl: '/media/backup-1640-4f013f867d9e1988ae5253dbeef9fe82.png',
+      imageUrl: '/media/reports.png',
       imageWidth: 750,
       imageHeight: 484
     }

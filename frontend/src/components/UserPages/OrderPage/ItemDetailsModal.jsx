@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { X, Plus, Minus, UtensilsCrossed } from 'lucide-react';
+import { getImageUrl } from '../../Menu/menuHelpers';
+import API_BASE_URL from '../../../config/api';
 
 /**
  * Item details modal for quick view
@@ -46,9 +48,9 @@ const ItemDetailsModal = ({ item, isOpen, onClose, onAddToCart }) => {
 
           {/* Image */}
           <div className="relative h-64 sm:h-80 overflow-hidden border-b-4 border-gray-900">
-            {item.image ? (
+            {getImageUrl(item.image, API_BASE_URL) ? (
               <img
-                src={item.image}
+                src={getImageUrl(item.image, API_BASE_URL)}
                 alt={item.itemName}
                 className="w-full h-full object-cover"
                 onError={(e) => {
@@ -59,7 +61,7 @@ const ItemDetailsModal = ({ item, isOpen, onClose, onAddToCart }) => {
             ) : null}
             <div
               className={`absolute inset-0 bg-gray-200 flex items-center justify-center ${
-                item.image ? 'hidden' : ''
+                getImageUrl(item.image, API_BASE_URL) ? 'hidden' : ''
               }`}
             >
               <UtensilsCrossed className="w-24 h-24 text-gray-900 opacity-30" />

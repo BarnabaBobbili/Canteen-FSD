@@ -213,3 +213,21 @@ export const getAlertItems = (menuItems) => {
     expiredItems
   };
 };
+
+/**
+ * Get full image URL from path
+ * @param {string} imagePath - Image path or URL from database
+ * @param {string} apiBaseUrl - API base URL
+ * @returns {string|null} Full image URL or null
+ */
+export const getImageUrl = (imagePath, apiBaseUrl) => {
+  if (!imagePath) return null;
+
+  // If already a full URL, return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+
+  // Remove /api from base URL and append image path
+  return `${apiBaseUrl.replace('/api', '')}${imagePath}`;
+};

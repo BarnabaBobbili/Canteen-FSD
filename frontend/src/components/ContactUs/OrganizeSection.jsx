@@ -14,19 +14,19 @@ const OrganizeSection = () => {
       description: (
         <span>Organize menu items by categories (snacks, beverages, meals). Add, edit, and manage availability in real-time.</span>
       ),
-      imageUrl: '/media/public-2112-415ac6f3e4ee51436936cb707962628b.png'
+      imageUrl: '/media/menu-management-modal.png'
     },
     {
-      title: 'Order Tracking',
+      title: 'Analytics Dashboard',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M6.815 16.961a1 1 0 0 1-1.97-.347l.388-2.2H3a1 1 0 1 1 0-2h2.585l.706-4H3a1 1 0 1 1 0-2h3.643l.633-3.587a1 1 0 0 1 1.97.347l-.572 3.24h4.062l.45-2.546a1 1 0 0 1 1.969.348l-.389 2.198H17a1 1 0 0 1 0 2h-2.586l-.706 4H17a1 1 0 0 1 0 2h-3.644l-.632 3.589a1 1 0 0 1-1.97-.347l.571-3.242H7.263l-.448 2.547zm.801-4.547h4.062l.705-4H8.321l-.705 4z" opacity=".9"></path>
+          <path fillRule="evenodd" d="M3 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3zm2 0v14h10V3H5zm2 12a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1zm0-4a1 1 0 0 1 1-1h4a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1zm6-4a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2h-1zM7 7a1 1 0 0 1 1-1h2a1 1 0 0 1 0 2H8a1 1 0 0 1-1-1z" opacity=".9"></path>
         </svg>
       ),
       description: (
-        <span>Track orders from pending to completed. Filter by status, order type (online, counter, dine-in), and date range.</span>
+        <span>Visualize sales trends, revenue analytics, and popular items. Get insights with interactive charts and real-time metrics.</span>
       ),
-      imageUrl: '/media/backup-1640-4f013f867d9e1988ae5253dbeef9fe82.png'
+      imageUrl: '/media/analytics-dashboard.png'
     },
     {
       title: 'Inventory Control',
@@ -39,7 +39,7 @@ const OrganizeSection = () => {
         <span>Manage stock efficiently. Get low-stock alerts (below 20 units), track ingredient usage, and manage suppliers.</span>
       ),
       hasPro: false,
-      imageUrl: '/media/duplicates-2112-9e536142e72e5c4809864d0f7202d0ca.png'
+      imageUrl: '/media/inventory-control.png'
     }
   ];
 

@@ -1,5 +1,7 @@
 import React from 'react';
 import { Clock, Plus, UtensilsCrossed } from 'lucide-react';
+import { getImageUrl } from '../../Menu/menuHelpers';
+import API_BASE_URL from '../../../config/api';
 
 /**
  * Repeat orders component for logged-in users
@@ -28,9 +30,9 @@ const RepeatOrders = ({ repeatOrders, onAddToCart }) => {
             <div className="flex items-center gap-3 p-4">
               {/* Small Image */}
               <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden border-2 border-gray-900">
-                {item.image ? (
+                {getImageUrl(item.image, API_BASE_URL) ? (
                   <img
-                    src={item.image}
+                    src={getImageUrl(item.image, API_BASE_URL)}
                     alt={item.itemName}
                     className="w-full h-full object-cover"
                     onError={(e) => {
@@ -41,7 +43,7 @@ const RepeatOrders = ({ repeatOrders, onAddToCart }) => {
                 ) : null}
                 <div
                   className={`absolute inset-0 bg-gray-200 flex items-center justify-center ${
-                    item.image ? 'hidden' : ''
+                    getImageUrl(item.image, API_BASE_URL) ? 'hidden' : ''
                   }`}
                 >
                   <UtensilsCrossed className="w-8 h-8 text-gray-900 opacity-30" />

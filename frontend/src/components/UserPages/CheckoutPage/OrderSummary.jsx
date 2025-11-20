@@ -1,6 +1,8 @@
 import React from 'react';
 import { ShoppingBag, UtensilsCrossed } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
+import { getImageUrl } from '../../Menu/menuHelpers';
+import API_BASE_URL from '../../../config/api';
 
 /**
  * Order Summary component for checkout
@@ -27,9 +29,9 @@ const OrderSummary = ({ deliveryOption = 'dine-in' }) => {
           <div key={item._id} className="flex items-center gap-3 p-2 border-2 border-gray-900 bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]">
             {/* Image */}
             <div className="relative w-12 h-12 flex-shrink-0 border-2 border-gray-900 overflow-hidden">
-              {item.image ? (
+              {getImageUrl(item.image, API_BASE_URL) ? (
                 <img
-                  src={item.image}
+                  src={getImageUrl(item.image, API_BASE_URL)}
                   alt={item.itemName}
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -40,7 +42,7 @@ const OrderSummary = ({ deliveryOption = 'dine-in' }) => {
               ) : null}
               <div
                 className={`absolute inset-0 bg-gray-200 flex items-center justify-center ${
-                  item.image ? 'hidden' : ''
+                  getImageUrl(item.image, API_BASE_URL) ? 'hidden' : ''
                 }`}
               >
                 <UtensilsCrossed className="w-6 h-6 text-gray-900 opacity-30" />

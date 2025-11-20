@@ -12,6 +12,7 @@ import {
   ArrowLeft,
   ArrowRight
 } from 'lucide-react';
+import Mermaid from '../Mermaid';
 import './about.css';
 
 const About = () => {
@@ -29,7 +30,8 @@ const About = () => {
       'welcome', 'about', 'quick-start', 'account-setup',
       'dashboard', 'menu-management', 'order-processing', 'inventory',
       'analytics', 'staff', 'discounts', 'payments', 'security', 'api-docs', 'integrations', 'search-filters',
-      'pricing', 'subscription', 'faq', 'contact', 'terms', 'privacy', 'contribute'
+      'pricing', 'subscription', 'faq', 'contact', 'terms', 'privacy', 'contribute',
+      'whitepaper', 'system-architecture', 'database-schema', 'feature-modules', 'api-architecture', 'security-architecture', 'implementation', 'code-examples'
     ];
     if (!section) {
       navigate('/docs/welcome', { replace: true });
@@ -106,6 +108,20 @@ const About = () => {
       emoji: '🤝',
       items: [
         { id: 'contribute', label: 'Contributing Guide' },
+      ]
+    },
+    {
+      category: 'Technical Documentation',
+      emoji: '📖',
+      items: [
+        { id: 'whitepaper', label: 'White Paper Overview' },
+        { id: 'system-architecture', label: 'System Architecture' },
+        { id: 'database-schema', label: 'Database Schema' },
+        { id: 'feature-modules', label: 'Feature Modules' },
+        { id: 'api-architecture', label: 'API Architecture' },
+        { id: 'security-architecture', label: 'Security' },
+        { id: 'implementation', label: 'Implementation Guide' },
+        { id: 'code-examples', label: 'Code Examples' },
       ]
     },
   ];
@@ -3064,6 +3080,925 @@ Authorization: Bearer YOUR_TOKEN`}</code></pre>
             </ul>
 
             <p><strong>Thank you for contributing to CanteenDelight!</strong></p>
+          </>
+        );
+
+      case 'whitepaper':
+        return (
+          <>
+            <header>
+              <h1>White Paper: Technical Overview</h1>
+            </header>
+            <p>
+              The <strong>Smart Canteen Management System</strong> is a comprehensive full-stack web application designed to streamline canteen operations through digital transformation. Built with modern technologies including React, Node.js, Express, and MongoDB, the system provides end-to-end management of orders, inventory, staff, and analytics with role-based access control.
+            </p>
+
+            <h2>Key Highlights</h2>
+            <ul>
+              <li><strong>11+ Feature Modules:</strong> Comprehensive coverage of all canteen operations</li>
+              <li><strong>5 User Roles:</strong> Granular access control for security (Admin, Manager, Cashier, Staff, Customer)</li>
+              <li><strong>RESTful API:</strong> Scalable microservices architecture</li>
+              <li><strong>Real-time Analytics:</strong> Visual insights with Recharts integration</li>
+              <li><strong>Mobile-First Design:</strong> Responsive interface for all devices</li>
+            </ul>
+
+            <h2>Technology Stack</h2>
+            <h3>Frontend</h3>
+            <ul>
+              <li>React 18.x - Modern UI framework</li>
+              <li>Tailwind CSS 3.3.3 - Utility-first styling</li>
+              <li>React Router DOM 7.9.5 - Client-side routing</li>
+              <li>Recharts 2.15.4 - Data visualization</li>
+              <li>Google OAuth - Social authentication</li>
+            </ul>
+
+            <h3>Backend</h3>
+            <ul>
+              <li>Node.js & Express 4.18.2 - Server framework</li>
+              <li>MongoDB & Mongoose 7.6.3 - NoSQL database</li>
+              <li>JWT - Stateless authentication</li>
+              <li>bcryptjs - Password hashing</li>
+              <li>RESTful API - Resource-based architecture</li>
+            </ul>
+
+            <h2>Core Features</h2>
+            <ul>
+              <li><strong>Order Management:</strong> End-to-end order lifecycle from creation to fulfillment</li>
+              <li><strong>Inventory Control:</strong> Real-time stock tracking with expiry management</li>
+              <li><strong>Staff Management:</strong> Role-based access with department allocation</li>
+              <li><strong>Analytics Dashboard:</strong> Real-time insights with visual charts</li>
+              <li><strong>Payment Processing:</strong> Multiple payment methods with transaction tracking</li>
+              <li><strong>Discount System:</strong> Flexible discount codes with validation</li>
+              <li><strong>Feedback Management:</strong> Customer feedback collection and response</li>
+              <li><strong>Activity Logging:</strong> Comprehensive audit trail for compliance</li>
+            </ul>
+
+            <p>
+              Explore the detailed sections in this documentation to understand the architecture, database design, API structure, and implementation guidelines.
+            </p>
+          </>
+        );
+
+      case 'system-architecture':
+        return (
+          <>
+            <header>
+              <h1>System Architecture</h1>
+            </header>
+
+            <h2>High-Level Architecture</h2>
+            <p>The system follows a three-tier architecture with clear separation between presentation, business logic, and data layers.</p>
+
+            <Mermaid chart={`
+graph TB
+    subgraph "Client Layer"
+        A[React Frontend]
+        B[Mobile Browser]
+        C[Desktop Browser]
+    end
+
+    subgraph "API Layer"
+        D[Express.js REST API]
+        E[JWT Middleware]
+        F[Activity Logger]
+    end
+
+    subgraph "Business Logic"
+        G[User Management]
+        H[Order Processing]
+        I[Inventory Control]
+        J[Payment Processing]
+    end
+
+    subgraph "Data Layer"
+        K[(MongoDB Atlas)]
+        L[User Collection]
+        M[Order Collection]
+        N[Inventory Collection]
+    end
+
+    A --> D
+    B --> D
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    F --> H
+    F --> I
+    F --> J
+    G --> K
+    H --> K
+    I --> K
+    J --> K
+    K --> L
+    K --> M
+    K --> N
+            `} />
+
+            <h2>Component Architecture</h2>
+            <p>The frontend follows a modular component architecture with feature folders.</p>
+
+            <Mermaid chart={`
+graph LR
+    subgraph "Frontend Architecture"
+        A[App.js] --> B[AuthContext]
+        A --> C[Router]
+        C --> D[Public Routes]
+        C --> E[Protected Routes]
+        E --> F[Role-based Guards]
+        F --> G[Dashboard Layout]
+        G --> H[Feature Modules]
+    end
+            `} />
+
+            <h2>Data Flow</h2>
+            <p>Authentication and API request flow with middleware validation.</p>
+
+            <Mermaid chart={`
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant A as API
+    participant M as Middleware
+    participant D as Database
+
+    U->>F: Login Request
+    F->>A: POST /api/auth/login
+    A->>M: Validate Credentials
+    M->>D: Query User
+    D-->>M: User Data
+    M-->>A: Hash Compare
+    A-->>F: JWT Token
+    F->>F: Store in localStorage
+    F->>U: Redirect to Dashboard
+
+    Note over F,D: Authenticated Request Flow
+
+    U->>F: Create Order
+    F->>A: POST /api/orders (with JWT)
+    A->>M: Verify Token
+    M->>M: Check Role Permissions
+    M->>D: Save Order
+    D-->>M: Order Saved
+    M->>D: Log Activity
+    M-->>A: Success Response
+    A-->>F: Order Confirmation
+    F->>U: Show Success Message
+            `} />
+
+            <h2>Architectural Decisions</h2>
+
+            <h3>Modular Component Architecture</h3>
+            <p>
+              All feature modules follow a consistent pattern with main orchestrator components (&lt;250 lines),
+              subcomponents (&lt;150 lines), service layers for API calls, and helper functions for business logic.
+              This ensures maintainability and testability.
+            </p>
+
+            <h3>RESTful API Design</h3>
+            <p>
+              The backend follows REST principles with resource-based URLs, proper HTTP methods (GET, POST, PUT, DELETE),
+              and consistent JSON responses. All endpoints use JWT authentication except auth routes.
+            </p>
+
+            <h3>Role-Based Access Control (RBAC)</h3>
+            <p>
+              Five distinct roles (Admin, Manager, Cashier, Staff, Customer) with granular permissions enforced
+              both on frontend routes and backend API endpoints. Middleware validates roles before processing requests.
+            </p>
+          </>
+        );
+
+      case 'database-schema':
+        return (
+          <>
+            <header>
+              <h1>Database Schema</h1>
+            </header>
+
+            <h2>Entity Relationship Diagram</h2>
+            <p>The database consists of 9 main collections with relationships defined through MongoDB ObjectIds.</p>
+
+            <Mermaid chart={`
+erDiagram
+    USER ||--o{ ORDER : places
+    USER ||--o{ ACTIVITY_LOG : generates
+    USER ||--o{ FEEDBACK : submits
+    ORDER ||--|| PAYMENT : has
+    ORDER ||--o{ ORDER_ITEM : contains
+    MENU ||--o{ ORDER_ITEM : includes
+    MENU ||--o{ DISCOUNT : applies_to
+    INVENTORY ||--o{ SUPPLIER : supplied_by
+
+    USER {
+        ObjectId _id PK
+        string name
+        string email UK
+        string password
+        string phone
+        string googleId
+        enum role
+        enum status
+        string employeeId
+        enum department
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    ORDER {
+        ObjectId _id PK
+        string customerName
+        string customerEmail
+        string customerPhone
+        array items
+        enum orderType
+        enum status
+        number totalAmount
+        ObjectId userId FK
+        datetime createdAt
+    }
+
+    MENU {
+        ObjectId _id PK
+        string itemName
+        enum category
+        number price
+        string description
+        string allergens
+        boolean available
+        datetime createdAt
+    }
+
+    INVENTORY {
+        ObjectId _id PK
+        string itemName
+        number quantity
+        enum unit
+        string supplier
+        date expiryDate
+        string batchNumber
+        datetime createdAt
+    }
+
+    SUPPLIER {
+        ObjectId _id PK
+        string supplierName
+        string contactPerson
+        string email
+        string phone
+        string address
+        enum supplierType
+        enum status
+        string gstNumber
+        enum paymentTerms
+        number rating
+        datetime createdAt
+    }
+
+    PAYMENT {
+        ObjectId _id PK
+        ObjectId orderId FK
+        number amount
+        enum paymentMethod
+        enum status
+        string transactionId
+        datetime paymentDate
+    }
+
+    DISCOUNT {
+        ObjectId _id PK
+        string code
+        enum discountType
+        number discountValue
+        date startDate
+        date endDate
+        number minOrderAmount
+        number usageLimit
+        number usedCount
+        array applicableRoles
+        boolean isActive
+    }
+
+    FEEDBACK {
+        ObjectId _id PK
+        ObjectId userId FK
+        string category
+        number rating
+        string message
+        enum status
+        string adminResponse
+        datetime createdAt
+    }
+
+    ACTIVITY_LOG {
+        ObjectId _id PK
+        ObjectId userId FK
+        string userName
+        string action
+        string resource
+        object details
+        string ipAddress
+        datetime timestamp
+    }
+            `} />
+
+            <h2>Schema Details</h2>
+
+            <h3>User Schema</h3>
+            <p>Stores user information with role-based access control.</p>
+            <ul>
+              <li><strong>Roles:</strong> admin, manager, cashier, staff, customer</li>
+              <li><strong>Status:</strong> active, inactive</li>
+              <li><strong>Departments:</strong> kitchen, counter, management, inventory, none</li>
+              <li><strong>Authentication:</strong> Email/password or Google OAuth</li>
+            </ul>
+
+            <h3>Order Schema</h3>
+            <p>Manages customer orders with status tracking.</p>
+            <ul>
+              <li><strong>Order Types:</strong> online, counter, dine-in</li>
+              <li><strong>Status Flow:</strong> pending → preparing → ready → completed/cancelled</li>
+              <li><strong>Items:</strong> Array of menu items with quantity and price</li>
+            </ul>
+
+            <h3>Menu Schema</h3>
+            <p>Catalog of food items available for order.</p>
+            <ul>
+              <li><strong>Categories:</strong> snacks, beverages, meals, desserts, breakfast</li>
+              <li><strong>Availability:</strong> Boolean toggle for item availability</li>
+              <li><strong>Allergens:</strong> Text field for allergy information</li>
+            </ul>
+
+            <h3>Inventory Schema</h3>
+            <p>Tracks stock levels and expiry dates.</p>
+            <ul>
+              <li><strong>Units:</strong> kg, g, l, ml, pcs, packets, boxes</li>
+              <li><strong>Low Stock Alert:</strong> Threshold set at 20 units</li>
+              <li><strong>Batch Tracking:</strong> Unique batch numbers for traceability</li>
+            </ul>
+          </>
+        );
+
+      case 'feature-modules':
+        return (
+          <>
+            <header>
+              <h1>Feature Modules</h1>
+            </header>
+            <p>
+              The system comprises 11 comprehensive feature modules, each designed with modular architecture
+              following established patterns for maintainability and scalability.
+            </p>
+
+            <h2>1. Dashboard Module</h2>
+            <p>Role-specific dashboards with real-time analytics, statistics, and quick access modules.</p>
+
+            <Mermaid chart={`
+flowchart LR
+    A[User Login] --> B{Check Role}
+    B -->|Admin| C[Admin Dashboard]
+    B -->|Manager| D[Manager Dashboard]
+    B -->|Cashier| E[Cashier Dashboard]
+    B -->|Staff| F[Kitchen Dashboard]
+    B -->|Customer| G[Customer Dashboard]
+
+    C --> H[Full Access]
+    D --> I[Operational Access]
+    E --> J[POS Interface]
+    F --> K[Order Queue]
+    G --> L[Order History]
+            `} />
+
+            <h3>Key Features:</h3>
+            <ul>
+              <li>Welcome card with user information</li>
+              <li>Statistics cards (orders, revenue, inventory)</li>
+              <li>Visual charts (Recharts integration)</li>
+              <li>Recent activities feed</li>
+              <li>Quick access to modules</li>
+            </ul>
+
+            <h2>2. Order Management Module</h2>
+            <p>Complete order lifecycle management from creation to fulfillment with real-time status tracking.</p>
+
+            <Mermaid chart={`
+stateDiagram-v2
+    [*] --> Pending: Order Created
+    Pending --> Preparing: Staff Accepts
+    Preparing --> Ready: Preparation Complete
+    Ready --> Completed: Order Delivered
+    Pending --> Cancelled: User/Staff Cancels
+    Preparing --> Cancelled: Admin Cancels
+    Completed --> [*]
+    Cancelled --> [*]
+            `} />
+
+            <h3>Order Flow:</h3>
+            <ul>
+              <li>Create order with multiple items</li>
+              <li>Automatic total calculation</li>
+              <li>Status progression workflow</li>
+              <li>Search and filter capabilities</li>
+              <li>Real-time updates</li>
+            </ul>
+
+            <h2>3-11. Additional Modules</h2>
+            <ul>
+              <li><strong>Menu Management:</strong> Category organization, pricing, allergen tracking</li>
+              <li><strong>Inventory Management:</strong> Stock tracking, expiry management, low stock alerts</li>
+              <li><strong>Staff Management:</strong> Employee management with role assignment</li>
+              <li><strong>Payment Management:</strong> Multiple payment methods, transaction records</li>
+              <li><strong>Discount Management:</strong> Percentage and fixed discounts with validation</li>
+              <li><strong>Feedback Management:</strong> Customer feedback collection and admin response</li>
+              <li><strong>Activity Log:</strong> Comprehensive audit trail with automatic logging</li>
+              <li><strong>Supplier Management:</strong> Supplier contacts, ratings, payment terms</li>
+              <li><strong>Settings:</strong> Profile, notifications, security, system preferences</li>
+            </ul>
+          </>
+        );
+
+      case 'api-architecture':
+        return (
+          <>
+            <header>
+              <h1>API Architecture</h1>
+            </header>
+
+            <h2>RESTful API Endpoints</h2>
+
+            <h3>Authentication Endpoints</h3>
+            <ul>
+              <li><code>POST /api/auth/register</code> - Register new user</li>
+              <li><code>POST /api/auth/login</code> - Login with credentials</li>
+              <li><code>POST /api/auth/google</code> - Google OAuth login</li>
+              <li><code>GET /api/auth/verify</code> - Verify JWT token</li>
+            </ul>
+
+            <h3>Order Endpoints</h3>
+            <ul>
+              <li><code>GET /api/orders</code> - Fetch all orders</li>
+              <li><code>POST /api/orders</code> - Create new order</li>
+              <li><code>PUT /api/orders/:id</code> - Update order</li>
+              <li><code>DELETE /api/orders/:id</code> - Delete order</li>
+            </ul>
+
+            <h3>Additional Resource Endpoints</h3>
+            <ul>
+              <li><code>/api/menu</code> - Menu item management</li>
+              <li><code>/api/inventory</code> - Inventory operations</li>
+              <li><code>/api/users</code> - Staff management</li>
+              <li><code>/api/suppliers</code> - Supplier CRUD</li>
+              <li><code>/api/payments</code> - Payment processing</li>
+              <li><code>/api/discounts</code> - Discount management</li>
+              <li><code>/api/feedback</code> - Feedback system</li>
+              <li><code>/api/activities</code> - Activity logs</li>
+            </ul>
+
+            <h2>Request/Response Flow</h2>
+
+            <Mermaid chart={`
+sequenceDiagram
+    participant C as Client
+    participant A as API Gateway
+    participant AM as Auth Middleware
+    participant AL as Activity Logger
+    participant BL as Business Logic
+    participant DB as Database
+
+    C->>A: HTTP Request + JWT
+    A->>AM: Verify Token
+    AM->>AM: Decode JWT
+
+    alt Token Invalid
+        AM-->>C: 401 Unauthorized
+    else Token Valid
+        AM->>AM: Check Role Permissions
+
+        alt Insufficient Permissions
+            AM-->>C: 403 Forbidden
+        else Authorized
+            AM->>AL: Log Request
+            AL->>BL: Process Request
+            BL->>DB: Query/Update
+            DB-->>BL: Data
+            BL->>AL: Log Activity
+            AL->>DB: Save Log
+            BL-->>A: Response
+            A-->>C: JSON Response
+        end
+    end
+            `} />
+
+            <h2>Error Handling</h2>
+            <p>All API errors follow a consistent JSON format:</p>
+            <pre><code>{`{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable error message",
+    "details": {},
+    "timestamp": "2024-11-20T10:30:00Z"
+  }
+}`}</code></pre>
+
+            <h2>Authentication</h2>
+            <p>All protected endpoints require a JWT token in the Authorization header:</p>
+            <pre><code>Authorization: Bearer &lt;jwt_token&gt;</code></pre>
+          </>
+        );
+
+      case 'security-architecture':
+        return (
+          <>
+            <header>
+              <h1>Security Architecture</h1>
+            </header>
+
+            <h2>Authentication Flow</h2>
+
+            <Mermaid chart={`
+flowchart TD
+    A[User Login] --> B{Login Method}
+    B -->|Email/Password| C[Validate Credentials]
+    B -->|Google OAuth| D[Google Authentication]
+
+    C --> E{Valid?}
+    E -->|No| F[Return Error]
+    E -->|Yes| G[Generate JWT]
+
+    D --> H{OAuth Success?}
+    H -->|No| F
+    H -->|Yes| G
+
+    G --> I[Set Token Expiry: 7 days]
+    I --> J[Return Token to Client]
+    J --> K[Store in localStorage]
+    K --> L[Include in Request Headers]
+            `} />
+
+            <h2>Security Features</h2>
+
+            <h3>Password Security</h3>
+            <ul>
+              <li>bcryptjs hashing (10 rounds)</li>
+              <li>No plain-text storage</li>
+              <li>Salt generation per password</li>
+              <li>Secure comparison using constant-time algorithm</li>
+            </ul>
+
+            <h3>JWT Token Security</h3>
+            <ul>
+              <li>7-day expiration period</li>
+              <li>Strong secret key (environment variable)</li>
+              <li>Signature verification on every request</li>
+              <li>Payload includes user ID and role</li>
+            </ul>
+
+            <h3>CORS Protection</h3>
+            <ul>
+              <li>Whitelisted origins only</li>
+              <li>Credential support enabled</li>
+              <li>Method restrictions (GET, POST, PUT, DELETE)</li>
+              <li>Header validation</li>
+            </ul>
+
+            <h3>Role-Based Access Control</h3>
+            <ul>
+              <li>Granular permissions per role</li>
+              <li>Frontend route protection</li>
+              <li>Backend API authorization middleware</li>
+              <li>Automatic permission validation</li>
+            </ul>
+
+            <h2>Activity Logging</h2>
+            <p>
+              All authenticated requests are automatically logged via middleware for audit trails and security monitoring.
+            </p>
+
+            <h3>Logged Information:</h3>
+            <ul>
+              <li>User identification (ID, name, email)</li>
+              <li>Action performed (create, read, update, delete)</li>
+              <li>Resource accessed (orders, menu, inventory, etc.)</li>
+              <li>Timestamp (ISO 8601 format)</li>
+              <li>IP address</li>
+              <li>Request metadata</li>
+            </ul>
+
+            <h2>Best Practices</h2>
+            <ul>
+              <li>Never store sensitive data in localStorage except JWT tokens</li>
+              <li>Always validate user input on both client and server</li>
+              <li>Use HTTPS in production environments</li>
+              <li>Regularly rotate JWT secret keys</li>
+              <li>Implement rate limiting on auth endpoints</li>
+              <li>Monitor activity logs for suspicious behavior</li>
+            </ul>
+          </>
+        );
+
+      case 'implementation':
+        return (
+          <>
+            <header>
+              <h1>Implementation Guide</h1>
+            </header>
+
+            <h2>Prerequisites</h2>
+            <ul>
+              <li>Node.js v14 or higher</li>
+              <li>npm or yarn package manager</li>
+              <li>MongoDB Atlas account (free tier available)</li>
+              <li>Git for version control</li>
+              <li>Code editor (VS Code recommended)</li>
+            </ul>
+
+            <h2>Backend Setup</h2>
+            <pre><code>{`# Navigate to backend directory
+cd backend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cat > .env << EOL
+MONGODB_URI=your_mongodb_connection_string
+PORT=5001
+JWT_SECRET=your_jwt_secret_key
+GOOGLE_CLIENT_ID=your_google_client_id
+EOL
+
+# Seed sample data
+npm run seed
+
+# Start development server
+npm run dev`}</code></pre>
+
+            <h2>Frontend Setup</h2>
+            <pre><code>{`# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cat > .env << EOL
+REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
+REACT_APP_API_URL=http://localhost:5001/api
+EOL
+
+# Start development server
+npm start`}</code></pre>
+
+            <h2>Best Practices</h2>
+
+            <h3>Component Development</h3>
+            <ul>
+              <li>Keep main components under 250 lines</li>
+              <li>Keep subcomponents under 150 lines</li>
+              <li>Extract API calls to service files</li>
+              <li>Use helper functions for business logic</li>
+              <li>Follow established folder patterns</li>
+            </ul>
+
+            <h3>API Development</h3>
+            <ul>
+              <li>Use authenticateToken middleware for protected routes</li>
+              <li>Implement role-based authorization</li>
+              <li>Return consistent JSON responses</li>
+              <li>Handle errors gracefully</li>
+              <li>Activity logging is automatic via middleware</li>
+            </ul>
+
+            <h3>Database Operations</h3>
+            <ul>
+              <li>Use Mongoose models for type safety</li>
+              <li>Implement validation in schemas</li>
+              <li>Use indexes for frequently queried fields</li>
+              <li>Handle connection errors properly</li>
+              <li>Use transactions for critical operations</li>
+            </ul>
+
+            <h2>Deployment Checklist</h2>
+            <ul>
+              <li>Change default passwords and credentials</li>
+              <li>Update JWT_SECRET to a strong random string</li>
+              <li>Enable HTTPS for all connections</li>
+              <li>Set up proper CORS origins for production</li>
+              <li>Configure Google OAuth authorized domains</li>
+              <li>Set up database backups</li>
+              <li>Monitor error logs</li>
+              <li>Implement rate limiting</li>
+              <li>Add security headers</li>
+            </ul>
+          </>
+        );
+
+      case 'code-examples':
+        return (
+          <>
+            <header>
+              <h1>Code Examples</h1>
+            </header>
+
+            <h2>Creating a Protected API Endpoint</h2>
+            <pre><code>{`// backend/routes/orders.js
+const express = require('express');
+const router = express.Router();
+const Order = require('../models/Order');
+const { authenticateToken, authorizeRoles } = require('../middleware/auth');
+
+// Get all orders (Admin, Manager, Cashier, Staff only)
+router.get('/',
+  authenticateToken,
+  authorizeRoles('admin', 'manager', 'cashier', 'staff'),
+  async (req, res) => {
+    try {
+      const orders = await Order.find().sort({ createdAt: -1 });
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch orders' });
+    }
+  }
+);
+
+// Create new order (All authenticated users)
+router.post('/', authenticateToken, async (req, res) => {
+  try {
+    const order = new Order(req.body);
+    await order.save();
+    res.status(201).json(order);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+module.exports = router;`}</code></pre>
+
+            <h2>Creating a Service Layer</h2>
+            <pre><code>{`// frontend/src/components/Orders/orderService.js
+import API_BASE_URL from '../../config/api';
+
+/**
+ * Fetch all orders
+ * @param {string} token - Authentication token
+ * @returns {Promise<Array>} Array of orders
+ */
+export const fetchOrders = async (token) => {
+  const response = await fetch(\`\${API_BASE_URL}/orders\`, {
+    headers: { 'Authorization': \`Bearer \${token}\` }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch orders');
+  }
+
+  return response.json();
+};
+
+/**
+ * Create new order
+ * @param {Object} orderData - Order details
+ * @param {string} token - Authentication token
+ * @returns {Promise<Object>} Created order
+ */
+export const createOrder = async (orderData, token) => {
+  const response = await fetch(\`\${API_BASE_URL}/orders\`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': \`Bearer \${token}\`
+    },
+    body: JSON.stringify(orderData)
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to create order');
+  }
+
+  return response.json();
+};`}</code></pre>
+
+            <h2>Using the Service in a Component</h2>
+            <pre><code>{`// frontend/src/components/Orders/OrderManagement.jsx
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { fetchOrders, createOrder } from './orderService';
+
+const OrderManagement = () => {
+  const { token } = useAuth();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadOrders();
+  }, []);
+
+  const loadOrders = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchOrders(token);
+      setOrders(data);
+    } catch (error) {
+      console.error('Failed to load orders:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateOrder = async (orderData) => {
+    try {
+      const newOrder = await createOrder(orderData, token);
+      setOrders([newOrder, ...orders]);
+    } catch (error) {
+      console.error('Failed to create order:', error);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div>
+      {/* Component JSX */}
+    </div>
+  );
+};
+
+export default OrderManagement;`}</code></pre>
+
+            <h2>Protected Route Example</h2>
+            <pre><code>{`// frontend/src/App.js
+import ProtectedRoute from './components/ProtectedRoute';
+import OrderManagement from './components/Orders/OrderManagement';
+
+<Route
+  path="/orders"
+  element={
+    <ProtectedRoute roles={['admin', 'manager', 'cashier', 'staff']}>
+      <OrderManagement />
+    </ProtectedRoute>
+  }
+/>`}</code></pre>
+
+            <h2>Mongoose Schema Example</h2>
+            <pre><code>{`// backend/models/Order.js
+const mongoose = require('mongoose');
+
+const orderSchema = new mongoose.Schema({
+  customerName: {
+    type: String,
+    required: [true, 'Customer name is required'],
+    trim: true
+  },
+  customerEmail: {
+    type: String,
+    trim: true,
+    lowercase: true
+  },
+  customerPhone: {
+    type: String,
+    trim: true
+  },
+  items: [{
+    itemName: {
+      type: String,
+      required: true
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: [1, 'Quantity must be at least 1']
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: [0, 'Price cannot be negative']
+    }
+  }],
+  orderType: {
+    type: String,
+    enum: ['online', 'counter', 'dine-in'],
+    default: 'counter'
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'preparing', 'ready', 'completed', 'cancelled'],
+    default: 'pending'
+  },
+  totalAmount: {
+    type: Number,
+    required: true,
+    min: [0, 'Total amount cannot be negative']
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('Order', orderSchema);`}</code></pre>
           </>
         );
 
