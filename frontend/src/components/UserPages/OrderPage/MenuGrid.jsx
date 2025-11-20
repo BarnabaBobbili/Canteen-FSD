@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Minus, Heart, ChefHat, Search, Eye } from 'lucide-react';
+import { Plus, Minus, Heart, UtensilsCrossed, Search, Eye } from 'lucide-react';
 import { findCartItem } from './cartHelpers';
 
 /**
@@ -71,7 +71,7 @@ const MenuGrid = ({
                   item.image ? 'hidden' : ''
                 }`}
               >
-                <ChefHat className="w-16 h-16 text-gray-900 opacity-30" />
+                <UtensilsCrossed className="w-16 h-16 text-gray-900 opacity-30" />
               </div>
 
               {/* Veg/Non-Veg Indicator */}

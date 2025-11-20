@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
-import API_BASE_URL from '../config/api';
 import ConfirmationModal from './Shared/ConfirmationModal';
 import { AlertCircle } from 'lucide-react';
 
@@ -21,6 +20,15 @@ import {
   filterStaff,
   validateStaffForm
 } from './Staff/staffHelpers';
+
+// Import service functions
+import {
+  fetchStaff as fetchStaffAPI,
+  createStaff,
+  updateStaff,
+  deleteStaff as deleteStaffAPI,
+  toggleStaffStatus as toggleStaffStatusAPI
+} from './Staff/staffService';
 
 const StaffManagement = () => {
   const { t } = useTranslation();
@@ -47,18 +55,8 @@ const StaffManagement = () => {
   const fetchStaff = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/users`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setStaff(data);
-      } else {
-        setApiError(t('staff.fetchError'));
-      }
+      const data = await fetchStaffAPI(token);
+      setStaff(data);
     } catch (error) {
       setApiError(`${t('staff.fetchError')}: ${error.message}`);
     } finally {
@@ -79,32 +77,18 @@ const StaffManagement = () => {
     }
 
     try {
-      const url = modalMode === 'add'
-        ? `${API_BASE_URL}/auth/register`
-        : `${API_BASE_URL}/users/${currentForm._id || currentForm.id}`;
-
-      const method = modalMode === 'add' ? 'POST' : 'PUT';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(currentForm)
-      });
-
-      if (response.ok) {
-        setSuccessMessage(t(modalMode === 'add' ? 'staff.staffCreated' : 'staff.staffUpdated'));
-        setTimeout(() => setSuccessMessage(''), 3000);
-        fetchStaff();
-        closeModal();
+      if (modalMode === 'add') {
+        await createStaff(currentForm, token);
       } else {
-        const error = await response.json();
-        setApiError(error.message || t('common.operationFailed'));
+        await updateStaff(currentForm._id || currentForm.id, currentForm, token);
       }
+
+      setSuccessMessage(t(modalMode === 'add' ? 'staff.staffCreated' : 'staff.staffUpdated'));
+      setTimeout(() => setSuccessMessage(''), 3000);
+      fetchStaff();
+      closeModal();
     } catch (error) {
-      setApiError(`${t('common.error')}: ${error.message}`);
+      setApiError(error.message || t('common.operationFailed'));
     }
   };
 
@@ -117,20 +101,10 @@ const StaffManagement = () => {
     if (!staffToDelete) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/users/${staffToDelete}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        setSuccessMessage(t('staff.staffDeleted'));
-        setTimeout(() => setSuccessMessage(''), 3000);
-        fetchStaff();
-      } else {
-        setApiError(t('staff.deleteError'));
-      }
+      await deleteStaffAPI(staffToDelete, token);
+      setSuccessMessage(t('staff.staffDeleted'));
+      setTimeout(() => setSuccessMessage(''), 3000);
+      fetchStaff();
     } catch (error) {
       setApiError(`${t('staff.deleteError')}: ${error.message}`);
     } finally {
@@ -140,20 +114,10 @@ const StaffManagement = () => {
 
   const toggleStatus = async (id, currentStatus) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/users/${id}/toggle-status`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        setSuccessMessage(t('staff.statusUpdateSuccess'));
-        setTimeout(() => setSuccessMessage(''), 3000);
-        fetchStaff();
-      } else {
-        setApiError(t('staff.statusUpdateError'));
-      }
+      await toggleStaffStatusAPI(id, token);
+      setSuccessMessage(t('staff.statusUpdateSuccess'));
+      setTimeout(() => setSuccessMessage(''), 3000);
+      fetchStaff();
     } catch (error) {
       setApiError(`${t('staff.statusUpdateError')}: ${error.message}`);
     }

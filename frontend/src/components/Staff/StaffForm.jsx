@@ -18,7 +18,7 @@ const StaffForm = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="macos-modal macos-animate max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
           <h2 className="text-xl font-bold text-gray-800">
             {mode === 'add' ? t('staff.addStaff') : t('staff.editStaff')}
@@ -44,7 +44,7 @@ const StaffForm = ({
                 type="text"
                 value={formData.name || ''}
                 onChange={(e) => onChange({ ...formData, name: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                className={`macos-input w-full focus:outline-none focus:ring-2 ${
                   errors.name ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
                 }`}
                 required
@@ -63,7 +63,7 @@ const StaffForm = ({
                 type="email"
                 value={formData.email || ''}
                 onChange={(e) => onChange({ ...formData, email: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                className={`macos-input w-full focus:outline-none focus:ring-2 ${
                   errors.email ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
                 }`}
                 required
@@ -83,7 +83,7 @@ const StaffForm = ({
                   type="password"
                   value={formData.password || ''}
                   onChange={(e) => onChange({ ...formData, password: e.target.value })}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                  className={`macos-input w-full focus:outline-none focus:ring-2 ${
                     errors.password ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
                   }`}
                   required={mode === 'add'}
@@ -103,7 +103,7 @@ const StaffForm = ({
                 type="tel"
                 value={formData.phone || ''}
                 onChange={(e) => onChange({ ...formData, phone: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                className={`macos-input w-full focus:outline-none focus:ring-2 ${
                   errors.phone ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
                 }`}
                 required
@@ -121,7 +121,7 @@ const StaffForm = ({
               <select
                 value={formData.role || 'staff'}
                 onChange={(e) => onChange({ ...formData, role: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full macos-input"
               >
                 <option value="admin">{t('staff.admin')}</option>
                 <option value="manager">{t('staff.manager')}</option>
@@ -137,7 +137,7 @@ const StaffForm = ({
               <select
                 value={formData.department || 'none'}
                 onChange={(e) => onChange({ ...formData, department: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full macos-input"
               >
                 <option value="none">{t('common.none')}</option>
                 <option value="kitchen">{t('staff.kitchen')}</option>
@@ -154,7 +154,7 @@ const StaffForm = ({
                 type="text"
                 value={formData.employeeId || ''}
                 onChange={(e) => onChange({ ...formData, employeeId: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full macos-input"
                 placeholder={t('staff.employeeIdPlaceholder')}
               />
             </div>
@@ -165,7 +165,7 @@ const StaffForm = ({
               <select
                 value={formData.status || 'active'}
                 onChange={(e) => onChange({ ...formData, status: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="w-full macos-input"
               >
                 <option value="active">{t('common.active')}</option>
                 <option value="inactive">{t('common.inactive')}</option>
@@ -177,7 +177,7 @@ const StaffForm = ({
           <div className="flex gap-3 mt-6">
             <button
               type="submit"
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 macos-btn text-white transition-colors"
             >
               <Save size={18} />
               {mode === 'add' ? t('staff.addStaff') : t('staff.updateStaff')}
@@ -185,7 +185,7 @@ const StaffForm = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg macos-table-row-colors"
             >
               {t('common.cancel')}
             </button>

@@ -35,7 +35,7 @@ const StaffAnalytics = ({
           <p className="text-sm mt-2 opacity-90">{t('staff.allEmployees')}</p>
         </div>
 
-        <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-xl shadow-lg text-white">
+        <div className="macos-stat-card macos-gradient-green text-white">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-semibold">{t('common.active')}</h3>
             <UserCheck size={24} />
@@ -44,7 +44,7 @@ const StaffAnalytics = ({
           <p className="text-sm mt-2 opacity-90">{t('staff.currentlyWorking')}</p>
         </div>
 
-        <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 rounded-xl shadow-lg text-white">
+        <div className="macos-stat-card macos-gradient-red text-white">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-semibold">{t('common.inactive')}</h3>
             <UserX size={24} />
@@ -53,7 +53,7 @@ const StaffAnalytics = ({
           <p className="text-sm mt-2 opacity-90">{t('staff.notWorking')}</p>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-xl shadow-lg text-white">
+        <div className="macos-stat-card macos-gradient-blue text-white">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-semibold">{t('staff.departments')}</h3>
             <Briefcase size={24} />
@@ -66,7 +66,7 @@ const StaffAnalytics = ({
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Role Distribution */}
-        <div className="bg-white p-6 rounded-xl shadow-lg">
+        <div className="macos-card p-6 macos-animate-lg">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <Shield size={20} className="text-sky-500" />
             {t('staff.roleDistribution')}
@@ -98,7 +98,7 @@ const StaffAnalytics = ({
         </div>
 
         {/* Department Distribution */}
-        <div className="bg-white p-6 rounded-xl shadow-lg">
+        <div className="macos-card p-6 macos-animate-lg">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             <Briefcase size={20} className="text-blue-500" />
             {t('staff.departmentDistribution')}

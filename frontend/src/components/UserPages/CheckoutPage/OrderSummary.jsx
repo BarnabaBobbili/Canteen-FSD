@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, ChefHat } from 'lucide-react';
+import { ShoppingBag, UtensilsCrossed } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 
 /**
@@ -43,7 +43,7 @@ const OrderSummary = ({ deliveryOption = 'dine-in' }) => {
                   item.image ? 'hidden' : ''
                 }`}
               >
-                <ChefHat className="w-6 h-6 text-gray-900 opacity-30" />
+                <UtensilsCrossed className="w-6 h-6 text-gray-900 opacity-30" />
               </div>
             </div>
 

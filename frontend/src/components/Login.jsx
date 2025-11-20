@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, User, Lock, AlertCircle, Eye, EyeOff, ChefHat } from 'lucide-react';
+import { LogIn, User, Lock, AlertCircle, Eye, EyeOff, UtensilsCrossed } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
@@ -109,10 +109,10 @@ const Login = () => {
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
               <div className="flex items-center gap-3 mb-6">
                 <div className="bg-white p-3 rounded-xl">
-                  <ChefHat className="w-10 h-10 text-sky-500" />
+                  <UtensilsCrossed className="w-10 h-10 text-sky-500" />
                 </div>
                 <div className="text-white">
-                  <h1 className="text-3xl font-bold">Smart Canteen</h1>
+                  <h1 className="text-3xl font-bold">CanteenDelight</h1>
                   <p className="text-sky-100">Management System</p>
                 </div>
               </div>

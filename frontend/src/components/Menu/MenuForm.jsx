@@ -80,7 +80,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
             type="text"
             value={currentForm.image || ''}
             onChange={(e) => handleUrlChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input"
             placeholder="https://example.com/image.jpg"
           />
         )}
@@ -91,7 +91,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input"
           />
         )}
 
@@ -131,7 +131,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
           type="text"
           value={currentForm.itemName || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, itemName: e.target.value })}
-          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+          className={`macos-input w-full focus:outline-none focus:ring-2 ${
             errors.itemName ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
           }`}
           placeholder={t('menu.enterItemName')}
@@ -152,7 +152,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
           <select
             value={currentForm.category || 'snacks'}
             onChange={(e) => setCurrentForm({ ...currentForm, category: e.target.value })}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+            className={`macos-input w-full focus:outline-none focus:ring-2 ${
               errors.category ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
             }`}
             required
@@ -177,7 +177,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
           <select
             value={currentForm.itemType || 'homemade'}
             onChange={(e) => setCurrentForm({ ...currentForm, itemType: e.target.value })}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+            className={`macos-input w-full focus:outline-none focus:ring-2 ${
               errors.itemType ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
             }`}
             required
@@ -201,7 +201,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
           type="number"
           value={currentForm.price || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, price: parseFloat(e.target.value) })}
-          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+          className={`macos-input w-full focus:outline-none focus:ring-2 ${
             errors.price ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
           }`}
           placeholder="0.00"
@@ -223,7 +223,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
         <textarea
           value={currentForm.description || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, description: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="w-full macos-input"
           rows="3"
           placeholder={t('menu.enterDescription')}
         />
@@ -237,7 +237,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
           type="text"
           value={currentForm.allergens || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, allergens: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="w-full macos-input"
           placeholder={t('menu.allergenExample')}
         />
       </div>
@@ -259,7 +259,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
               type="number"
               value={currentForm.stockQuantity || ''}
               onChange={(e) => setCurrentForm({ ...currentForm, stockQuantity: parseInt(e.target.value) || 0 })}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              className={`macos-input w-full focus:outline-none focus:ring-2 ${
                 errors.stockQuantity ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
               }`}
               placeholder={currentForm.itemType === 'homemade' ? t('common.optional') : t('validation.required')}
@@ -280,7 +280,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
               type="number"
               value={currentForm.lowStockThreshold || 10}
               onChange={(e) => setCurrentForm({ ...currentForm, lowStockThreshold: parseInt(e.target.value) || 10 })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="w-full macos-input"
               placeholder="10"
               min="0"
             />
@@ -295,7 +295,7 @@ const MenuForm = ({ currentForm, setCurrentForm, errors, onImageUpload }) => {
             type="date"
             value={currentForm.expiryDate ? new Date(currentForm.expiryDate).toISOString().split('T')[0] : ''}
             onChange={(e) => setCurrentForm({ ...currentForm, expiryDate: e.target.value ? new Date(e.target.value) : null })}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+            className={`macos-input w-full focus:outline-none focus:ring-2 ${
               errors.expiryDate ? 'border-red-500 focus:ring-red-500 bg-red-50' : 'border-gray-300 focus:ring-sky-500'
             }`}
           />

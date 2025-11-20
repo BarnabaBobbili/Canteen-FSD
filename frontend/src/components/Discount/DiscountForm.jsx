@@ -53,7 +53,7 @@ const DiscountForm = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+      <div className="macos-card macos-animate-xl max-w-md w-full mx-4">
         <div className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">{t('discounts.applyDiscount')}</h2>
@@ -80,7 +80,7 @@ const DiscountForm = ({
                 <select
                   value={manualDiscount.discountType}
                   onChange={(e) => setManualDiscount({ ...manualDiscount, discountType: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  className="w-full macos-input focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="percentage">{t('discounts.percentage')}</option>
                   <option value="fixed">{t('discounts.fixedAmount')}</option>
@@ -111,7 +111,7 @@ const DiscountForm = ({
                     min="0"
                     max={manualDiscount.discountType === 'percentage' ? 100 : selectedItem.price}
                     step="1"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-center text-lg font-semibold"
+                    className="flex-1 macos-input focus:ring-2 focus:ring-indigo-500 text-center text-lg font-semibold"
                     required
                   />
                   <button
@@ -136,7 +136,7 @@ const DiscountForm = ({
                 <select
                   value={manualDiscount.reason}
                   onChange={(e) => setManualDiscount({ ...manualDiscount, reason: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  className="w-full macos-input focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="manual">{t('discounts.reasons.manual')}</option>
                   <option value="clearance">{t('discounts.reasons.clearance')}</option>
@@ -178,7 +178,7 @@ const DiscountForm = ({
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+                className="flex-1 px-4 py-2 macos-btn text-white disabled:opacity-50"
               >
                 {loading ? t('discounts.applying') : t('discounts.applyDiscount')}
               </button>

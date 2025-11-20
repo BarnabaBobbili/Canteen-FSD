@@ -32,11 +32,10 @@ const RecentActivities = ({ recentActivity, loading }) => {
 
   return (
     <div
-      className="bg-white rounded-xl p-5 sm:p-6 border border-gray-100"
-      style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)' }}
+      className="macos-card p-5 sm:p-6 macos-animate"
     >
       <div className="flex items-center justify-between mb-4 sm:mb-5">
-        <h3 className="text-base sm:text-lg font-bold flex items-center gap-2" style={{ color: '#111827' }}>
+        <h3 className="macos-subheading text-base sm:text-lg flex items-center gap-2">
           <Activity className="w-5 h-5" style={{ color: '#1570EF' }} />
           <span className="truncate">{t('dashboard.recentActivity')}</span>
         </h3>

@@ -23,7 +23,7 @@ const DiscountFilters = ({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+    <div className="macos-card macos-animate-md p-4 mb-6">
       <div className="flex gap-4 mb-4">
         {activeTab === 'discounted' && (
           <div className="flex-1 relative">
@@ -96,7 +96,7 @@ const DiscountFilters = ({
 
         <button
           onClick={onToggleFilters}
-          className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition flex items-center gap-2"
+          className="px-6 py-2 border border-gray-300 rounded-lg macos-table-row flex items-center gap-2"
         >
           <Filter size={16} />
           {t('common.filters')}
@@ -116,7 +116,7 @@ const DiscountFilters = ({
               <select
                 value={categoryFilter}
                 onChange={(e) => onCategoryChange(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full macos-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="all">{t('discounts.allCategories')}</option>
                 <option value="snacks">{t('menu.categories.snacks')}</option>
@@ -136,7 +136,7 @@ const DiscountFilters = ({
               <select
                 value={expiryFilter}
                 onChange={(e) => onExpiryChange(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full macos-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="all">{t('discounts.allItems')}</option>
                 <option value="expiring-soon">{t('discounts.expiringSoon')}</option>
@@ -155,7 +155,7 @@ const DiscountFilters = ({
               <select
                 value={sortBy}
                 onChange={(e) => onSortChange(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full macos-input focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="discount-desc">{t('discounts.sort.discountDesc')}</option>
                 <option value="discount-asc">{t('discounts.sort.discountAsc')}</option>

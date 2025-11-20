@@ -121,12 +121,11 @@ const HeroSection = () => {
 
               <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white mb-6 sm:mb-8 leading-tight transform -rotate-1 relative" style={{
                 textShadow: `
-                  6px 6px 0px rgba(0,0,0,1),
-                  8px 8px 0px rgba(0,0,0,0.5),
-                  -2px -2px 0px rgba(255,215,0,0.8)
+                  4px 4px 0px rgba(0,0,0,1),
+                  6px 6px 0px rgba(0,0,0,0.3)
                 `,
                 letterSpacing: '-0.03em',
-                WebkitTextStroke: '3px black',
+                WebkitTextStroke: '2px black',
                 paintOrder: 'stroke fill'
               }}>
                 Order Now,
@@ -173,7 +172,7 @@ const HeroSection = () => {
 
             {/* Comic-style speech bubble for description - SKETCHY */}
             <div className="relative inline-block mb-8 sm:mb-10 p-4 sm:p-6 bg-white border-3 sm:border-4 border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transform rotate-1 max-w-2xl mx-4" style={{ filter: 'url(#roughEdges)' }}>
-              <p className="text-base sm:text-lg md:text-xl text-gray-900 font-bold leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl font-bold leading-relaxed" style={{ color: '#1a202c' }}>
                 Skip the line! Order ahead and grab your food when it's ready. Fresh, hot, and waiting for you.
               </p>
               {/* Comic action lines in corners - sketchy */}

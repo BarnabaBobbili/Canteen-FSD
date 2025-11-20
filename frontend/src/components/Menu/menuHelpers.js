@@ -176,3 +176,40 @@ export const getItemAlertInfo = (item) => {
 
   return alerts;
 };
+
+/**
+ * Get all alert items from menu
+ * @param {Array} menuItems - All menu items
+ * @returns {Object} Categorized alert items
+ */
+export const getAlertItems = (menuItems) => {
+  const lowStockItems = menuItems.filter(item =>
+    (item.itemType || 'homemade') === 'packaged' &&
+    item.stockQuantity <= (item.lowStockThreshold || 10) &&
+    item.stockQuantity > 0
+  );
+
+  const outOfStockItems = menuItems.filter(item =>
+    (item.itemType || 'homemade') === 'packaged' &&
+    item.stockQuantity === 0
+  );
+
+  const expiringItems = menuItems.filter(item => {
+    if ((item.itemType || 'homemade') !== 'packaged' || !item.expiryDate) return false;
+    const daysUntilExpiry = calculateDaysUntilExpiry(item.expiryDate);
+    return daysUntilExpiry <= 7 && daysUntilExpiry > 0;
+  });
+
+  const expiredItems = menuItems.filter(item => {
+    if ((item.itemType || 'homemade') !== 'packaged' || !item.expiryDate) return false;
+    const daysUntilExpiry = calculateDaysUntilExpiry(item.expiryDate);
+    return daysUntilExpiry <= 0;
+  });
+
+  return {
+    lowStockItems,
+    outOfStockItems,
+    expiringItems,
+    expiredItems
+  };
+};

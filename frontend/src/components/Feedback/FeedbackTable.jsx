@@ -32,10 +32,10 @@ const FeedbackTable = ({ feedbacks, loading, onViewDetails }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="macos-card macos-animate overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="macos-table-header">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 {t('feedback.customer')}
@@ -75,7 +75,7 @@ const FeedbackTable = ({ feedbacks, loading, onViewDetails }) => {
               </tr>
             ) : (
               feedbacks.map((feedback) => (
-                <tr key={feedback._id} className="hover:bg-gray-50 transition-colors">
+                <tr key={feedback._id} className="macos-table-row-colors">
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">{feedback.customerName}</div>
                     <div className="text-sm text-gray-500">{feedback.customerEmail}</div>

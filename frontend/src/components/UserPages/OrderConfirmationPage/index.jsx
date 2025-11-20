@@ -136,7 +136,7 @@ const OrderConfirmationPage = () => {
           </button>
 
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/demo')}
             className="w-full py-3 text-gray-600 hover:text-gray-900 transition-all font-bold border-2 border-transparent hover:border-gray-900"
           >
             Back to Home

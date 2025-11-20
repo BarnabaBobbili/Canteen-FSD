@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Plus, ChefHat } from 'lucide-react';
+import { Heart, Plus, UtensilsCrossed } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import API_BASE_URL from '../../../config/api';
 
@@ -100,7 +100,7 @@ const FavoriteItems = ({ favoriteIds, onRemoveFavorite }) => {
                 item.image ? 'hidden' : ''
               }`}
             >
-              <ChefHat className="w-12 h-12 text-white opacity-50" />
+              <UtensilsCrossed className="w-12 h-12 text-white opacity-50" />
             </div>
 
             {/* Remove Favorite Button */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChefHat } from 'lucide-react';
+import { UtensilsCrossed } from 'lucide-react';
 
 /**
  * Shared navigation component for user-facing pages
@@ -24,14 +24,14 @@ const Navigation = ({ showAuth = true, variant = 'landing' }) => {
     <nav className={getNavClasses()} style={{ fontFamily: '"Comic Sans MS", "Marker Felt", cursive' }}>
       <div className="flex items-center gap-2 sm:gap-3">
         <div className="bg-gray-900 border-3 border-gray-900 p-1.5 sm:p-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.4)] cursor-pointer"
-          onClick={() => navigate('/')}>
-          <ChefHat className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+          onClick={() => navigate('/demo')}>
+          <UtensilsCrossed className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
         </div>
         <h1
           className="text-lg sm:text-xl md:text-2xl font-black text-gray-900 truncate cursor-pointer"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/demo')}
         >
-          Smart Canteen
+          CanteenDelight
         </h1>
       </div>
 

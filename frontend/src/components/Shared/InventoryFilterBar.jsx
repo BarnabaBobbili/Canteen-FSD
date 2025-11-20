@@ -24,7 +24,7 @@ const InventoryFilterBar = ({
           <select
             value={supplierFilter}
             onChange={(e) => setSupplierFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="all">All Suppliers</option>
             {suppliers.map((supplier, idx) => (
@@ -42,7 +42,7 @@ const InventoryFilterBar = ({
           <select
             value={stockFilter}
             onChange={(e) => setStockFilter(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="all">All Stock Levels</option>
             <option value="low">Low Stock (Below 20)</option>
@@ -59,7 +59,7 @@ const InventoryFilterBar = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+            className="w-full macos-input focus:ring-2 focus:ring-sky-500"
           >
             <option value="name-asc">Name: A to Z</option>
             <option value="name-desc">Name: Z to A</option>

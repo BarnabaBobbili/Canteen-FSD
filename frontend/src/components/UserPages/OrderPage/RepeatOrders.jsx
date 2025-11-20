@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, Plus, ChefHat } from 'lucide-react';
+import { Clock, Plus, UtensilsCrossed } from 'lucide-react';
 
 /**
  * Repeat orders component for logged-in users
@@ -44,7 +44,7 @@ const RepeatOrders = ({ repeatOrders, onAddToCart }) => {
                     item.image ? 'hidden' : ''
                   }`}
                 >
-                  <ChefHat className="w-8 h-8 text-gray-900 opacity-30" />
+                  <UtensilsCrossed className="w-8 h-8 text-gray-900 opacity-30" />
                 </div>
               </div>
               <div className="flex-1">

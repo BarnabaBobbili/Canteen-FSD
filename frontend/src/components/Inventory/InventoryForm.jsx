@@ -44,7 +44,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
           type="text"
           value={currentForm.itemName || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, itemName: e.target.value })}
-          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+          className={`macos-input w-full focus:outline-none focus:ring-2 ${
             errors.itemName ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-sky-500'
           }`}
           placeholder={t('inventory.itemNamePlaceholder')}
@@ -93,7 +93,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
         <select
           value={currentForm.unit || 'kg'}
           onChange={(e) => setCurrentForm({ ...currentForm, unit: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="w-full macos-input"
         >
           <option value="kg">{t('inventory.units.kg')}</option>
           <option value="g">{t('inventory.units.g')}</option>
@@ -112,7 +112,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
         <select
           value={currentForm.supplier || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, supplier: e.target.value })}
-          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+          className={`macos-input w-full focus:outline-none focus:ring-2 ${
             errors.supplier ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-sky-500'
           }`}
           disabled={loadingSuppliers}
@@ -145,7 +145,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
           type="date"
           value={currentForm.expiryDate || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, expiryDate: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="w-full macos-input"
         />
       </div>
 
@@ -157,7 +157,7 @@ const InventoryForm = ({ currentForm, setCurrentForm, errors }) => {
           type="text"
           value={currentForm.batchNumber || ''}
           onChange={(e) => setCurrentForm({ ...currentForm, batchNumber: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="w-full macos-input"
           placeholder={t('inventory.batchNumberPlaceholder')}
         />
       </div>

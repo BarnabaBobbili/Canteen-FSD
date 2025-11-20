@@ -9,6 +9,7 @@
     "discounts": "Discounts",
     "feedback": "Feedback",
     "payments": "Payments",
+    "reports": "Reports",
     "activities": "Activities",
     "settings": "Settings",
     "notifications": "Notifications",
@@ -73,7 +74,13 @@
     "print": "Print",
     "export": "Export",
     "import": "Import",
-    "optional": "Optional"
+    "optional": "Optional",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "unknown": "Unknown",
+    "clearSearch": "Clear search",
+    "unknownError": "Unknown error occurred",
+    "email": "Email"
   },
   "dashboard": {
     "welcomeToCanteen": "Welcome to Smart Canteen!",
@@ -96,7 +103,8 @@
     "recentActivity": "Recent Activity",
     "noActivities": "No recent activities",
     "orderAnalytics": "Order Analytics",
-    "selectPeriod": "Select Period"
+    "selectPeriod": "Select Period",
+    "fetchError": "Failed to fetch dashboard data"
   },
   "orders": {
     "title": "Order Management",
@@ -113,6 +121,7 @@
     "customerName": "Customer Name",
     "customerPhone": "Customer Phone",
     "customerEmail": "Customer Email",
+    "phone": "Phone",
     "items": "Items",
     "itemName": "Item Name",
     "addItem": "Add Item",
@@ -252,7 +261,8 @@
     "outOfStock": "Out of Stock",
     "items": "items",
     "expiredItems": "Expired Items",
-    "expiringSoon": "Expiring Soon"
+    "expiringSoon": "Expiring Soon",
+    "saveFailed": "Failed to save menu item"
   },
   "inventory": {
     "title": "Inventory Management",
@@ -345,7 +355,14 @@
     "filterByStatus": "Filter by Status",
     "totalStaff": "Total Staff",
     "activeStaff": "Active Staff",
-    "inactiveStaff": "Inactive Staff"
+    "inactiveStaff": "Inactive Staff",
+    "departments": {
+      "kitchen": "Kitchen",
+      "counter": "Counter",
+      "management": "Management",
+      "inventory": "Inventory",
+      "none": "None"
+    }
   },
   "suppliers": {
     "title": "Supplier Management",
@@ -360,7 +377,10 @@
     "supplierAddress": "Address",
     "productsSupplied": "Products Supplied",
     "paymentTerms": "Payment Terms",
+    "supplierType": "Supplier Type",
     "supplierStatus": "Status",
+    "supplier": "Supplier",
+    "rating": "Rating",
     "supplierCreated": "Supplier created successfully",
     "supplierUpdated": "Supplier updated successfully",
     "supplierDeleted": "Supplier deleted successfully",
@@ -368,7 +388,17 @@
     "noSuppliers": "No suppliers found",
     "searchSuppliers": "Search suppliers...",
     "totalSuppliers": "Total Suppliers",
-    "activeSuppliers": "Active Suppliers"
+    "activeSuppliers": "Active Suppliers",
+    "loading": "Loading suppliers...",
+    "addFirst": "Add your first supplier",
+    "types": {
+      "food": "Food",
+      "beverages": "Beverages",
+      "raw-materials": "Raw Materials",
+      "packaging": "Packaging",
+      "equipment": "Equipment",
+      "other": "Other"
+    }
   },
   "discounts": {
     "title": "Discount Management",
@@ -400,7 +430,13 @@
     "filterByType": "Filter by Type",
     "totalDiscounts": "Total Discounts",
     "activeDiscounts": "Active Discounts",
-    "expiredDiscounts": "Expired Discounts"
+    "expiredDiscounts": "Expired Discounts",
+    "reasons": {
+      "manual": "Manual Discount",
+      "clearance": "Clearance Sale",
+      "low_stock": "Low Stock",
+      "expiry": "Near Expiry"
+    }
   },
   "payments": {
     "title": "Payment Management",
@@ -493,6 +529,7 @@
   },
   "activities": {
     "title": "Activity Log",
+    "description": "Track and monitor system activities",
     "activityDetails": "Activity Details",
     "user": "User",
     "action": "Action",
@@ -501,10 +538,44 @@
     "ipAddress": "IP Address",
     "noActivities": "No activities found",
     "searchActivities": "Search activities...",
+    "searchPlaceholder": "Search activities by user, action, or resource...",
     "filterByUser": "Filter by User",
     "filterByAction": "Filter by Action",
     "recentActivities": "Recent Activities",
-    "allActivities": "All Activities"
+    "allActivities": "All Activities",
+    "activityType": "Activity Type",
+    "resourceType": "Resource Type",
+    "severity": "Severity",
+    "allTypes": "All Types",
+    "allResources": "All Resources",
+    "allSeverities": "All Severities",
+    "activeFilters": "Active Filters",
+    "typeFilter": "Type",
+    "resourceFilter": "Resource",
+    "severityFilter": "Severity",
+    "fromFilter": "From",
+    "toFilter": "To",
+    "performedBy": "Performed By",
+    "additionalDetails": "Additional Details",
+    "fetchError": "Failed to fetch activities",
+    "fetchDetailsError": "Failed to fetch activity details",
+    "types": {
+      "menu_create": "Menu Created",
+      "menu_update": "Menu Updated",
+      "menu_delete": "Menu Deleted",
+      "order_create": "Order Created",
+      "order_update": "Order Updated",
+      "order_delete": "Order Deleted",
+      "inventory_create": "Inventory Created",
+      "inventory_update": "Inventory Updated",
+      "inventory_delete": "Inventory Deleted",
+      "payment_create": "Payment Created",
+      "payment_update": "Payment Updated",
+      "user_create": "User Created",
+      "user_update": "User Updated",
+      "user_login": "User Login",
+      "user_logout": "User Logout"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -563,6 +634,67 @@
     "requiredField": "{{field}} is required",
     "pleaseFixErrors": "Please fix the validation errors before submitting"
   },
+  "reports": {
+    "title": "Reports & Analytics",
+    "subtitle": "Generate detailed reports and export data to PDF or Excel",
+    "dateRange": "Date Range",
+    "from": "From",
+    "to": "To",
+    "loading": "Loading report data...",
+    "exportPDF": "Export PDF",
+    "exportExcel": "Export Excel",
+    "tabs": {
+      "sales": "Sales Report",
+      "salesShort": "Sales",
+      "inventory": "Inventory Report",
+      "inventoryShort": "Inventory",
+      "financial": "Financial Statement",
+      "financialShort": "Financial"
+    },
+    "sales": {
+      "totalOrders": "Total Orders",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "totalRevenue": "Total Revenue",
+      "avgOrderValue": "Avg Order Value",
+      "byOrderType": "Sales by Order Type",
+      "orderType": "Order Type",
+      "revenue": "Revenue",
+      "topSellingItems": "Top Selling Items",
+      "itemName": "Item Name",
+      "quantitySold": "Quantity Sold"
+    },
+    "inventory": {
+      "totalItems": "Total Items",
+      "lowStock": "Low Stock",
+      "outOfStock": "Out of Stock",
+      "totalValue": "Total Value",
+      "lowStockAlert": "Low Stock Alert",
+      "lowStockMessage": "{{count}} items are running low on stock (below 20 units)",
+      "itemName": "Item Name",
+      "quantity": "Quantity",
+      "unit": "Unit",
+      "supplier": "Supplier",
+      "byCategory": "Inventory by Category",
+      "category": "Category",
+      "items": "Items",
+      "totalQuantity": "Total Quantity"
+    },
+    "financial": {
+      "totalRevenue": "Total Revenue",
+      "totalOrders": "Total Orders",
+      "avgDailyRevenue": "Avg Daily Revenue",
+      "inventoryValue": "Inventory Value",
+      "byPaymentMethod": "Revenue by Payment Method",
+      "paymentMethod": "Payment Method",
+      "transactions": "Transactions",
+      "amount": "Amount",
+      "percentOfTotal": "% of Total",
+      "dailyRevenue": "Daily Revenue Breakdown",
+      "date": "Date",
+      "revenue": "Revenue"
+    }
+  },
   "messages": {
     "operationSuccess": "Operation completed successfully",
     "operationFailed": "Operation failed",
@@ -578,5 +710,57 @@
     "sessionExpired": "Session expired. Please login again",
     "networkError": "Network error. Please check your connection",
     "serverError": "Server error. Please try again later"
+  },
+  "modules": {
+    "orders": {
+      "name": "Orders",
+      "description": "Manage and track all customer orders"
+    },
+    "menu": {
+      "name": "Menu",
+      "description": "Manage menu items and categories"
+    },
+    "inventory": {
+      "name": "Inventory",
+      "description": "Track and manage stock levels"
+    },
+    "staff": {
+      "name": "Staff",
+      "description": "Manage staff and their roles"
+    },
+    "suppliers": {
+      "name": "Suppliers",
+      "description": "Manage supplier information and contacts"
+    },
+    "discounts": {
+      "name": "Discounts",
+      "description": "Create and manage discount codes"
+    },
+    "feedback": {
+      "name": "Feedback",
+      "description": "View and respond to customer feedback"
+    },
+    "payments": {
+      "name": "Payments",
+      "description": "Track payments and revenue"
+    }
+  },
+  "resources": {
+    "Menu": "Menu",
+    "Order": "Order",
+    "Inventory": "Inventory",
+    "Payment": "Payment",
+    "User": "User"
+  },
+  "severities": {
+    "info": "Info",
+    "warning": "Warning",
+    "critical": "Critical"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "activities": "activities"
   }
 }

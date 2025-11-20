@@ -75,21 +75,20 @@ const DashboardStats = ({ stats, loading, previousStats = {} }) => {
         return (
           <div
             key={index}
-            className="bg-white rounded-xl p-5 sm:p-6 border border-gray-100 hover:shadow-lg transition-all duration-300 cursor-pointer"
-            style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)' }}
+            className="macos-stat-card macos-animate cursor-pointer"
           >
             {/* Header with Icon */}
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg" style={{ backgroundColor: card.bgColor }}>
+              <div className="macos-icon-bg" style={{ backgroundColor: card.bgColor }}>
                 <Icon className="w-6 h-6" style={{ color: card.iconColor }} />
               </div>
             </div>
 
             {/* Title */}
-            <p className="text-sm font-medium mb-1" style={{ color: '#6B7280' }}>{card.title}</p>
+            <p className="macos-text text-sm font-medium mb-1">{card.title}</p>
 
             {/* Value */}
-            <h3 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: '#111827' }}>
+            <h3 className="macos-metric text-2xl sm:text-3xl mb-3">
               {card.value}
             </h3>
 

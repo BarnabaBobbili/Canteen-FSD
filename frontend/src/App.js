@@ -21,6 +21,7 @@ import VerifyEmail from './components/UserPages/Auth/VerifyEmail';
 import ForgotPassword from './components/UserPages/Auth/ForgotPassword';
 import ResetPassword from './components/UserPages/Auth/ResetPassword';
 import ContactUs from './components/ContactUs';
+import About from './components/About';
 import StaffLogin from './components/Staff/StaffLogin';
 import StaffSignup from './components/Staff/StaffSignup';
 import Dashboard from './components/Dashboard';
@@ -39,6 +40,7 @@ import DiscountManagement from './components/DiscountManagement';
 import PaymentManagement from './components/Payments/PaymentManagement';
 import FeedbackManagement from './components/Feedback/FeedbackManagement';
 import FeedbackForm from './components/UserPages/FeedbackPage/FeedbackForm';
+import ReportsManagement from './components/Reports/ReportsManagement';
 import Notifications from './components/Notifications';
 import Settings from './components/Settings';
 
@@ -55,14 +57,16 @@ function App() {
               <div className="App">
                 <Routes>
               {/* Public Routes */}
-              <Route path="/" element={<LandingPage />} />
+              <Route path="/" element={<ContactUs />} />
+              <Route path="/demo" element={<LandingPage />} />
               <Route path="/order" element={<OrderPage />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
               <Route path="/order-tracking" element={<OrderTrackingPage />} />
               <Route path="/track-order/:orderNumber" element={<OrderTrackingPage />} />
-              <Route path="/contactus" element={<ContactUs />} />
+              <Route path="/docs" element={<About />} />
+              <Route path="/docs/:section" element={<About />} />
 
             {/* User Auth Routes */}
             <Route path="/login" element={<UserLogin />} />
@@ -182,6 +186,15 @@ function App() {
             />
 
             <Route
+              path="/admin/reports"
+              element={
+                <ProtectedRoute roles={['admin']}>
+                  <ReportsManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
               path="/admin/notifications"
               element={
                 <ProtectedRoute roles={['admin']}>
@@ -290,6 +303,15 @@ function App() {
               element={
                 <ProtectedRoute roles={['manager']}>
                   <PaymentManagement />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/manager/reports"
+              element={
+                <ProtectedRoute roles={['manager']}>
+                  <ReportsManagement />
                 </ProtectedRoute>
               }
             />
