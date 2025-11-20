@@ -191,5 +191,6 @@ dist
 .turbo
 
 API_KEY_CHECKLIST.txt
-MediaOld/
+MediaOld\
+MediaOld
 Inventory Management Dashboard (Community).svg
