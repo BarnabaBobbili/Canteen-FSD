@@ -14,7 +14,7 @@ const StaffTable = ({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="macos-card macos-animate overflow-hidden">
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">{t('common.loading')}</p>
@@ -24,10 +24,10 @@ const StaffTable = ({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="macos-card macos-animate overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="macos-table-header">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">{t('common.name')}</th>
               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">{t('common.email')}</th>
@@ -40,7 +40,7 @@ const StaffTable = ({
           </thead>
           <tbody>
             {staff.map((member, index) => (
-              <tr key={member._id || index} className="border-b hover:bg-gray-50">
+              <tr key={member._id || index} className="border-b macos-table-row">
                 <td className="px-6 py-4 text-sm font-medium text-gray-900">{member.name}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">{member.email}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">{member.phone}</td>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Minus, ChefHat } from 'lucide-react';
+import { Plus, Minus, UtensilsCrossed } from 'lucide-react';
 import { getImageUrl } from './cashierHelpers';
 import API_BASE_URL from '../../config/api';
 
@@ -48,7 +48,7 @@ const MenuItemCard = React.memo(({ item, quantityInCart, onAddToCart, onUpdateQu
         </div>
       ) : (
         <div className="w-full bg-gray-100 rounded mb-2 flex items-center justify-center" style={{ height: '120px' }}>
-          <ChefHat className="w-10 h-10 text-gray-400" />
+          <UtensilsCrossed className="w-10 h-10 text-gray-400" />
         </div>
       )}
       <h3 className="font-semibold text-sm text-gray-800 mb-1">{item.itemName}</h3>

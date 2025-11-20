@@ -12,10 +12,10 @@ const PaymentTable = ({ payments, loading, onViewDetails }) => {
   const { t } = useTranslation();
   const { formatCurrency } = useSettings();
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="macos-card macos-animate overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="macos-table-header">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 {t('payments.transactionId')}
@@ -55,7 +55,7 @@ const PaymentTable = ({ payments, loading, onViewDetails }) => {
               </tr>
             ) : (
               payments.map((payment) => (
-                <tr key={payment._id} className="hover:bg-gray-50 transition-colors">
+                <tr key={payment._id} className="macos-table-row-colors">
                   {/* Transaction ID */}
                   <td className="px-6 py-4 text-sm font-medium text-indigo-600">
                     {payment.transactionId || payment.razorpayPaymentId || 'N/A'}

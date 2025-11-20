@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import DashboardLayout from './DashboardLayout';
-import API_BASE_URL from '../config/api';
 import { Activity } from 'lucide-react';
 
 // Import ActivityLog components
@@ -10,6 +9,12 @@ import ActivityFilters from './ActivityLog/ActivityFilters';
 import ActivityTable from './ActivityLog/ActivityTable';
 import ActivityDetailModal from './ActivityLog/ActivityDetailModal';
 import ActivityPagination from './ActivityLog/ActivityPagination';
+
+// Import service functions
+import {
+  fetchActivities as fetchActivitiesAPI,
+  fetchActivityById
+} from './ActivityLog/activityService';
 
 const ActivityLog = () => {
   const { t } = useTranslation();
@@ -42,22 +47,13 @@ const ActivityLog = () => {
   const fetchActivities = async () => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({
+      const data = await fetchActivitiesAPI({
         page: pagination.page,
         limit: pagination.limit,
-        ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ''))
-      });
+        filters: filters,
+        search: searchTerm
+      }, token);
 
-      if (searchTerm) {
-        params.append('search', searchTerm);
-      }
-
-      const response = await fetch(`${API_BASE_URL}/activities?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const data = await response.json();
       setActivities(data.activities);
       setPagination(prev => ({ ...prev, ...data.pagination }));
     } catch (error) {
@@ -91,12 +87,7 @@ const ActivityLog = () => {
 
   const openDetailModal = async (activityId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/activities/${activityId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const data = await response.json();
+      const data = await fetchActivityById(activityId, token);
       setSelectedActivity(data);
       setShowDetailModal(true);
     } catch (error) {
@@ -142,7 +133,7 @@ const ActivityLog = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#1570EF' }}></div>
         </div>
       ) : activities.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+        <div className="macos-card macos-animate-sm p-8 text-center">
           <Activity className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500 text-lg">{t('activities.noActivities')}</p>
         </div>

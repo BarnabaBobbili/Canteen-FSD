@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, TrendingUp, ChefHat, Plus, ArrowRight } from 'lucide-react';
+import { Sparkles, TrendingUp, UtensilsCrossed, Plus, ArrowRight } from 'lucide-react';
 import API_BASE_URL from '../../../config/api';
 import { useTheme } from '../../../context/ThemeContext';
+import { getImageUrl } from '../../Menu/menuHelpers';
 
 /**
  * Today's Specials / Offers Section
@@ -177,9 +178,9 @@ const SpecialsSection = () => {
 
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
-                {item.image ? (
+                {getImageUrl(item.image, API_BASE_URL) ? (
                   <img
-                    src={item.image}
+                    src={getImageUrl(item.image, API_BASE_URL)}
                     alt={item.itemName}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     onError={(e) => {
@@ -190,10 +191,10 @@ const SpecialsSection = () => {
                 ) : null}
                 <div
                   className={`absolute inset-0 bg-[#FF7A00] bg-opacity-20 flex items-center justify-center ${
-                    item.image ? 'hidden' : ''
+                    getImageUrl(item.image, API_BASE_URL) ? 'hidden' : ''
                   }`}
                 >
-                  <ChefHat className="w-16 h-16 text-[#FF7A00]" />
+                  <UtensilsCrossed className="w-16 h-16 text-[#FF7A00]" />
                 </div>
 
                 {/* Veg/Non-Veg Indicator */}

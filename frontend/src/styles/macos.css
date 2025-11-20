@@ -1,0 +1,1084 @@
+/* macOS-Style Dashboard Styling */
+
+/* Import SF Pro-like font (system fonts) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* macOS Glassmorphism Variables */
+:root {
+  --macos-bg-primary: rgba(246, 246, 249, 0.8);
+  --macos-bg-secondary: rgba(255, 255, 255, 0.7);
+  --macos-bg-tertiary: rgba(255, 255, 255, 0.5);
+  --macos-blur: blur(40px) saturate(180%);
+  --macos-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --macos-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --macos-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --macos-border: rgba(0, 0, 0, 0.08);
+  --macos-transition: cubic-bezier(0.4, 0, 0.2, 1);
+  --macos-blue: #007AFF;
+  --macos-purple: #5856D6;
+  --macos-green: #34C759;
+  --macos-orange: #FF9500;
+  --macos-red: #FF3B30;
+}
+
+/* Glassmorphism Sidebar */
+.macos-sidebar {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  -webkit-backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset -1px 0 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Glassmorphism Header */
+.macos-header {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  -webkit-backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 4px 24px rgba(31, 38, 135, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+}
+
+/* macOS Background */
+.macos-bg {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(88, 86, 214, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(0, 122, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(175, 82, 222, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 20% 90%, rgba(52, 199, 89, 0.2) 0%, transparent 40%),
+    linear-gradient(135deg, #e0e7ff 0%, #f0f4ff 25%, #e5e7ff 50%, #f5f3ff 75%, #fce7f3 100%) !important;
+  min-height: 100vh;
+  position: relative;
+}
+
+.macos-bg::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.05) 3px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.05) 3px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+/* macOS Cards */
+.macos-card {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.macos-card:hover {
+  transform: translateY(-4px) scale(1.005) !important;
+  box-shadow:
+    0 16px 48px rgba(31, 38, 135, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 30px rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* macOS Buttons */
+.macos-btn {
+  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 10px 20px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  letter-spacing: -0.01em !important;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.macos-btn:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4) !important;
+}
+
+.macos-btn:active {
+  transform: translateY(0px) scale(0.98) !important;
+}
+
+/* macOS Icon Backgrounds */
+.macos-icon-bg {
+  border-radius: 12px !important;
+  padding: 12px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.macos-icon-bg:hover {
+  transform: scale(1.12) rotate(3deg) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+}
+
+/* macOS Nav Items */
+.macos-nav-item {
+  border-radius: 10px !important;
+  padding: 10px 16px !important;
+  margin: 4px 0 !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.macos-nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(88, 86, 214, 0.1));
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px;
+}
+
+.macos-nav-item:hover::before {
+  opacity: 1;
+}
+
+.macos-nav-item.active {
+  background: linear-gradient(135deg, #007AFF, #5856D6) !important;
+  color: white !important;
+  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3) !important;
+}
+
+/* macOS Stats Cards */
+.macos-stat-card {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.macos-stat-card:hover {
+  transform: translateY(-6px) scale(1.005) !important;
+  box-shadow:
+    0 16px 56px rgba(31, 38, 135, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 30px rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* macOS Typography */
+.macos-heading {
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  background: linear-gradient(135deg, #1d1d1f, #424245);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.macos-subheading {
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
+  color: #1d1d1f !important;
+}
+
+.macos-text {
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+  color: #6e6e73 !important;
+}
+
+/* macOS Smooth Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* macOS Modal */
+.macos-modal {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  -webkit-backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow:
+    0 24px 64px rgba(31, 38, 135, 0.2),
+    0 12px 32px rgba(31, 38, 135, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+}
+
+/* macOS Input Fields */
+.macos-input {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 10px !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.macos-input:focus {
+  outline: none !important;
+  border-color: rgba(0, 122, 255, 0.5) !important;
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* macOS Date Input Styling */
+input[type="date"].macos-input {
+  position: relative;
+  cursor: pointer;
+  font-weight: 500;
+  color: #1d1d1f;
+}
+
+input[type="date"].macos-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 10;
+}
+
+input[type="date"].macos-input:hover {
+  border-color: rgba(0, 122, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* macOS Date Picker Calendar Popup */
+input[type="date"]::-webkit-datetime-edit {
+  padding: 0;
+  font-weight: 500;
+}
+
+input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+input[type="date"]::-webkit-datetime-edit-text {
+  padding: 0 2px;
+  color: #6e6e73;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field:hover,
+input[type="date"]::-webkit-datetime-edit-day-field:hover,
+input[type="date"]::-webkit-datetime-edit-year-field:hover {
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field:focus,
+input[type="date"]::-webkit-datetime-edit-day-field:focus,
+input[type="date"]::-webkit-datetime-edit-year-field:focus {
+  background-color: rgba(0, 122, 255, 0.15);
+  outline: none;
+  color: #007AFF;
+}
+
+/* Firefox date input styling */
+input[type="date"].macos-input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/* macOS Select/Dropdown Input */
+select.macos-input,
+textarea.macos-input {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+}
+
+/* macOS Badge */
+.macos-badge {
+  background: linear-gradient(135deg, #FF3B30, #FF6B6B) !important;
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 2px 8px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3) !important;
+}
+
+/* macOS Dropdown */
+.macos-dropdown {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  -webkit-backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 16px 56px rgba(31, 38, 135, 0.2),
+    0 8px 24px rgba(31, 38, 135, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  padding: 8px !important;
+  z-index: 9999 !important;
+}
+
+.macos-dropdown-item {
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.macos-dropdown-item:hover {
+  background: rgba(0, 122, 255, 0.1) !important;
+}
+
+/* macOS Animation */
+@keyframes macos-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.macos-animate {
+  animation: macos-fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* macOS Gradient Backgrounds */
+.macos-gradient-blue {
+  background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%) !important;
+}
+
+.macos-gradient-green {
+  background: linear-gradient(135deg, #34C759 0%, #30D158 100%) !important;
+}
+
+.macos-gradient-orange {
+  background: linear-gradient(135deg, #FF9500 0%, #FF6B00 100%) !important;
+}
+
+.macos-gradient-red {
+  background: linear-gradient(135deg, #FF3B30 0%, #FF6B6B 100%) !important;
+}
+
+.macos-gradient-purple {
+  background: linear-gradient(135deg, #5856D6 0%, #AF52DE 100%) !important;
+}
+
+/* macOS Loading Skeleton */
+.macos-skeleton {
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  animation: macos-shimmer 1.5s infinite;
+  border-radius: 12px;
+}
+
+@keyframes macos-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* macOS Table */
+.macos-table {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
+}
+
+.macos-table-row {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.macos-table-row:hover {
+  background: rgba(0, 122, 255, 0.08) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* macOS Table Header */
+.macos-table-header {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(40px) !important;
+  -webkit-backdrop-filter: blur(40px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* macOS Notification */
+.macos-notification {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+  animation: macos-slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes macos-slide-in {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* macOS Divider */
+.macos-divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.08) 50%,
+    transparent 100%
+  );
+  margin: 24px 0;
+}
+
+/* macOS Logo Effect */
+.macos-logo {
+  background: linear-gradient(135deg, #007AFF, #5856D6);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.macos-logo:hover {
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Notification Badge Pulse */
+@keyframes macos-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+.macos-notification-badge {
+  animation: macos-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* macOS Metrics */
+.macos-metric {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #1d1d1f, #424245);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* macOS Success State */
+.macos-success {
+  background: rgba(52, 199, 89, 0.1) !important;
+  border: 1px solid rgba(52, 199, 89, 0.2) !important;
+  color: #34C759 !important;
+}
+
+/* macOS Error State */
+.macos-error {
+  background: rgba(255, 59, 48, 0.1) !important;
+  border: 1px solid rgba(255, 59, 48, 0.2) !important;
+  color: #FF3B30 !important;
+}
+
+/* macOS Warning State */
+.macos-warning {
+  background: rgba(255, 149, 0, 0.1) !important;
+  border: 1px solid rgba(255, 149, 0, 0.2) !important;
+  color: #FF9500 !important;
+}
+
+/* macOS Filter/Search Bar */
+.macos-filter-bar {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 4px 16px rgba(31, 38, 135, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  padding: 16px !important;
+}
+
+/* macOS Section Container */
+.macos-section {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(80px) saturate(180%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 8px 32px rgba(31, 38, 135, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 20px rgba(255, 255, 255, 0.1) !important;
+  padding: 24px !important;
+  margin-bottom: 24px !important;
+}
+
+/* macOS Panel (for forms, modals, etc) */
+.macos-panel {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  -webkit-backdrop-filter: blur(100px) saturate(180%) contrast(110%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 12px 40px rgba(31, 38, 135, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 0 30px rgba(255, 255, 255, 0.15) !important;
+  padding: 24px !important;
+}
+
+/* macOS Tabs */
+.macos-tab {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 10px 20px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.macos-tab.active {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(40px) !important;
+  -webkit-backdrop-filter: blur(40px) !important;
+  box-shadow: 0 2px 8px rgba(31, 38, 135, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  color: #1570EF !important;
+}
+
+.macos-tab:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* ==========================================
+   macOS Custom DatePicker Calendar Styling
+   ========================================== */
+
+/* Calendar Popper Container */
+.macos-calendar-popper {
+  z-index: 99999 !important;
+  filter: drop-shadow(0 20px 60px rgba(31, 38, 135, 0.25));
+}
+
+/* Ensure wrapper also has high z-index */
+.react-datepicker-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* Force popper to be on top */
+.react-datepicker-popper,
+.react-datepicker__portal {
+  z-index: 99999 !important;
+}
+
+/* Ensure the popper container itself is also elevated */
+.react-datepicker-popper[data-placement^="bottom"],
+.react-datepicker-popper[data-placement^="top"],
+.react-datepicker-popper[data-placement^="left"],
+.react-datepicker-popper[data-placement^="right"] {
+  z-index: 99999 !important;
+  position: absolute !important;
+}
+
+/* Portal container for datepicker */
+#root-portal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 99999 !important;
+  pointer-events: none !important;
+}
+
+/* Portal content */
+.react-datepicker__portal {
+  position: fixed !important;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure portal calendar is clickable */
+#root-portal .macos-calendar,
+#root-portal .react-datepicker-popper {
+  pointer-events: auto !important;
+}
+
+/* Calendar Main Container with Enhanced Glassmorphism */
+.macos-calendar {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(120px) saturate(200%) contrast(115%) !important;
+  -webkit-backdrop-filter: blur(120px) saturate(200%) contrast(115%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 32px 80px rgba(31, 38, 135, 0.25),
+    0 16px 40px rgba(31, 38, 135, 0.18),
+    0 8px 20px rgba(31, 38, 135, 0.12),
+    inset 0 2px 0 rgba(255, 255, 255, 0.8),
+    inset 0 0 40px rgba(255, 255, 255, 0.15) !important;
+  padding: 20px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 99999 !important;
+}
+
+/* When calendar is in portal, ensure it positions correctly */
+.react-datepicker__portal .macos-calendar {
+  position: absolute !important;
+  z-index: 99999 !important;
+}
+
+/* Glassmorphism overlay effect */
+.macos-calendar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(88, 86, 214, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(21, 112, 239, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure calendar content is above the overlay */
+.macos-calendar > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Calendar Header */
+.react-datepicker__header {
+  background: transparent !important;
+  border-bottom: none !important;
+  padding: 8px 0 12px 0 !important;
+}
+
+/* Current Month/Year Display with Glassmorphism */
+.react-datepicker__current-month {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: #1d1d1f !important;
+  margin-bottom: 12px !important;
+  padding: 10px 16px !important;
+  background: rgba(21, 112, 239, 0.1) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border: 1px solid rgba(21, 112, 239, 0.15) !important;
+  border-radius: 12px !important;
+  display: inline-block !important;
+  box-shadow:
+    0 4px 12px rgba(21, 112, 239, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Navigation Buttons with Enhanced Glassmorphism */
+.react-datepicker__navigation {
+  top: 20px !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow:
+    0 4px 12px rgba(31, 38, 135, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+.react-datepicker__navigation:hover:not(.react-datepicker__navigation--disabled) {
+  background: rgba(21, 112, 239, 0.15) !important;
+  border-color: rgba(21, 112, 239, 0.25) !important;
+  box-shadow:
+    0 6px 16px rgba(21, 112, 239, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  transform: scale(1.08) !important;
+}
+
+.react-datepicker__navigation--disabled {
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+}
+
+.react-datepicker__navigation--previous {
+  left: 12px !important;
+}
+
+.react-datepicker__navigation--next {
+  right: 12px !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #1570EF !important;
+  border-width: 2px 2px 0 0 !important;
+  width: 8px !important;
+  height: 8px !important;
+  top: 10px !important;
+  pointer-events: none !important;
+}
+
+/* Day Names (Sun, Mon, etc.) */
+.react-datepicker__day-names {
+  display: flex !important;
+  justify-content: space-around !important;
+  margin-bottom: 8px !important;
+  padding: 0 4px !important;
+}
+
+.react-datepicker__day-name {
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  margin: 0 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  color: #6e6e73 !important;
+  text-align: center !important;
+}
+
+/* Week Row */
+.react-datepicker__week {
+  display: flex !important;
+  justify-content: space-around !important;
+  padding: 0 4px !important;
+}
+
+/* Individual Day Cell with Glassmorphism */
+.react-datepicker__day {
+  width: 38px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  margin: 2px !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #1d1d1f !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  position: relative !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid transparent !important;
+}
+
+.react-datepicker__day:hover {
+  background: rgba(21, 112, 239, 0.12) !important;
+  backdrop-filter: blur(30px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+  border-color: rgba(21, 112, 239, 0.2) !important;
+  color: #1570EF !important;
+  transform: scale(1.1) translateY(-1px) !important;
+  box-shadow:
+    0 4px 12px rgba(21, 112, 239, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Selected Day with Enhanced Glassmorphism */
+.react-datepicker__day--selected {
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.95) 0%, rgba(88, 86, 214, 0.95) 100%) !important;
+  backdrop-filter: blur(60px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  box-shadow:
+    0 8px 20px rgba(0, 122, 255, 0.4),
+    0 4px 12px rgba(88, 86, 214, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  transform: scale(1.08) !important;
+}
+
+.react-datepicker__day--selected:hover {
+  background: linear-gradient(135deg, rgba(0, 81, 213, 0.98) 0%, rgba(64, 52, 176, 0.98) 100%) !important;
+  transform: scale(1.12) translateY(-2px) !important;
+  box-shadow:
+    0 12px 28px rgba(0, 122, 255, 0.45),
+    0 6px 16px rgba(88, 86, 214, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Today with Glassmorphism */
+.react-datepicker__day--today {
+  background: rgba(52, 199, 89, 0.15) !important;
+  backdrop-filter: blur(30px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+  border: 1px solid rgba(52, 199, 89, 0.25) !important;
+  color: #34C759 !important;
+  font-weight: 600 !important;
+  box-shadow:
+    0 2px 8px rgba(52, 199, 89, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.react-datepicker__day--today:hover {
+  background: rgba(52, 199, 89, 0.22) !important;
+  border-color: rgba(52, 199, 89, 0.35) !important;
+  box-shadow:
+    0 4px 12px rgba(52, 199, 89, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Keyboard Selected with Glassmorphism */
+.react-datepicker__day--keyboard-selected {
+  background: rgba(21, 112, 239, 0.18) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  border: 1px solid rgba(21, 112, 239, 0.25) !important;
+  color: #1570EF !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Outside Month (Grayed Out) */
+.react-datepicker__day--outside-month {
+  color: #c7c7cc !important;
+  opacity: 0.5 !important;
+}
+
+.react-datepicker__day--outside-month:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #9ca3af !important;
+}
+
+/* Disabled Days */
+.react-datepicker__day--disabled {
+  color: #d1d1d6 !important;
+  cursor: not-allowed !important;
+  opacity: 0.4 !important;
+}
+
+.react-datepicker__day--disabled:hover {
+  background: transparent !important;
+  transform: none !important;
+}
+
+/* Month Container */
+.react-datepicker__month-container {
+  float: none !important;
+}
+
+.react-datepicker__month {
+  margin: 0 !important;
+  padding: 4px !important;
+}
+
+/* Time Container (if used) */
+.react-datepicker__time-container {
+  border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+/* Triangle Arrow (hidden) */
+.react-datepicker__triangle {
+  display: none !important;
+}
+
+/* Month/Year Dropdown with Enhanced Glassmorphism */
+.react-datepicker__month-dropdown,
+.react-datepicker__year-dropdown {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(80px) saturate(180%) contrast(110%) !important;
+  -webkit-backdrop-filter: blur(80px) saturate(180%) contrast(110%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 16px 48px rgba(31, 38, 135, 0.25),
+    0 8px 24px rgba(31, 38, 135, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  padding: 10px !important;
+  max-height: 280px !important;
+  overflow-y: auto !important;
+}
+
+.react-datepicker__month-option,
+.react-datepicker__year-option {
+  padding: 10px 18px !important;
+  border-radius: 10px !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-weight: 500 !important;
+  margin: 2px 0 !important;
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid transparent !important;
+}
+
+.react-datepicker__month-option:hover,
+.react-datepicker__year-option:hover {
+  background: rgba(21, 112, 239, 0.15) !important;
+  backdrop-filter: blur(30px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+  border-color: rgba(21, 112, 239, 0.2) !important;
+  color: #1570EF !important;
+  transform: translateX(4px) !important;
+  box-shadow:
+    0 4px 12px rgba(21, 112, 239, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+.react-datepicker__month-option--selected,
+.react-datepicker__year-option--selected {
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.95) 0%, rgba(88, 86, 214, 0.95) 100%) !important;
+  backdrop-filter: blur(60px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(60px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  box-shadow:
+    0 6px 16px rgba(0, 122, 255, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Scrollbar for dropdowns */
+.react-datepicker__month-dropdown::-webkit-scrollbar,
+.react-datepicker__year-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.react-datepicker__month-dropdown::-webkit-scrollbar-track,
+.react-datepicker__year-dropdown::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.react-datepicker__month-dropdown::-webkit-scrollbar-thumb,
+.react-datepicker__year-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(21, 112, 239, 0.3);
+  border-radius: 10px;
+}
+
+.react-datepicker__month-dropdown::-webkit-scrollbar-thumb:hover,
+.react-datepicker__year-dropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(21, 112, 239, 0.5);
+}
+
+/* Animation for Calendar Popup */
+@keyframes macos-calendar-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.macos-calendar {
+  animation: macos-calendar-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Input Focus State Enhancement for DatePicker */
+.react-datepicker-wrapper input.macos-input:focus {
+  outline: none !important;
+  border-color: rgba(0, 122, 255, 0.5) !important;
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+}

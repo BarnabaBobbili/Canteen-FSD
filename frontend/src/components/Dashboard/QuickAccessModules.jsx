@@ -20,7 +20,7 @@ const QuickAccessModules = ({ accessibleModules }) => {
 
   return (
     <div className="mb-6 md:mb-8">
-      <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4" style={{ color: '#111827' }}>
+      <h3 className="macos-subheading text-lg sm:text-xl mb-3 sm:mb-4">
         {t('dashboard.quickAccess')}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -32,19 +32,18 @@ const QuickAccessModules = ({ accessibleModules }) => {
             <button
               key={index}
               onClick={() => navigate(module.path)}
-              className="bg-white rounded-xl p-5 sm:p-6 border border-gray-100 hover:shadow-lg transition-all transform hover:-translate-y-1 text-left group duration-300"
-              style={{ boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.06)' }}
+              className="macos-card p-5 sm:p-6 text-left group macos-animate"
             >
               <div
-                className="inline-flex items-center justify-center p-3 rounded-lg mb-3 group-hover:scale-110 transition-transform"
+                className="macos-icon-bg inline-flex mb-3"
                 style={{ backgroundColor: colors.bg }}
               >
                 <Icon className="w-6 h-6" style={{ color: colors.icon }} />
               </div>
-              <h4 className="text-base font-bold mb-1" style={{ color: '#111827' }}>
+              <h4 className="macos-subheading text-base mb-1">
                 {module.name}
               </h4>
-              <p className="text-sm" style={{ color: '#6B7280' }}>{module.description}</p>
+              <p className="macos-text text-sm">{module.description}</p>
             </button>
           );
         })}

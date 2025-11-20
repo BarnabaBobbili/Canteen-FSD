@@ -16,7 +16,7 @@ const PaymentFilters = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+    <div className="macos-card macos-animate p-6 mb-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Search Input */}
         <div className="md:col-span-2">

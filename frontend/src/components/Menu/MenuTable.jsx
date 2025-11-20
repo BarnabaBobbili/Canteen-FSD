@@ -3,7 +3,7 @@ import { Edit2, Trash2, AlertTriangle, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSettings } from '../../context/SettingsContext';
 import API_BASE_URL from '../../config/api';
-import { calculateDiscountedPrice } from './menuHelpers';
+import { calculateDiscountedPrice, getImageUrl } from './menuHelpers';
 
 /**
  * MenuTable - Displays menu items in a table format
@@ -19,16 +19,16 @@ const MenuTable = ({
   const { formatCurrency } = useSettings();
   if (!menuItems || menuItems.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 text-center text-gray-500">
+      <div className="macos-card p-8 text-center text-gray-500 macos-animate">
         {t('menu.noItems')}
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="macos-table macos-animate">
       <table className="w-full">
-        <thead className="bg-gray-50">
+        <thead className="macos-table-header">
           <tr>
             <th className="px-6 py-3 text-left text-sm font-semibold">{t('menu.image')}</th>
             <th className="px-6 py-3 text-left text-sm font-semibold">{t('menu.itemName')}</th>
@@ -63,16 +63,13 @@ const MenuTable = ({
             }
 
             return (
-              <tr key={item._id} className="border-b hover:bg-gray-50">
+              <tr key={item._id} className="border-b macos-table-row">
                 {/* Image Cell */}
                 <td className="px-6 py-4">
                   <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
-                    {item.image ? (
+                    {getImageUrl(item.image, API_BASE_URL) ? (
                       <img
-                        src={(() => {
-                          const isExternalUrl = item.image.startsWith('http://') || item.image.startsWith('https://');
-                          return isExternalUrl ? item.image : `${API_BASE_URL.replace('/api', '')}${item.image}`;
-                        })()}
+                        src={getImageUrl(item.image, API_BASE_URL)}
                         alt={item.itemName}
                         className="w-full h-full object-cover"
                         onError={(e) => {

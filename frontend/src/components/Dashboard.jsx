@@ -5,7 +5,7 @@ import DashboardLayout from './DashboardLayout';
 import API_BASE_URL from '../config/api';
 import {
   ShoppingCart, UtensilsCrossed, Package, Users, Truck, Tag,
-  MessageSquare, CreditCard
+  MessageSquare, CreditCard, FileText
 } from 'lucide-react';
 
 // Import Dashboard components
@@ -119,6 +119,14 @@ const Dashboard = () => {
       path: '/payments',
       color: 'from-emerald-500 to-emerald-600',
       roles: ['admin', 'manager', 'cashier']
+    },
+    {
+      name: 'Reports & Export',
+      description: 'Generate detailed sales reports, inventory summaries, and financial statements. Export to PDF or Excel.',
+      icon: FileText,
+      path: '/reports',
+      color: 'from-orange-500 to-orange-600',
+      roles: ['admin', 'manager']
     }
   ];
 

@@ -24,7 +24,7 @@ const OrderHeader = ({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 p-6">
+    <div className="macos-filter-bar mb-6 macos-animate">
       {/* Search Bar and Buttons */}
       <div className="flex gap-3 mb-4 flex-wrap">
         <div className="flex-1 min-w-[300px]">
@@ -36,7 +36,7 @@ const OrderHeader = ({
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm"
+          className="macos-input flex items-center gap-2 px-4 py-2 font-medium text-sm"
         >
           <Filter size={16} />
           {t('common.filters')}
@@ -44,7 +44,7 @@ const OrderHeader = ({
         </button>
         <button
           onClick={onAddOrder}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm"
+          className="macos-btn flex items-center gap-2 text-white font-medium text-sm"
         >
           <Plus size={18} /> {t('orders.addOrder')}
         </button>

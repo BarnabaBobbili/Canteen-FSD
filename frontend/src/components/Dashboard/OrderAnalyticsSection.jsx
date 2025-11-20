@@ -26,14 +26,13 @@ const OrderAnalyticsSection = ({
   return (
     <div className="mt-6 md:mt-8">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-gray-900">Sales Details</h3>
+        <h3 className="macos-subheading text-xl">Sales Details</h3>
         {/* Date Filter Dropdown */}
         <div className="relative">
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:border-transparent cursor-pointer"
-            style={{ '--tw-ring-color': '#1570EF' }}
+            className="macos-input px-4 py-2 text-sm font-medium cursor-pointer"
           >
             {filterOptions.map((filter) => (
               <option key={filter.value} value={filter.value}>
@@ -47,14 +46,14 @@ const OrderAnalyticsSection = ({
       <div className="space-y-6">
         {/* Analytics Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+          <div className="macos-stat-card macos-animate">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-lg" style={{ backgroundColor: '#E0F2FE' }}>
+              <div className="macos-icon-bg" style={{ backgroundColor: '#E0F2FE' }}>
                 <CheckCircle className="w-6 h-6" style={{ color: '#1570EF' }} />
               </div>
             </div>
-            <p className="text-sm text-gray-600 font-medium mb-1">Total Orders</p>
-            <h3 className="text-3xl font-bold text-gray-900">{analytics.totalOrders}</h3>
+            <p className="macos-text text-sm font-medium mb-1">Total Orders</p>
+            <h3 className="macos-metric text-3xl">{analytics.totalOrders}</h3>
             <div className="flex items-center gap-1 mt-2 text-green-600">
               <TrendingUp className="w-4 h-4" />
               <span className="text-sm font-semibold">12.5%</span>
@@ -62,14 +61,14 @@ const OrderAnalyticsSection = ({
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+          <div className="macos-stat-card macos-animate">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-50 rounded-lg">
+              <div className="macos-icon-bg bg-green-50">
                 <DollarSign className="w-6 h-6 text-green-600" />
               </div>
             </div>
-            <p className="text-sm text-gray-600 font-medium mb-1">Total Revenue</p>
-            <h3 className="text-3xl font-bold text-gray-900">
+            <p className="macos-text text-sm font-medium mb-1">Total Revenue</p>
+            <h3 className="macos-metric text-3xl">
               {formatCurrency(analytics.totalRevenue)}
             </h3>
             <div className="flex items-center gap-1 mt-2 text-green-600">
@@ -79,14 +78,14 @@ const OrderAnalyticsSection = ({
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+          <div className="macos-stat-card macos-animate">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-50 rounded-lg">
+              <div className="macos-icon-bg bg-purple-50">
                 <BarChart3 className="w-6 h-6 text-purple-600" />
               </div>
             </div>
-            <p className="text-sm text-gray-600 font-medium mb-1">Avg Order Value</p>
-            <h3 className="text-3xl font-bold text-gray-900">
+            <p className="macos-text text-sm font-medium mb-1">Avg Order Value</p>
+            <h3 className="macos-metric text-3xl">
               {formatCurrency(analytics.averageOrderValue)}
             </h3>
             <div className="flex items-center gap-1 mt-2 text-green-600">
@@ -99,7 +98,7 @@ const OrderAnalyticsSection = ({
 
         {/* Analytics Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          <div className="rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg" style={{ background: 'linear-gradient(135deg, #1570EF 0%, #3B82F6 100%)' }}>
+          <div className="macos-gradient-blue rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg macos-animate">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-white/20 rounded-lg backdrop-blur">
                 <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -110,7 +109,7 @@ const OrderAnalyticsSection = ({
             <p className="text-blue-100 text-xs sm:text-sm">Completed Orders</p>
           </div>
 
-          <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
+          <div className="macos-gradient-green rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg macos-animate">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-white/20 rounded-lg backdrop-blur">
                 <DollarSign className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -123,7 +122,7 @@ const OrderAnalyticsSection = ({
             <p className="text-green-100 text-xs sm:text-sm">Total Revenue</p>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
+          <div className="macos-gradient-purple rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg macos-animate">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div className="p-2 sm:p-3 bg-white/20 rounded-lg backdrop-blur">
                 <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -140,8 +139,8 @@ const OrderAnalyticsSection = ({
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Orders Trend Chart */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <h4 className="font-semibold text-gray-900 mb-4 text-base">
+          <div className="macos-card p-6 macos-animate">
+            <h4 className="macos-subheading mb-4 text-base">
               Orders Trend
             </h4>
             {analytics.chartData.length > 0 ? (
@@ -184,8 +183,8 @@ const OrderAnalyticsSection = ({
           </div>
 
           {/* Revenue Trend Chart */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <h4 className="font-semibold text-gray-900 mb-4 text-base">
+          <div className="macos-card p-6 macos-animate">
+            <h4 className="macos-subheading mb-4 text-base">
               Revenue Trend
             </h4>
             {analytics.chartData.length > 0 ? (
@@ -227,8 +226,8 @@ const OrderAnalyticsSection = ({
 
         {/* Order Status Distribution & Recent Orders */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <h4 className="font-semibold text-gray-900 mb-4 text-base">
+          <div className="macos-card p-6 macos-animate">
+            <h4 className="macos-subheading mb-4 text-base">
               Order Status Distribution
             </h4>
             {analytics.statusChartData.length > 0 ? (
@@ -269,8 +268,8 @@ const OrderAnalyticsSection = ({
           </div>
 
           {/* Completed Orders List */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-            <h4 className="font-semibold text-gray-900 mb-4 text-base">
+          <div className="macos-card p-6 macos-animate">
+            <h4 className="macos-subheading mb-4 text-base">
               Recent Completed Orders
             </h4>
             <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">

@@ -21,7 +21,7 @@ const StaffHeader = ({ searchTerm, onSearchChange, onAddClick }) => {
       </div>
 
       {/* Search and Add Controls */}
-      <div className="bg-white rounded-xl shadow-lg mb-6 p-6">
+      <div className="macos-card macos-animate mb-6 p-6">
         <div className="flex gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -45,7 +45,7 @@ const StaffHeader = ({ searchTerm, onSearchChange, onAddClick }) => {
           </div>
           <button
             onClick={onAddClick}
-            className="flex items-center gap-2 px-6 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+            className="flex items-center gap-2 px-6 py-2 macos-btn text-white transition-colors"
           >
             <Plus size={20} />
             {t('staff.addStaff')}

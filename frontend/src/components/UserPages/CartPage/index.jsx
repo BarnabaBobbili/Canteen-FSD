@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Trash2, Plus, Minus, ChefHat } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Trash2, Plus, Minus, UtensilsCrossed } from 'lucide-react';
 import { useCart } from '../../../context/CartContext';
 import { useAuth } from '../../../context/AuthContext';
+import { getImageUrl } from '../../Menu/menuHelpers';
+import API_BASE_URL from '../../../config/api';
 
 /**
  * Dedicated Cart Page
@@ -164,9 +166,9 @@ const CartPage = () => {
                 <div className="flex gap-4">
                   {/* Image */}
                   <div className="relative w-24 h-24 flex-shrink-0 overflow-hidden border-2 border-gray-900">
-                    {item.image ? (
+                    {getImageUrl(item.image, API_BASE_URL) ? (
                       <img
-                        src={item.image}
+                        src={getImageUrl(item.image, API_BASE_URL)}
                         alt={item.itemName}
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -177,10 +179,10 @@ const CartPage = () => {
                     ) : null}
                     <div
                       className={`absolute inset-0 bg-gray-200 flex items-center justify-center ${
-                        item.image ? 'hidden' : ''
+                        getImageUrl(item.image, API_BASE_URL) ? 'hidden' : ''
                       }`}
                     >
-                      <ChefHat className="w-12 h-12 text-gray-900 opacity-30" />
+                      <UtensilsCrossed className="w-12 h-12 text-gray-900 opacity-30" />
                     </div>
                   </div>
 

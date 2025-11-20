@@ -67,6 +67,10 @@ testing/
 !README.md
 FRONTEND_SUMMARY.txt
 MD Documentation/
+Media/
+SVG/
+Landing Page pics/
+Menu Images/
 
 # Don't track .gitignore changes
 .gitignore

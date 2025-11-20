@@ -1,6 +1,8 @@
 import React from 'react';
-import { Plus, Minus, Heart, ChefHat, Search, Eye } from 'lucide-react';
+import { Plus, Minus, Heart, UtensilsCrossed, Search, Eye } from 'lucide-react';
 import { findCartItem } from './cartHelpers';
+import { getImageUrl } from '../../Menu/menuHelpers';
+import API_BASE_URL from '../../../config/api';
 
 /**
  * Menu grid component displaying menu items
@@ -55,9 +57,9 @@ const MenuGrid = ({
           >
             {/* Menu Item Image */}
             <div className="relative h-48 overflow-hidden group cursor-pointer" onClick={() => onItemClick && onItemClick(item)}>
-              {item.image ? (
+              {getImageUrl(item.image, API_BASE_URL) ? (
                 <img
-                  src={item.image}
+                  src={getImageUrl(item.image, API_BASE_URL)}
                   alt={item.itemName}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   onError={(e) => {
@@ -68,10 +70,10 @@ const MenuGrid = ({
               ) : null}
               <div
                 className={`absolute inset-0 bg-gray-200 flex items-center justify-center ${
-                  item.image ? 'hidden' : ''
+                  getImageUrl(item.image, API_BASE_URL) ? 'hidden' : ''
                 }`}
               >
-                <ChefHat className="w-16 h-16 text-gray-900 opacity-30" />
+                <UtensilsCrossed className="w-16 h-16 text-gray-900 opacity-30" />
               </div>
 
               {/* Veg/Non-Veg Indicator */}

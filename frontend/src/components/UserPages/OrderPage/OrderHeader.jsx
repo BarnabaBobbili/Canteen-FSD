@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, ChefHat, User } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, UtensilsCrossed, User } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
 /**
@@ -20,14 +20,14 @@ const OrderHeader = ({ cartQuantity, onCartClick }) => {
           {/* Left Side */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/demo')}
               className="p-2 border-2 border-gray-900 hover:bg-gray-100 transition-all transform hover:-rotate-3"
             >
               <ArrowLeft className="w-6 h-6 text-gray-900" />
             </button>
             <div className="flex items-center gap-2">
               <div className="bg-gray-900 border-3 border-gray-900 p-2.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.4)]">
-                <ChefHat className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                <UtensilsCrossed className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
               <div>
                 <h1 className="text-lg sm:text-xl font-black text-gray-900">Order Food</h1>

@@ -88,3 +88,17 @@ export const deleteOrder = async (orderId, token) => {
     throw new Error('Failed to delete order');
   }
 };
+
+/**
+ * Fetch all available menu items
+ * @returns {Promise<Array>} Array of available menu items
+ */
+export const fetchMenuItems = async () => {
+  const response = await fetch(`${API_BASE_URL}/menu`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch menu items');
+  }
+  const data = await response.json();
+  // Filter only available items
+  return data.filter(item => item.available);
+};
