@@ -4,6 +4,7 @@ import { FileText, FileSpreadsheet, AlertTriangle, Package, TrendingDown, XOctag
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { formatCurrencyForPDF, getPDFFileName, getExcelFileName } from './reportHelpers';
 
 const InventoryReport = ({ inventoryData, formatCurrency }) => {
   const { t } = useTranslation();
@@ -64,7 +65,7 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
       ['Total Items', inventoryMetrics.totalItems.toString()],
       ['Low Stock Items', inventoryMetrics.lowStockCount.toString()],
       ['Out of Stock Items', inventoryMetrics.outOfStockCount.toString()],
-      ['Total Inventory Value', formatCurrency(inventoryMetrics.totalValue)]
+      ['Total Inventory Value', formatCurrencyForPDF(formatCurrency(inventoryMetrics.totalValue))]
     ];
 
     autoTable(doc, {
@@ -84,7 +85,7 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
       category,
       data.count.toString(),
       data.totalQuantity.toString(),
-      formatCurrency(data.totalValue)
+      formatCurrencyForPDF(formatCurrency(data.totalValue))
     ]);
 
     autoTable(doc, {
@@ -119,7 +120,7 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
       });
     }
 
-    doc.save(`Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(getPDFFileName('Inventory', null, null));
   };
 
   const exportToExcel = () => {
@@ -184,7 +185,7 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
       XLSX.utils.book_append_sheet(wb, lowStockSheet, 'Low Stock Alert');
     }
 
-    XLSX.writeFile(wb, `Inventory_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+    XLSX.writeFile(wb, getExcelFileName('Inventory', null, null));
   };
 
   const statCards = [

@@ -4,6 +4,7 @@ import { FileText, FileSpreadsheet, DollarSign, ShoppingCart, TrendingUp, Packag
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { formatCurrencyForPDF, getPDFFileName, getExcelFileName } from './reportHelpers';
 
 const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, formatCurrency }) => {
   const { t } = useTranslation();
@@ -76,10 +77,10 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
     doc.text('Financial Summary', 14, 35);
 
     const summaryData = [
-      ['Total Revenue', formatCurrency(financialMetrics.totalRevenue)],
+      ['Total Revenue', formatCurrencyForPDF(formatCurrency(financialMetrics.totalRevenue))],
       ['Total Orders', financialMetrics.totalOrders.toString()],
-      ['Average Daily Revenue', formatCurrency(financialMetrics.avgDailyRevenue)],
-      ['Inventory Value', formatCurrency(financialMetrics.totalInventoryCost)]
+      ['Average Daily Revenue', formatCurrencyForPDF(formatCurrency(financialMetrics.avgDailyRevenue))],
+      ['Inventory Value', formatCurrencyForPDF(formatCurrency(financialMetrics.totalInventoryCost))]
     ];
 
     autoTable(doc, {
@@ -98,7 +99,7 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
     const paymentData = Object.entries(financialMetrics.revenueByPayment).map(([method, data]) => [
       method.toUpperCase(),
       data.count.toString(),
-      formatCurrency(data.amount),
+      formatCurrencyForPDF(formatCurrency(data.amount)),
       ((data.amount / financialMetrics.totalRevenue) * 100).toFixed(1) + '%'
     ]);
 
@@ -119,7 +120,7 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
       .slice(0, 15)
       .map(item => [
         new Date(item.date).toLocaleDateString(),
-        formatCurrency(item.amount)
+        formatCurrencyForPDF(formatCurrency(item.amount))
       ]);
 
     autoTable(doc, {
@@ -130,7 +131,7 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
       headStyles: { fillColor: [249, 115, 22] }
     });
 
-    doc.save(`Financial_Statement_${dateRange.startDate}_to_${dateRange.endDate}.pdf`);
+    doc.save(getPDFFileName('Financial_Statement', dateRange.startDate, dateRange.endDate));
   };
 
   const exportToExcel = () => {
@@ -175,7 +176,7 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
     const dailySheet = XLSX.utils.aoa_to_sheet(dailyData);
     XLSX.utils.book_append_sheet(wb, dailySheet, 'Daily Revenue');
 
-    XLSX.writeFile(wb, `Financial_Statement_${dateRange.startDate}_to_${dateRange.endDate}.xlsx`);
+    XLSX.writeFile(wb, getExcelFileName('Financial_Statement', dateRange.startDate, dateRange.endDate));
   };
 
   const statCards = [

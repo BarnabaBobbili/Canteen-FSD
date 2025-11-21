@@ -4,6 +4,7 @@ import { Download, FileText, FileSpreadsheet, ShoppingCart, CheckCircle, XCircle
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import { formatCurrencyForPDF, getPDFFileName, getExcelFileName } from './reportHelpers';
 
 const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
   const { t } = useTranslation();
@@ -84,8 +85,8 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
       ['Total Orders', salesMetrics.totalOrders.toString()],
       ['Completed Orders', salesMetrics.completedOrders.toString()],
       ['Cancelled Orders', salesMetrics.cancelledOrders.toString()],
-      ['Total Revenue', formatCurrency(salesMetrics.totalRevenue)],
-      ['Average Order Value', formatCurrency(salesMetrics.averageOrderValue)]
+      ['Total Revenue', formatCurrencyForPDF(formatCurrency(salesMetrics.totalRevenue))],
+      ['Average Order Value', formatCurrencyForPDF(formatCurrency(salesMetrics.averageOrderValue))]
     ];
 
     autoTable(doc, {
@@ -103,7 +104,7 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
 
     const typeData = Object.entries(salesMetrics.salesByType).map(([type, amount]) => [
       type.charAt(0).toUpperCase() + type.slice(1),
-      formatCurrency(amount)
+      formatCurrencyForPDF(formatCurrency(amount))
     ]);
 
     autoTable(doc, {
@@ -122,7 +123,7 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
     const topItemsData = salesMetrics.topItems.map(item => [
       item.name,
       item.quantity.toString(),
-      formatCurrency(item.revenue)
+      formatCurrencyForPDF(formatCurrency(item.revenue))
     ]);
 
     autoTable(doc, {
@@ -133,7 +134,7 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
       headStyles: { fillColor: [249, 115, 22] }
     });
 
-    doc.save(`Sales_Report_${dateRange.startDate}_to_${dateRange.endDate}.pdf`);
+    doc.save(getPDFFileName('Sales', dateRange.startDate, dateRange.endDate));
   };
 
   const exportToExcel = () => {
@@ -186,7 +187,7 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
     const ordersSheet = XLSX.utils.aoa_to_sheet(ordersExportData);
     XLSX.utils.book_append_sheet(wb, ordersSheet, 'All Orders');
 
-    XLSX.writeFile(wb, `Sales_Report_${dateRange.startDate}_to_${dateRange.endDate}.xlsx`);
+    XLSX.writeFile(wb, getExcelFileName('Sales', dateRange.startDate, dateRange.endDate));
   };
 
   const statCards = [
