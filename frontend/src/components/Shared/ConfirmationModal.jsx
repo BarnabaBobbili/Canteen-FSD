@@ -56,22 +56,23 @@ const ConfirmationModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="macos-card macos-animate-xl max-w-md w-full">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="presentation">
+      <div className="macos-card macos-animate-xl max-w-md w-full" role="dialog" aria-modal="true" aria-labelledby="confirmation-modal-title">
         <div className="p-6">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className={`p-3 rounded-full ${getIconBgColor()}`}>
-                <AlertTriangle className={getIconColor()} size={24} />
+                <AlertTriangle className={getIconColor()} size={24} aria-hidden="true" />
               </div>
-              <h2 className="text-xl font-bold text-gray-800">{title}</h2>
+              <h2 id="confirmation-modal-title" className="text-xl font-bold text-gray-800">{title}</h2>
             </div>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 transition"
+              aria-label="Close dialog"
             >
-              <X size={24} />
+              <X size={24} aria-hidden="true" />
             </button>
           </div>
 

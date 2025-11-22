@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
 import { useTranslation } from 'react-i18next';
-import DashboardLayout from '../DashboardLayout';
+import DashboardLayout from '../Layout/DashboardLayout';
 import API_BASE_URL from '../../config/api';
 import { FileText, Download, TrendingUp, Package, DollarSign, Calendar, FileBarChart, ArrowRight } from 'lucide-react';
 import SalesReport from './SalesReport';

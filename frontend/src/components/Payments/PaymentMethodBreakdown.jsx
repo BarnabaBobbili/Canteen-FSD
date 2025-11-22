@@ -16,9 +16,9 @@ const PaymentMethodBreakdown = ({ stats }) => {
     <div className="macos-card macos-animate p-6 mb-6">
       <h2 className="text-lg font-bold mb-4">{t('payments.paymentMethodBreakdown')}</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        {stats.byMethod.map((method, idx) => (
+        {stats.byMethod.map((method) => (
           <div
-            key={idx}
+            key={method._id || method.name || 'unknown'}
             className="bg-gray-50 rounded-lg p-4 border border-gray-200"
           >
             <div className="text-2xl mb-2">{getMethodIcon(method._id)}</div>

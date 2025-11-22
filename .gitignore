@@ -59,9 +59,6 @@ testActivity.js
 testing/
 *.csv
 
-# Don't track .gitignore changes
-.gitignore
-
 # Development Documentation (temporary implementation notes)
 *.md
 !README.md
@@ -70,13 +67,6 @@ MD Documentation/
 SVG/
 Landing Page pics/
 Menu Images/
-
-SVG/
-Landing Page pics/
-Menu Images/
-
-# Don't track .gitignore changes
-.gitignore
 
 # Accidental/Error Files
 nul

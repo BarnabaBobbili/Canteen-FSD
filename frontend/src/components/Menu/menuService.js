@@ -34,8 +34,18 @@ export const createMenuItem = async (menuData, token) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Failed to create menu item');
+    // Use generic error message to avoid exposing server internals
+    let errorMessage = 'Failed to create menu item';
+    try {
+      const errorData = await response.json();
+      // Log for debugging but don't expose to users
+      if (errorData.message) {
+        console.debug('Server error:', errorData.message);
+      }
+    } catch {
+      // Response body is not valid JSON
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -59,8 +69,18 @@ export const updateMenuItem = async (id, menuData, token) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Failed to update menu item');
+    // Use generic error message to avoid exposing server internals
+    let errorMessage = 'Failed to update menu item';
+    try {
+      const errorData = await response.json();
+      // Log for debugging but don't expose to users
+      if (errorData.message) {
+        console.debug('Server error:', errorData.message);
+      }
+    } catch {
+      // Response body is not valid JSON
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();

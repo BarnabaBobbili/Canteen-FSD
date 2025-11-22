@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FileText, FileSpreadsheet, DollarSign, ShoppingCart, TrendingUp, Package } from 'lucide-react';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { DollarSign, ShoppingCart, TrendingUp, Package } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import ReportExportButtons from './shared/ReportExportButtons';
+import ReportSummaryCards from './shared/ReportSummaryCards';
 import { formatCurrencyForPDF, getPDFFileName, getExcelFileName } from './reportHelpers';
+import { createPDFWithHeader, addPDFSummarySection, addPDFTableSection } from './shared/reportPDFHelpers';
 
 const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, formatCurrency }) => {
   const { t } = useTranslation();
@@ -19,17 +20,14 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
     const revenueByPayment = completedOrders.reduce((acc, order) => {
       const method = order.paymentMethod || 'cash';
       if (!acc[method]) {
-        acc[method] = {
-          count: 0,
-          amount: 0
-        };
+        acc[method] = { count: 0, amount: 0 };
       }
       acc[method].count++;
       acc[method].amount += order.totalAmount || 0;
       return acc;
     }, {});
 
-    // Calculate inventory costs (estimation)
+    // Calculate inventory costs
     const totalInventoryCost = inventoryData.reduce((sum, item) => {
       return sum + (item.quantity * (item.unitPrice || 0));
     }, 0);
@@ -45,10 +43,7 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
       .map(([date, amount]) => ({ date, amount }))
       .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    // Calculate average daily revenue
-    const avgDailyRevenue = dailyRevenue.length > 0
-      ? totalRevenue / dailyRevenue.length
-      : 0;
+    const avgDailyRevenue = dailyRevenue.length > 0 ? totalRevenue / dailyRevenue.length : 0;
 
     return {
       totalRevenue,
@@ -61,75 +56,33 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
   }, [ordersData, inventoryData]);
 
   const exportToPDF = () => {
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
+    const doc = createPDFWithHeader('Financial Statement', dateRange);
 
-    // Header
-    doc.setFontSize(20);
-    doc.text('Financial Statement', pageWidth / 2, 15, { align: 'center' });
-
-    doc.setFontSize(10);
-    doc.text(`Period: ${dateRange.startDate} to ${dateRange.endDate}`, pageWidth / 2, 22, { align: 'center' });
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, 27, { align: 'center' });
-
-    // Financial Summary
-    doc.setFontSize(14);
-    doc.text('Financial Summary', 14, 35);
-
+    // Summary section
     const summaryData = [
       ['Total Revenue', formatCurrencyForPDF(formatCurrency(financialMetrics.totalRevenue))],
       ['Total Orders', financialMetrics.totalOrders.toString()],
       ['Average Daily Revenue', formatCurrencyForPDF(formatCurrency(financialMetrics.avgDailyRevenue))],
       ['Inventory Value', formatCurrencyForPDF(formatCurrency(financialMetrics.totalInventoryCost))]
     ];
+    let currentY = addPDFSummarySection(doc, 'Financial Summary', summaryData);
 
-    autoTable(doc, {
-      startY: 40,
-      head: [['Metric', 'Value']],
-      body: summaryData,
-      theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }
-    });
-
-    // Revenue by Payment Method
-    let currentY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text('Revenue by Payment Method', 14, currentY);
-
+    // Revenue by payment method
     const paymentData = Object.entries(financialMetrics.revenueByPayment).map(([method, data]) => [
       method.toUpperCase(),
       data.count.toString(),
       formatCurrencyForPDF(formatCurrency(data.amount)),
       ((data.amount / financialMetrics.totalRevenue) * 100).toFixed(1) + '%'
     ]);
+    currentY = addPDFTableSection(doc, 'Revenue by Payment Method',
+      ['Payment Method', 'Transactions', 'Amount', '% of Total'], paymentData, currentY);
 
-    autoTable(doc, {
-      startY: currentY + 5,
-      head: [['Payment Method', 'Transactions', 'Amount', '% of Total']],
-      body: paymentData,
-      theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }
-    });
-
-    // Daily Revenue (limited to first 15 days for PDF)
-    currentY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text('Daily Revenue Breakdown', 14, currentY);
-
-    const dailyData = financialMetrics.dailyRevenue
-      .slice(0, 15)
-      .map(item => [
-        new Date(item.date).toLocaleDateString(),
-        formatCurrencyForPDF(formatCurrency(item.amount))
-      ]);
-
-    autoTable(doc, {
-      startY: currentY + 5,
-      head: [['Date', 'Revenue']],
-      body: dailyData,
-      theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }
-    });
+    // Daily revenue (first 15 days)
+    const dailyData = financialMetrics.dailyRevenue.slice(0, 15).map(item => [
+      new Date(item.date).toLocaleDateString(),
+      formatCurrencyForPDF(formatCurrency(item.amount))
+    ]);
+    addPDFTableSection(doc, 'Daily Revenue Breakdown', ['Date', 'Revenue'], dailyData, currentY);
 
     doc.save(getPDFFileName('Financial_Statement', dateRange.startDate, dateRange.endDate));
   };
@@ -168,10 +121,7 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
     // Daily Revenue
     const dailyData = [
       ['Date', 'Revenue'],
-      ...financialMetrics.dailyRevenue.map(item => [
-        item.date,
-        item.amount
-      ])
+      ...financialMetrics.dailyRevenue.map(item => [item.date, item.amount])
     ];
     const dailySheet = XLSX.utils.aoa_to_sheet(dailyData);
     XLSX.utils.book_append_sheet(wb, dailySheet, 'Daily Revenue');
@@ -212,51 +162,9 @@ const FinancialReport = ({ ordersData, paymentsData, inventoryData, dateRange, f
 
   return (
     <div>
-      {/* Export Buttons */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 mb-6">
-        <button
-          onClick={exportToPDF}
-          className="macos-btn flex items-center justify-center gap-2 px-4 py-2.5 text-white"
-          style={{
-            background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
-          }}
-        >
-          <FileText size={18} />
-          {t('reports.exportPDF', 'Export PDF')}
-        </button>
-        <button
-          onClick={exportToExcel}
-          className="macos-btn flex items-center justify-center gap-2 px-4 py-2.5 text-white"
-          style={{
-            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-          }}
-        >
-          <FileSpreadsheet size={18} />
-          {t('reports.exportExcel', 'Export Excel')}
-        </button>
-      </div>
+      <ReportExportButtons onExportPDF={exportToPDF} onExportExcel={exportToExcel} />
 
-      {/* Summary Cards with macOS Design */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {statCards.map((card, index) => {
-          const Icon = card.icon;
-          return (
-            <div key={index} className="macos-stat-card macos-animate cursor-pointer">
-              <div className="flex items-center justify-between mb-4">
-                <div className="macos-icon-bg" style={{ backgroundColor: card.bgColor }}>
-                  <Icon className="w-6 h-6" style={{ color: card.iconColor }} />
-                </div>
-              </div>
-              <p className="macos-text text-sm font-medium mb-1">{card.title}</p>
-              <h3 className="macos-metric text-2xl sm:text-3xl">
-                {card.value}
-              </h3>
-            </div>
-          );
-        })}
-      </div>
+      <ReportSummaryCards cards={statCards} />
 
       {/* Revenue by Payment Method */}
       <div className="mb-6">
