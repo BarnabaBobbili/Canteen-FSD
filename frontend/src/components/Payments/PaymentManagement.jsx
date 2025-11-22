@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
-import DashboardLayout from '../DashboardLayout';
+import DashboardLayout from '../Layout/DashboardLayout';
 import PaymentStats from './PaymentStats';
 import PaymentMethodBreakdown from './PaymentMethodBreakdown';
 import PaymentFilters from './PaymentFilters';

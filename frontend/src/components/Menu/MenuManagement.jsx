@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
-import DashboardLayout from '../DashboardLayout';
+import DashboardLayout from '../Layout/DashboardLayout';
 import MenuForm from './MenuForm';
 import MenuFilterBar from '../Shared/MenuFilterBar';
 import MenuAnalytics from './MenuAnalytics';

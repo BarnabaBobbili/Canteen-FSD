@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
-import DashboardLayout from './DashboardLayout';
+import DashboardLayout from './Layout/DashboardLayout';
 import API_BASE_URL from '../config/api';
 import {
   ShoppingCart, UtensilsCrossed, Package, Users, Truck, Tag,

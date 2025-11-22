@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FileText, FileSpreadsheet, AlertTriangle, Package, TrendingDown, XOctagon, DollarSign } from 'lucide-react';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { AlertTriangle, Package, TrendingDown, XOctagon, DollarSign } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import ReportExportButtons from './shared/ReportExportButtons';
+import ReportSummaryCards from './shared/ReportSummaryCards';
+import { formatCurrencyForPDF, getPDFFileName, getExcelFileName } from './reportHelpers';
+import { createPDFWithHeader, addPDFSummarySection, addPDFTableSection } from './shared/reportPDFHelpers';
 
 const InventoryReport = ({ inventoryData, formatCurrency }) => {
   const { t } = useTranslation();
@@ -22,11 +24,7 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
     const byCategory = inventoryData.reduce((acc, item) => {
       const category = item.category || 'Other';
       if (!acc[category]) {
-        acc[category] = {
-          count: 0,
-          totalQuantity: 0,
-          totalValue: 0
-        };
+        acc[category] = { count: 0, totalQuantity: 0, totalValue: 0 };
       }
       acc[category].count++;
       acc[category].totalQuantity += item.quantity;
@@ -46,80 +44,39 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
   }, [inventoryData]);
 
   const exportToPDF = () => {
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
+    const doc = createPDFWithHeader('Inventory Report');
 
-    // Header
-    doc.setFontSize(20);
-    doc.text('Inventory Report', pageWidth / 2, 15, { align: 'center' });
-
-    doc.setFontSize(10);
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, 22, { align: 'center' });
-
-    // Summary Statistics
-    doc.setFontSize(14);
-    doc.text('Inventory Summary', 14, 30);
-
+    // Summary section
     const summaryData = [
       ['Total Items', inventoryMetrics.totalItems.toString()],
       ['Low Stock Items', inventoryMetrics.lowStockCount.toString()],
       ['Out of Stock Items', inventoryMetrics.outOfStockCount.toString()],
-      ['Total Inventory Value', formatCurrency(inventoryMetrics.totalValue)]
+      ['Total Inventory Value', formatCurrencyForPDF(formatCurrency(inventoryMetrics.totalValue))]
     ];
+    let currentY = addPDFSummarySection(doc, 'Inventory Summary', summaryData, 30);
 
-    autoTable(doc, {
-      startY: 35,
-      head: [['Metric', 'Value']],
-      body: summaryData,
-      theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }
-    });
-
-    // Inventory by Category
-    let currentY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text('Inventory by Category', 14, currentY);
-
+    // By category
     const categoryData = Object.entries(inventoryMetrics.byCategory).map(([category, data]) => [
       category,
       data.count.toString(),
       data.totalQuantity.toString(),
-      formatCurrency(data.totalValue)
+      formatCurrencyForPDF(formatCurrency(data.totalValue))
     ]);
+    currentY = addPDFTableSection(doc, 'Inventory by Category',
+      ['Category', 'Items', 'Total Quantity', 'Total Value'], categoryData, currentY);
 
-    autoTable(doc, {
-      startY: currentY + 5,
-      head: [['Category', 'Items', 'Total Quantity', 'Total Value']],
-      body: categoryData,
-      theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }
-    });
-
-    // Low Stock Items
+    // Low stock alert
     if (inventoryMetrics.lowStockItems.length > 0) {
-      currentY = doc.lastAutoTable.finalY + 10;
-      doc.setFontSize(14);
-      doc.setTextColor(220, 38, 38); // Red color
-      doc.text('Low Stock Alert', 14, currentY);
-      doc.setTextColor(0, 0, 0); // Reset to black
-
       const lowStockData = inventoryMetrics.lowStockItems.map(item => [
         item.itemName,
         item.quantity.toString(),
         item.unit || 'pcs',
         item.supplier || 'N/A'
       ]);
-
-      autoTable(doc, {
-        startY: currentY + 5,
-        head: [['Item Name', 'Quantity', 'Unit', 'Supplier']],
-        body: lowStockData,
-        theme: 'grid',
-        headStyles: { fillColor: [220, 38, 38] }
-      });
+      addPDFTableSection(doc, 'Low Stock Alert', ['Item Name', 'Quantity', 'Unit', 'Supplier'], lowStockData, currentY);
     }
 
-    doc.save(`Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(getPDFFileName('Inventory', null, null));
   };
 
   const exportToExcel = () => {
@@ -143,10 +100,7 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
     const categoryData = [
       ['Category', 'Items', 'Total Quantity', 'Total Value'],
       ...Object.entries(inventoryMetrics.byCategory).map(([category, data]) => [
-        category,
-        data.count,
-        data.totalQuantity,
-        data.totalValue
+        category, data.count, data.totalQuantity, data.totalValue
       ])
     ];
     const categorySheet = XLSX.utils.aoa_to_sheet(categoryData);
@@ -173,18 +127,14 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
       const lowStockData = [
         ['Item Name', 'Quantity', 'Unit', 'Supplier', 'Unit Price'],
         ...inventoryMetrics.lowStockItems.map(item => [
-          item.itemName,
-          item.quantity,
-          item.unit || 'pcs',
-          item.supplier || 'N/A',
-          item.unitPrice || 0
+          item.itemName, item.quantity, item.unit || 'pcs', item.supplier || 'N/A', item.unitPrice || 0
         ])
       ];
       const lowStockSheet = XLSX.utils.aoa_to_sheet(lowStockData);
       XLSX.utils.book_append_sheet(wb, lowStockSheet, 'Low Stock Alert');
     }
 
-    XLSX.writeFile(wb, `Inventory_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+    XLSX.writeFile(wb, getExcelFileName('Inventory', null, null));
   };
 
   const statCards = [
@@ -220,51 +170,9 @@ const InventoryReport = ({ inventoryData, formatCurrency }) => {
 
   return (
     <div>
-      {/* Export Buttons */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 mb-6">
-        <button
-          onClick={exportToPDF}
-          className="macos-btn flex items-center justify-center gap-2 px-4 py-2.5 text-white"
-          style={{
-            background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
-          }}
-        >
-          <FileText size={18} />
-          {t('reports.exportPDF', 'Export PDF')}
-        </button>
-        <button
-          onClick={exportToExcel}
-          className="macos-btn flex items-center justify-center gap-2 px-4 py-2.5 text-white"
-          style={{
-            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-          }}
-        >
-          <FileSpreadsheet size={18} />
-          {t('reports.exportExcel', 'Export Excel')}
-        </button>
-      </div>
+      <ReportExportButtons onExportPDF={exportToPDF} onExportExcel={exportToExcel} />
 
-      {/* Summary Cards with macOS Design */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {statCards.map((card, index) => {
-          const Icon = card.icon;
-          return (
-            <div key={index} className="macos-stat-card macos-animate cursor-pointer">
-              <div className="flex items-center justify-between mb-4">
-                <div className="macos-icon-bg" style={{ backgroundColor: card.bgColor }}>
-                  <Icon className="w-6 h-6" style={{ color: card.iconColor }} />
-                </div>
-              </div>
-              <p className="macos-text text-sm font-medium mb-1">{card.title}</p>
-              <h3 className="macos-metric text-2xl sm:text-3xl">
-                {card.value}
-              </h3>
-            </div>
-          );
-        })}
-      </div>
+      <ReportSummaryCards cards={statCards} />
 
       {/* Low Stock Alert */}
       {inventoryMetrics.lowStockItems.length > 0 && (

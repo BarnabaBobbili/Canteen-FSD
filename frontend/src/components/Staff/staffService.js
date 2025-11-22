@@ -41,8 +41,14 @@ export const createStaff = async (staffData, token) => {
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Failed to create staff member');
+    let errorMessage = 'Failed to create staff member';
+    try {
+      const error = await response.json();
+      errorMessage = error.message || errorMessage;
+    } catch {
+      // Response body is not valid JSON, use default message
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -66,8 +72,14 @@ export const updateStaff = async (id, staffData, token) => {
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Failed to update staff member');
+    let errorMessage = 'Failed to update staff member';
+    try {
+      const error = await response.json();
+      errorMessage = error.message || errorMessage;
+    } catch {
+      // Response body is not valid JSON, use default message
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();

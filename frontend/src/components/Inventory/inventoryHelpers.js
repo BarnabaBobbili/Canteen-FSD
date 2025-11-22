@@ -24,8 +24,9 @@ export const validateInventoryForm = (formData, t) => {
     }
   }
 
-  // Validate quantity
-  if (!formData.quantity || formData.quantity <= 0) {
+  // Validate quantity (must be a positive integer)
+  const quantity = Number(formData.quantity);
+  if (!formData.quantity || Number.isNaN(quantity) || !Number.isFinite(quantity) || !Number.isInteger(quantity) || quantity <= 0) {
     errors.quantity = t('inventory.errors.quantityInvalid');
   }
 
@@ -110,9 +111,11 @@ export const getInitialFormState = () => ({
 /**
  * Format expiry date for display
  * @param {string|Date} date - Date to format
- * @returns {string} Formatted date or 'N/A'
+ * @returns {string} Formatted date or 'N/A' if invalid/missing
  */
 export const formatExpiryDate = (date) => {
   if (!date) return 'N/A';
-  return new Date(date).toLocaleDateString();
+  const d = new Date(date);
+  if (Number.isNaN(d.getTime())) return 'N/A';
+  return d.toLocaleDateString();
 };

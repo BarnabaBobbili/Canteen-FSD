@@ -41,8 +41,14 @@ export const createSupplier = async (supplierData, token) => {
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Failed to create supplier');
+    let errorMessage = 'Failed to create supplier';
+    try {
+      const error = await response.json();
+      errorMessage = error.message || errorMessage;
+    } catch {
+      // Response body is not valid JSON, use default message
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -66,8 +72,14 @@ export const updateSupplier = async (id, supplierData, token) => {
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Failed to update supplier');
+    let errorMessage = 'Failed to update supplier';
+    try {
+      const error = await response.json();
+      errorMessage = error.message || errorMessage;
+    } catch {
+      // Response body is not valid JSON, use default message
+    }
+    throw new Error(errorMessage);
   }
 
   return response.json();

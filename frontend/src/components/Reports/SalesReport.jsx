@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, FileText, FileSpreadsheet, ShoppingCart, CheckCircle, XCircle, DollarSign, TrendingUp } from 'lucide-react';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { ShoppingCart, CheckCircle, XCircle, DollarSign, TrendingUp } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import ReportExportButtons from './shared/ReportExportButtons';
+import ReportSummaryCards from './shared/ReportSummaryCards';
+import { formatCurrencyForPDF, getPDFFileName, getExcelFileName } from './reportHelpers';
+import { createPDFWithHeader, addPDFSummarySection, addPDFTableSection } from './shared/reportPDFHelpers';
 
 const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
   const { t } = useTranslation();
@@ -35,13 +37,19 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
     const itemsSold = {};
     completedOrders.forEach(order => {
       order.items?.forEach(item => {
+        // Skip items without valid name
+        if (!item.itemName) return;
+        // Safely coerce quantity and price to numbers
+        const safeQuantity = Number.isFinite(Number(item.quantity)) ? Number(item.quantity) : 0;
+        const safePrice = Number.isFinite(Number(item.price)) ? Number(item.price) : 0;
+
         if (itemsSold[item.itemName]) {
-          itemsSold[item.itemName].quantity += item.quantity;
-          itemsSold[item.itemName].revenue += item.price * item.quantity;
+          itemsSold[item.itemName].quantity += safeQuantity;
+          itemsSold[item.itemName].revenue += safePrice * safeQuantity;
         } else {
           itemsSold[item.itemName] = {
-            quantity: item.quantity,
-            revenue: item.price * item.quantity
+            quantity: safeQuantity,
+            revenue: safePrice * safeQuantity
           };
         }
       });
@@ -65,75 +73,34 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
   }, [ordersData]);
 
   const exportToPDF = () => {
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
+    const doc = createPDFWithHeader('Sales Report', dateRange);
 
-    // Header
-    doc.setFontSize(20);
-    doc.text('Sales Report', pageWidth / 2, 15, { align: 'center' });
-
-    doc.setFontSize(10);
-    doc.text(`Period: ${dateRange.startDate} to ${dateRange.endDate}`, pageWidth / 2, 22, { align: 'center' });
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth / 2, 27, { align: 'center' });
-
-    // Summary Statistics
-    doc.setFontSize(14);
-    doc.text('Summary', 14, 35);
-
+    // Summary section
     const summaryData = [
       ['Total Orders', salesMetrics.totalOrders.toString()],
       ['Completed Orders', salesMetrics.completedOrders.toString()],
       ['Cancelled Orders', salesMetrics.cancelledOrders.toString()],
-      ['Total Revenue', formatCurrency(salesMetrics.totalRevenue)],
-      ['Average Order Value', formatCurrency(salesMetrics.averageOrderValue)]
+      ['Total Revenue', formatCurrencyForPDF(formatCurrency(salesMetrics.totalRevenue))],
+      ['Average Order Value', formatCurrencyForPDF(formatCurrency(salesMetrics.averageOrderValue))]
     ];
+    let currentY = addPDFSummarySection(doc, 'Summary', summaryData);
 
-    autoTable(doc, {
-      startY: 40,
-      head: [['Metric', 'Value']],
-      body: summaryData,
-      theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }
-    });
-
-    // Sales by Order Type
-    let currentY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text('Sales by Order Type', 14, currentY);
-
+    // Sales by order type
     const typeData = Object.entries(salesMetrics.salesByType).map(([type, amount]) => [
       type.charAt(0).toUpperCase() + type.slice(1),
-      formatCurrency(amount)
+      formatCurrencyForPDF(formatCurrency(amount))
     ]);
+    currentY = addPDFTableSection(doc, 'Sales by Order Type', ['Order Type', 'Revenue'], typeData, currentY);
 
-    autoTable(doc, {
-      startY: currentY + 5,
-      head: [['Order Type', 'Revenue']],
-      body: typeData,
-      theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }
-    });
-
-    // Top Selling Items
-    currentY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text('Top Selling Items', 14, currentY);
-
+    // Top selling items
     const topItemsData = salesMetrics.topItems.map(item => [
       item.name,
       item.quantity.toString(),
-      formatCurrency(item.revenue)
+      formatCurrencyForPDF(formatCurrency(item.revenue))
     ]);
+    addPDFTableSection(doc, 'Top Selling Items', ['Item Name', 'Quantity Sold', 'Revenue'], topItemsData, currentY);
 
-    autoTable(doc, {
-      startY: currentY + 5,
-      head: [['Item Name', 'Quantity Sold', 'Revenue']],
-      body: topItemsData,
-      theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] }
-    });
-
-    doc.save(`Sales_Report_${dateRange.startDate}_to_${dateRange.endDate}.pdf`);
+    doc.save(getPDFFileName('Sales', dateRange.startDate, dateRange.endDate));
   };
 
   const exportToExcel = () => {
@@ -186,7 +153,7 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
     const ordersSheet = XLSX.utils.aoa_to_sheet(ordersExportData);
     XLSX.utils.book_append_sheet(wb, ordersSheet, 'All Orders');
 
-    XLSX.writeFile(wb, `Sales_Report_${dateRange.startDate}_to_${dateRange.endDate}.xlsx`);
+    XLSX.writeFile(wb, getExcelFileName('Sales', dateRange.startDate, dateRange.endDate));
   };
 
   const statCards = [
@@ -229,51 +196,9 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
 
   return (
     <div>
-      {/* Export Buttons */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 mb-6">
-        <button
-          onClick={exportToPDF}
-          className="macos-btn flex items-center justify-center gap-2 px-4 py-2.5 text-white"
-          style={{
-            background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
-          }}
-        >
-          <FileText size={18} />
-          {t('reports.exportPDF', 'Export PDF')}
-        </button>
-        <button
-          onClick={exportToExcel}
-          className="macos-btn flex items-center justify-center gap-2 px-4 py-2.5 text-white"
-          style={{
-            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-          }}
-        >
-          <FileSpreadsheet size={18} />
-          {t('reports.exportExcel', 'Export Excel')}
-        </button>
-      </div>
+      <ReportExportButtons onExportPDF={exportToPDF} onExportExcel={exportToExcel} />
 
-      {/* Summary Cards with macOS Design */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-        {statCards.map((card, index) => {
-          const Icon = card.icon;
-          return (
-            <div key={index} className="macos-stat-card macos-animate cursor-pointer">
-              <div className="flex items-center justify-between mb-4">
-                <div className="macos-icon-bg" style={{ backgroundColor: card.bgColor }}>
-                  <Icon className="w-6 h-6" style={{ color: card.iconColor }} />
-                </div>
-              </div>
-              <p className="macos-text text-sm font-medium mb-1">{card.title}</p>
-              <h3 className="macos-metric text-2xl sm:text-3xl">
-                {card.value}
-              </h3>
-            </div>
-          );
-        })}
-      </div>
+      <ReportSummaryCards cards={statCards} />
 
       {/* Sales by Order Type */}
       <div className="mb-6">
@@ -293,7 +218,7 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(salesMetrics.salesByType).map(([type, amount], idx) => (
+              {Object.entries(salesMetrics.salesByType).map(([type, amount]) => (
                 <tr key={type} className="macos-table-row">
                   <td className="px-6 py-4 text-sm capitalize font-medium">{type}</td>
                   <td className="px-6 py-4 text-sm font-semibold text-green-600">
@@ -327,8 +252,8 @@ const SalesReport = ({ ordersData, dateRange, formatCurrency }) => {
               </tr>
             </thead>
             <tbody>
-              {salesMetrics.topItems.map((item, index) => (
-                <tr key={index} className="macos-table-row">
+              {salesMetrics.topItems.map((item) => (
+                <tr key={item.name || item.id} className="macos-table-row">
                   <td className="px-6 py-4 text-sm font-medium">{item.name}</td>
                   <td className="px-6 py-4 text-sm">{item.quantity}</td>
                   <td className="px-6 py-4 text-sm font-semibold text-green-600">

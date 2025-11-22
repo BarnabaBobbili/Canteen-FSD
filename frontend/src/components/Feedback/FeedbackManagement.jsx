@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
-import DashboardLayout from '../DashboardLayout';
+import DashboardLayout from '../Layout/DashboardLayout';
 import FeedbackStats from './FeedbackStats';
 import FeedbackQualityMetrics from './FeedbackQualityMetrics';
 import FeedbackFilters from './FeedbackFilters';

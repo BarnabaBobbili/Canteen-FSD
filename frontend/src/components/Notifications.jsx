@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import DashboardLayout from './DashboardLayout';
+import DashboardLayout from './Layout/DashboardLayout';
 import API_BASE_URL from '../config/api';
 import { Bell, Check, CheckCheck, Trash2, ArrowLeft } from 'lucide-react';
 

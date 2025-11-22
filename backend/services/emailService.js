@@ -2,6 +2,21 @@ const nodemailer = require('nodemailer');
 const sgMail = require('@sendgrid/mail');
 
 /**
+ * Escape HTML special characters to prevent XSS in email templates
+ * @param {string} str - String to escape
+ * @returns {string} Escaped string
+ */
+const escapeHtml = (str) => {
+  if (!str || typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
+
+/**
  * Email Service for sending verification and password reset emails
  * Supports Gmail (development) and SendGrid Web API (production)
  *
@@ -130,14 +145,14 @@ const sendVerificationEmail = async (email, name, verificationToken) => {
             <h1>Welcome to Canteen Delight!</h1>
           </div>
           <div class="content">
-            <h2>Hello ${name},</h2>
+            <h2>Hello ${escapeHtml(name)},</h2>
             <p>Thank you for signing up! Please verify your email address to complete your registration and start ordering delicious food.</p>
             <p>Click the button below to verify your email:</p>
             <div style="text-align: center;">
-              <a href="${verificationUrl}" class="button">Verify Email Address</a>
+              <a href="${escapeHtml(verificationUrl)}" class="button">Verify Email Address</a>
             </div>
             <p>Or copy and paste this link in your browser:</p>
-            <p style="word-break: break-all; color: #667eea;">${verificationUrl}</p>
+            <p style="word-break: break-all; color: #667eea;">${escapeHtml(verificationUrl)}</p>
             <p><strong>This link will expire in 24 hours.</strong></p>
             <p>If you didn't create an account, please ignore this email.</p>
           </div>
@@ -187,14 +202,14 @@ const sendPasswordResetEmail = async (email, name, resetToken) => {
             <h1>Password Reset Request</h1>
           </div>
           <div class="content">
-            <h2>Hello ${name},</h2>
+            <h2>Hello ${escapeHtml(name)},</h2>
             <p>We received a request to reset your password for your Canteen Delight account.</p>
             <p>Click the button below to reset your password:</p>
             <div style="text-align: center;">
-              <a href="${resetUrl}" class="button">Reset Password</a>
+              <a href="${escapeHtml(resetUrl)}" class="button">Reset Password</a>
             </div>
             <p>Or copy and paste this link in your browser:</p>
-            <p style="word-break: break-all; color: #f5576c;">${resetUrl}</p>
+            <p style="word-break: break-all; color: #f5576c;">${escapeHtml(resetUrl)}</p>
             <div class="warning">
               <strong>⚠️ Security Notice:</strong>
               <ul>

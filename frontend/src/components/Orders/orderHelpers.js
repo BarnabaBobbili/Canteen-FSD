@@ -104,9 +104,10 @@ export const sortOrders = (orders, sortBy) => {
         return (a.customerName || '').localeCompare(b.customerName || '');
       case 'customer-desc':
         return (b.customerName || '').localeCompare(a.customerName || '');
-      case 'status':
+      case 'status': {
         const statusOrder = { 'pending': 1, 'preparing': 2, 'ready': 3, 'completed': 4, 'cancelled': 5 };
         return (statusOrder[a.status] || 0) - (statusOrder[b.status] || 0);
+      }
       default:
         return 0;
     }
