@@ -20,6 +20,7 @@ migrate*.js
 
 # production
 /build
+/dist
 
 # environment variables
 .env
@@ -51,4 +52,3 @@ nul
 *.swo
 *~
 
-vercel.json

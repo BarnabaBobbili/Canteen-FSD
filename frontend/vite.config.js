@@ -31,7 +31,7 @@ export default defineConfig({
 
   // Build configuration
   build: {
-    outDir: 'build',  // Keep same output directory as CRA
+    outDir: 'dist',  // Vite default
     sourcemap: false,
     rollupOptions: {
       output: {
