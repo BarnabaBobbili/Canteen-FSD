@@ -2,8 +2,9 @@
   "name": "canteen-frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "engines": {
-    "node": "20.x"
+    "node": ">=18.x"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
@@ -21,58 +22,25 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
     "react-router-dom": "^7.9.5",
-    "react-scripts": "5.0.1",
     "recharts": "^2.15.4",
     "three": "^0.181.0",
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "i18n:extract": "node scripts/extract-translations.js",
     "i18n:sync": "node scripts/translate-missing.js",
     "i18n:translate": "node scripts/translateI18n.js"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ],
-    "rules": {
-      "no-unused-vars": "warn",
-      "no-console": "off",
-      "react-hooks/exhaustive-deps": "warn"
-    }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@vitalets/google-translate-api": "^9.2.1",
-    "ajv": "6.12.6",
-    "ajv-formats": "1.6.1",
-    "ajv-keywords": "3.5.2",
+    "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
     "tailwindcss": "^3.3.3",
-    "typescript": "^4.9.5"
-  },
-  "resolutions": {
-    "ajv": "6.12.6",
-    "ajv-keywords": "3.5.2",
-    "ajv-formats": "1.6.1",
-    "**/**/ajv": "6.12.6",
-    "**/**/ajv-keywords": "3.5.2",
-    "**/**/ajv-formats": "1.6.1"
+    "vite": "^7.2.4"
   }
 }

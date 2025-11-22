@@ -6,6 +6,7 @@ A comprehensive full-stack canteen management application built with **React**, 
 
 ## Table of Contents
 
+- [⚠️ For Developers - READ FIRST](#️-for-developers---read-first)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
@@ -23,6 +24,55 @@ A comprehensive full-stack canteen management application built with **React**, 
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
+
+---
+
+## ⚠️ For Developers - READ FIRST
+
+### 📚 Essential Documentation
+
+**Before writing ANY code, you MUST read these documents in order:**
+
+1. **[`CODING_STANDARDS.md`](./CODING_STANDARDS.md)** ⚠️ **MANDATORY** - Coding rules and best practices
+   - File size limits (<250 lines)
+   - Feature folder structure
+   - Separation of concerns (UI/Logic/API)
+   - Service layer patterns
+   - Helper function patterns
+   - Anti-patterns to avoid
+
+2. **[`CODEBASE_SUMMARY.md`](./CODEBASE_SUMMARY.md)** - Architecture and refactoring status
+   - Current codebase structure
+   - Established patterns
+   - Refactoring history
+   - Examples to follow
+
+3. **[`CLAUDE.md`](./CLAUDE.md)** - Project-specific guidance
+   - Development workflow
+   - Key architectural decisions
+   - Common patterns
+   - File locations
+
+### 🎯 Quick Rules
+
+```
+✅ DO:
+- Keep components <250 lines (main) or <150 lines (sub)
+- Put API calls in *Service.js files
+- Put business logic in *Helpers.js files
+- Use feature folder structure
+- Document all functions with JSDoc
+- Handle errors at every layer
+
+❌ DON'T:
+- Write monolithic 500+ line components
+- Inline API calls in components
+- Duplicate code across files
+- Skip error handling
+- Ignore coding standards
+```
+
+**Not following these standards = PR rejection**
 
 ---
 
@@ -341,13 +391,11 @@ The application will automatically open in your browser at `http://localhost:300
 
 The project includes two seed scripts:
 
-### 1. Basic Seed Data (`seed.js`)
+### 1. Basic Seed Data (`scripts/seed.js`)
 
 ```bash
 cd backend
-npm run seed
-# or
-node seed.js
+node scripts/seed.js
 ```
 
 Creates:
@@ -358,11 +406,11 @@ Creates:
 - 4 suppliers
 - 4 discount codes
 
-### 2. Weekly Sample Data (`seedWeeklyData.js`) - Recommended
+### 2. Weekly Sample Data (`scripts/seedWeeklyData.js`) - Recommended
 
 ```bash
 cd backend
-node seedWeeklyData.js
+node scripts/seedWeeklyData.js
 ```
 
 Creates:
@@ -722,17 +770,56 @@ REACT_APP_DEBUG=true npm start
 
 We welcome contributions! Please follow these steps:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Read the coding standards first:** [`CODING_STANDARDS.md`](./CODING_STANDARDS.md) ⚠️ **MANDATORY**
+2. Read the architecture overview: [`CODEBASE_SUMMARY.md`](./CODEBASE_SUMMARY.md)
+3. Read the project guidance: [`CLAUDE.md`](./CLAUDE.md)
+4. Fork the repository
+5. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+6. Write code following our standards (components <250 lines, use feature folders)
+7. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+8. Push to the branch (`git push origin feature/AmazingFeature`)
+9. Open a Pull Request
 
-### Code Style
-- Use ESLint for JavaScript linting
-- Follow React best practices
-- Write meaningful commit messages
-- Add comments for complex logic
+### 🚨 Code Standards (MANDATORY)
+
+**Before writing ANY code, read [`CODING_STANDARDS.md`](./CODING_STANDARDS.md)**
+
+This document contains:
+- ✅ File size limits (<250 lines for components, <150 for sub-components)
+- ✅ Feature folder structure patterns
+- ✅ Separation of concerns (UI, Logic, API layers)
+- ✅ Service layer requirements (all API calls in `*Service.js` files)
+- ✅ Helper function patterns (business logic in `*Helpers.js` files)
+- ✅ Naming conventions (PascalCase, camelCase rules)
+- ✅ Documentation requirements (JSDoc for all functions)
+- ✅ Anti-patterns to avoid (what NOT to do)
+- ✅ Code review checklist
+
+**PRs that don't follow these standards will be rejected.**
+
+### Quick Standards Summary
+
+```
+Component Size:      <250 lines (main), <150 lines (sub)
+API Calls:           All in *Service.js files
+Business Logic:      All in *Helpers.js files
+Documentation:       JSDoc for all functions
+Zero Duplication:    Check existing code first
+Feature Folders:     Group related files together
+Error Handling:      At every layer (UI, Service, API)
+```
+
+### Before Submitting PR
+
+- [ ] Read `CODING_STANDARDS.md` completely
+- [ ] All components are <250 lines
+- [ ] API calls are in service files
+- [ ] Business logic is in helper files
+- [ ] All functions have JSDoc documentation
+- [ ] No code duplication
+- [ ] Error handling implemented
+- [ ] Build passes without errors
+- [ ] Code follows established patterns (see Dashboard/, Staff/, Discount/)
 
 ---
 

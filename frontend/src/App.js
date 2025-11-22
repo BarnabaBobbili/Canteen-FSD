@@ -44,7 +44,7 @@ import ReportsManagement from './components/Reports/ReportsManagement';
 import Notifications from './components/Notifications';
 import Settings from './components/Settings/Settings';
 
-const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || 'your-google-client-id';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id';
 
 function App() {
   return (

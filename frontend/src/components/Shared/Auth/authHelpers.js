@@ -60,7 +60,7 @@ export const getDefaultRedirect = (role) => {
  */
 export const getDemoAccounts = () => {
   // Only allow demo accounts in development mode
-  if (process.env.NODE_ENV === 'production') {
+  if (import.meta.env.MODE === 'production') {
     return [];
   }
 
