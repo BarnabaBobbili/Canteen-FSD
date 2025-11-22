@@ -64,7 +64,7 @@ export const fetchOrderDetails = async (identifier) => {
   }
 
   const response = await fetch(
-    `${process.env.REACT_APP_API_URL || 'http://localhost:5001/api'}/orders/${identifier}`,
+    `${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/orders/${identifier}`,
     { headers }
   );
 

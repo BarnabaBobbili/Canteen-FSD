@@ -40,7 +40,7 @@ export const useAutoTranslate = () => {
    * Export missing keys (for debugging or auto-generation)
    */
   useEffect(() => {
-    if (missingKeys.size > 0 && process.env.NODE_ENV === 'development') {
+    if (missingKeys.size > 0 && import.meta.env.MODE === 'development') {
       console.log('[i18n] Missing keys detected:', Array.from(missingKeys));
     }
   }, [missingKeys]);

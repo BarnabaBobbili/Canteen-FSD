@@ -46,9 +46,13 @@ const createTransporter = () => {
     });
   } else {
     // Generic SMTP configuration
+    const port = parseInt(process.env.SMTP_PORT || '587', 10);
+    if (Number.isNaN(port) || port < 1 || port > 65535) {
+      throw new Error(`Invalid SMTP_PORT configuration: ${process.env.SMTP_PORT}. Must be between 1 and 65535.`);
+    }
     return nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '587'),
+      port,
       secure: process.env.SMTP_SECURE === 'true',
       auth: {
         user: process.env.EMAIL_USER,
@@ -97,17 +101,17 @@ const sendEmail = async (mailOptions) => {
       };
 
       await sgMail.send(msg);
-      console.log('✅ Email sent via SendGrid Web API to:', mailOptions.to);
+      console.log('✅ Email sent via SendGrid Web API');
       return { success: true };
     } else {
       // Use nodemailer SMTP (Gmail for development)
       const transporter = createTransporter();
       await transporter.sendMail(mailOptions);
-      console.log('✅ Email sent via SMTP to:', mailOptions.to);
+      console.log('✅ Email sent via SMTP');
       return { success: true };
     }
   } catch (error) {
-    console.error('❌ Error sending email:', error);
+    console.error('❌ Error sending email:', error.message);
     return { success: false, error: error.message };
   }
 };
@@ -239,13 +243,27 @@ const sendPasswordResetEmail = async (email, name, resetToken) => {
  * @param {string} otp - 6-digit OTP
  */
 const sendOrderConfirmationEmail = async (email, name, order, otp) => {
-  const trackingUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/track-order/${order.orderNumber}`;
+  // Validate order input
+  if (!order || typeof order !== 'object') {
+    throw new Error('Invalid order: order must be an object');
+  }
+  if (!Array.isArray(order.items)) {
+    throw new Error('Invalid order: items must be an array');
+  }
+  if (!order.orderNumber) {
+    throw new Error('Invalid order: orderNumber is required');
+  }
 
-  const itemsList = order.items.map(item =>
-    `<li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-      <strong>${item.itemName}</strong> x ${item.quantity} - ₹${item.price * item.quantity}
-    </li>`
-  ).join('');
+  const trackingUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/track-order/${encodeURIComponent(order.orderNumber)}`;
+
+  const itemsList = order.items.map(item => {
+    const safeName = escapeHtml(item.itemName || 'Unknown Item');
+    const safeQty = Number.isFinite(Number(item.quantity)) ? Number(item.quantity) : 0;
+    const safePrice = Number.isFinite(Number(item.price)) ? Number(item.price) : 0;
+    return `<li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+      <strong>${safeName}</strong> x ${safeQty} - ₹${(safePrice * safeQty).toFixed(2)}
+    </li>`;
+  }).join('');
 
   const mailOptions = {
     from: process.env.EMAIL_USER || 'noreply@canteen.com',
@@ -272,15 +290,15 @@ const sendOrderConfirmationEmail = async (email, name, order, otp) => {
         <div class="container">
           <div class="header">
             <h1>🎉 Order Confirmed!</h1>
-            <p>Order #${order.orderNumber}</p>
+            <p>Order #${escapeHtml(order.orderNumber)}</p>
           </div>
           <div class="content">
-            <h2>Hello ${name},</h2>
+            <h2>Hello ${escapeHtml(name)},</h2>
             <p>Thank you for your order! Your delicious food is being prepared.</p>
 
             <div class="otp-box">
               <p style="margin: 0 0 10px 0; font-size: 14px; color: #666;">Your Order OTP</p>
-              <div class="otp">${otp}</div>
+              <div class="otp">${escapeHtml(otp)}</div>
               <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">Please provide this OTP when collecting your order</p>
               <p style="margin: 5px 0 0 0; font-size: 12px; color: #ff6b6b;">⏱️ Valid for 2 hours</p>
             </div>
@@ -291,28 +309,28 @@ const sendOrderConfirmationEmail = async (email, name, order, otp) => {
                 ${itemsList}
               </ul>
               <div class="total">
-                Total: ₹${order.totalAmount}
+                Total: ₹${Number.isFinite(Number(order.totalAmount)) ? Number(order.totalAmount).toFixed(2) : '0.00'}
               </div>
             </div>
 
             <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
               <strong>📋 Order Information:</strong>
               <ul style="margin: 10px 0 0 20px;">
-                <li><strong>Order Number:</strong> ${order.orderNumber}</li>
-                <li><strong>Order Type:</strong> ${order.orderType}</li>
-                <li><strong>Payment Method:</strong> ${order.paymentMethod}</li>
-                <li><strong>Status:</strong> ${order.status}</li>
+                <li><strong>Order Number:</strong> ${escapeHtml(order.orderNumber)}</li>
+                <li><strong>Order Type:</strong> ${escapeHtml(order.orderType || 'N/A')}</li>
+                <li><strong>Payment Method:</strong> ${escapeHtml(order.paymentMethod || 'N/A')}</li>
+                <li><strong>Status:</strong> ${escapeHtml(order.status || 'N/A')}</li>
               </ul>
             </div>
 
             <p style="text-align: center; margin: 30px 0;">
-              <a href="${trackingUrl}" style="display: inline-block; padding: 15px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">📱 Track Your Order</a>
+              <a href="${escapeHtml(trackingUrl)}" style="display: inline-block; padding: 15px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">📱 Track Your Order</a>
             </p>
 
             <p><strong>Next Steps:</strong></p>
             <ol>
               <li>We'll send you another email when your order is ready</li>
-              <li>Come to the counter and provide your OTP: <strong>${otp}</strong></li>
+              <li>Come to the counter and provide your OTP: <strong>${escapeHtml(otp)}</strong></li>
               <li>Collect your order and enjoy!</li>
             </ol>
           </div>
@@ -336,13 +354,30 @@ const sendOrderConfirmationEmail = async (email, name, order, otp) => {
  * @param {Buffer} pdfBuffer - PDF bill buffer (optional, will be attached if provided)
  */
 const sendOrderCompletionEmail = async (email, name, order, pdfBuffer = null) => {
-  const trackingUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/track-order/${order.orderNumber}`;
+  // Validate order input
+  if (!order || typeof order !== 'object') {
+    throw new Error('Invalid order: order must be an object');
+  }
+  if (!Array.isArray(order.items)) {
+    throw new Error('Invalid order: items must be an array');
+  }
+  if (!order.orderNumber) {
+    throw new Error('Invalid order: orderNumber is required');
+  }
+  if (pdfBuffer !== null && !Buffer.isBuffer(pdfBuffer)) {
+    throw new Error('Invalid pdfBuffer: must be a Buffer or null');
+  }
 
-  const itemsList = order.items.map(item =>
-    `<li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-      <strong>${item.itemName}</strong> x ${item.quantity} - ₹${item.price * item.quantity}
-    </li>`
-  ).join('');
+  const trackingUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/track-order/${encodeURIComponent(order.orderNumber)}`;
+
+  const itemsList = order.items.map(item => {
+    const safeName = escapeHtml(item.itemName || 'Unknown Item');
+    const safeQty = Number.isFinite(Number(item.quantity)) ? Number(item.quantity) : 0;
+    const safePrice = Number.isFinite(Number(item.price)) ? Number(item.price) : 0;
+    return `<li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+      <strong>${safeName}</strong> x ${safeQty} - ₹${(safePrice * safeQty).toFixed(2)}
+    </li>`;
+  }).join('');
 
   const mailOptions = {
     from: process.env.EMAIL_USER || 'noreply@canteen.com',
@@ -368,10 +403,10 @@ const sendOrderCompletionEmail = async (email, name, order, pdfBuffer = null) =>
         <div class="container">
           <div class="header">
             <h1>✅ Order Completed!</h1>
-            <p>Order #${order.orderNumber}</p>
+            <p>Order #${escapeHtml(order.orderNumber)}</p>
           </div>
           <div class="content">
-            <h2>Hello ${name},</h2>
+            <h2>Hello ${escapeHtml(name)},</h2>
 
             <div class="thank-you">
               <h2 style="margin: 0 0 10px 0; color: #059669;">Thank You for Your Order!</h2>
@@ -380,23 +415,23 @@ const sendOrderCompletionEmail = async (email, name, order, pdfBuffer = null) =>
 
             <div class="order-details">
               <h3>Order Summary</h3>
-              <p><strong>Order Number:</strong> ${order.orderNumber}</p>
-              <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
-              <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
+              <p><strong>Order Number:</strong> ${escapeHtml(order.orderNumber)}</p>
+              <p><strong>Date:</strong> ${escapeHtml(order.createdAt ? new Date(order.createdAt).toLocaleString() : 'N/A')}</p>
+              <p><strong>Payment Method:</strong> ${escapeHtml(order.paymentMethod || 'N/A')}</p>
 
               <h4 style="margin-top: 20px;">Items Ordered:</h4>
               <ul class="items">
                 ${itemsList}
               </ul>
               <div class="total">
-                Total Paid: ₹${order.totalAmount}
+                Total Paid: ₹${Number.isFinite(Number(order.totalAmount)) ? Number(order.totalAmount).toFixed(2) : '0.00'}
               </div>
             </div>
 
             ${pdfBuffer ? '<p style="background: #e0e7ff; padding: 15px; border-radius: 5px; border-left: 4px solid #667eea;"><strong>📄 Bill Attached:</strong> Your detailed bill is attached as a PDF for your records.</p>' : ''}
 
             <p style="text-align: center; margin: 25px 0;">
-              <a href="${trackingUrl}" style="display: inline-block; padding: 12px 30px; background: #10b981; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 5px;">📱 View Order Details</a>
+              <a href="${escapeHtml(trackingUrl)}" style="display: inline-block; padding: 12px 30px; background: #10b981; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 5px;">📱 View Order Details</a>
             </p>
 
             <p style="margin-top: 30px; text-align: center;">
